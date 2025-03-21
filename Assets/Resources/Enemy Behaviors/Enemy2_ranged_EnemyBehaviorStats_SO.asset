@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 694ed7c473eff614bb9434a226829ca6, type: 3}
+  m_Name: Enemy2_ranged_EnemyBehaviorStats_SO
+  m_EditorClassIdentifier: 
+  trigger_activeRadius: 15
+  trigger_active_disengageRadius: 18
+  trigger_farRadius: 10
+  trigger_far_disengageRadius: 20
+  trigger_nearRadius: 5
+  visualContact_required: 1
+  trigger_lowHealth: 20
+  defaultBehavior: 0
+  defaultBehavior_SO: {fileID: 11400000, guid: a4599094eb8321a4b914cddfeb6ef300, type: 2}
+  alertBehavior_SO: {fileID: 11400000, guid: 767f8a56a47bafe43ad9cbc77c2cd6ca, type: 2}
+  engageBehavior_SO: {fileID: 11400000, guid: c5965ebddd0927a47b7b58ada5d17533, type: 2}
+  wander_radius: 0

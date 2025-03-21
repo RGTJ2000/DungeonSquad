@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a374e2a8f7c1da94eaa015d53adfd4a6, type: 3}
+  m_Name: Simple Bow
+  m_EditorClassIdentifier: 
+  weaponName: Simple Bow
+  weaponType: 1
+  attackCooldown: 1
+  critChance_base: 0.5
+  critChance_weight_str: 0.25
+  critChance_weight_dex: 0.75
+  critChance_weight_int: 0
+  critChance_weight_will: 0
+  critChance_weight_soul: 0
+  melee_damageBase: 0
+  melee_damageRange: 0
+  launch_impulse: 0.3
+  accuracy_factor: 1
+  missile_damageBase: 0
+  missile_damageRange: 0
+  missile_weight: 0
+  missile_prefab: {fileID: 0}

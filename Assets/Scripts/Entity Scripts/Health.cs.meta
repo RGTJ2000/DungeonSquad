@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 127eba021ce5b604f9b952ebfcab6e35
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - healthBar_prefab: {fileID: 6214553089576252208, guid: abbbf7e58441f034587e2911dfad2697,
+      type: 3}
+  - floatingTextPrefab: {fileID: 8424693797070645721, guid: a46f4fc061cfedf45aa46af33ee1f59a,
+      type: 3}
+  - mainCamera: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
