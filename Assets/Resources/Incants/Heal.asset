@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skill_type: incant
   skill_name: Heal
-  skill_targetType: group
+  skill_targetType: 1
+  cooldown: 0
   skill_icon: {fileID: 21300000, guid: 2f9da4d2b35af6748836866180462617, type: 3}
   healingRate: 1
   healing_prefab: {fileID: 5540355412864984503, guid: 176a163e07bb23745bc5b47b8efe344f,

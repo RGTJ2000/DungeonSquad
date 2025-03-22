@@ -105,6 +105,7 @@ public class EnemyMove : MonoBehaviour
                     isMeleeAttacking = true;
 
                     Skill_SO skill = _entityStats.selected_skill;
+                    Debug.Log("Skill to use:" + skill.skill_name);
                     skill.Use(gameObject, obj_to_pursue);
 
                     StartCoroutine(MeleeAttackCooldown(_entityStats.equipped_meleeWeapon.attackCooldown));

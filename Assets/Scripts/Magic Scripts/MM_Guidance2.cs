@@ -106,11 +106,15 @@ public class MM_Guidance2 : MonoBehaviour
             hasCollided = true;
 
 
-            if (collided_obj.tag == "Enemy" || collided_obj.tag == "Character")
+            if (collided_obj.tag == "Character" || collided_obj.tag == "Enemy")
             {
+                SoundManager.Instance.PlayMMBoom();
+                StartCoroutine(DeactivateDestroyMissile());
+                hasCollided = true;
+
                 CombatManager.Instance.ResolveMagic(origin_obj, collided_obj, "physical", damage_base, damage_range, magic_hitChanceMultiplier, caster_magicAR);
 
-            }
+            } 
 
 
         }
@@ -132,22 +136,22 @@ public class MM_Guidance2 : MonoBehaviour
         caster_magicAR = magicAR;
 
         EntityStats _entityStats = originObj.GetComponent<EntityStats>();
-        string type = _entityStats.selected_skill.skill_targetType;
+        Targeting_Type type = _entityStats.selected_skill.skill_targetType;
 
         {
             if (originObj.tag == "Character")
             {
                 switch (type)
                 {
-                    case "self":
+                    case Targeting_Type.self:
                         break;
-                    case "group":
+                    case Targeting_Type.group:
                         targetTag = "Character";
                         break;
-                    case "other":
+                    case Targeting_Type.other:
                         targetTag = "Enemy";
                         break;
-                    case "area":
+                    case Targeting_Type.area:
                         break;
                     default:
                         targetTag = "none";
@@ -160,15 +164,15 @@ public class MM_Guidance2 : MonoBehaviour
             {
                 switch (type)
                 {
-                    case "self":
+                    case Targeting_Type.self:
                         break;
-                    case "group":
+                    case Targeting_Type.group:
                         targetTag = "Enemy";
                         break;
-                    case "other":
+                    case Targeting_Type.other:
                         targetTag = "Character";
                         break;
-                    case "area":
+                    case Targeting_Type.area:
                         break;
                     default:
                         targetTag = "none";

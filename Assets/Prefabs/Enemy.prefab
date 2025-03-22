@@ -236,7 +236,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   character_ID: 100
   visible_distance: 50
-  health_max: 100
+  health_max: 500
   walking_speed: 0
   running_speed: 0
   entity_radius: 0.5

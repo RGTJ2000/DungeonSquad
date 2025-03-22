@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-[CreateAssetMenu(fileName = "New Melee Assault", menuName = "Melee Skills/Assault_SO")]
+[CreateAssetMenu(fileName = "New Assault SO", menuName = "Melee Skills/Assault_SO")]
 public class Assault_SO : Skill_SO
 {
     [SerializeField] Skill_SO meleeAttack_SO;
@@ -40,7 +40,7 @@ public class Assault_SO : Skill_SO
 
                 }
 
-                if (_cooldownTracker.GetRemainingCooldown(meleeAttack_SO) == 0)
+                if (_cooldownTracker != null && _cooldownTracker.GetRemainingCooldown(meleeAttack_SO) == 0)
                 {
                     if (meleeAttack_SO != null)
                     {
@@ -50,6 +50,13 @@ public class Assault_SO : Skill_SO
                 }
 
 
+            } else
+            {
+                if (_navMeshAgent.isOnNavMesh)
+                {
+                    _navMeshAgent.destination = target.transform.position;
+
+                }
             }
         }
 

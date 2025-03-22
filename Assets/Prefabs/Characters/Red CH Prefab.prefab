@@ -161,6 +161,7 @@ MonoBehaviour:
   core_obj: {fileID: 0}
   isInFormation: 1
   isEngaging: 0
+  skill_performing: {fileID: 0}
 --- !u!195 &-6725781667187197507
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -295,9 +296,9 @@ MonoBehaviour:
   maxSkillSlots: 5
   skill_slot:
   - {fileID: 11400000, guid: 68269be72b2a8734c92db619120d46be, type: 2}
-  - {fileID: 11400000, guid: 1124a068fe6ce9b40aa23da75dcdff3a, type: 2}
+  - {fileID: 11400000, guid: 265db9da9a3d8974090a0800c648e05b, type: 2}
   active_skillSlot: 0
-  active_skill: {fileID: 0}
+  selected_skill: {fileID: 0}
   confusion_AL: 20
   fear_AL: 20
   fire_AL: 20

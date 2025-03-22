@@ -147,20 +147,21 @@ public class TargetingScan : MonoBehaviour
 
     public GameObject[] ScanForVisibleTargets()
     {
-        string type = _entityStats.selected_skill.skill_targetType;
+        Targeting_Type type = _entityStats.selected_skill.skill_targetType;
+        //string type = _entityStats.selected_skill.skill_targetType;
         string targetingTag = "none";
 
         switch (type)
         {
-            case "self":
+            case Targeting_Type.self:
                 break;
-            case "group":
+            case Targeting_Type.group:
                 targetingTag = "Character";
                 break;
-            case "other":
+            case Targeting_Type.other:
                 targetingTag = "Enemy";
                 break;
-            case "area":
+            case Targeting_Type.area:
                 break;
             default:
                 targetingTag = "none";

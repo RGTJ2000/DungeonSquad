@@ -175,15 +175,15 @@ public class UICanvasManager : MonoBehaviour
                 {
                     Skill_SO skill = _entityStats.skill_slot[i];
                     float remainingCooldown = _cooldownTracker.GetRemainingCooldown(skill);
-                    Debug.Log($"Slot {i}: remaining cooldown={remainingCooldown} | cooldown total: {skill.cooldown}");
+                    //Debug.Log($"Slot {i}: remaining cooldown={remainingCooldown} | cooldown total: {skill.cooldown}");
                     if (skill.cooldown == 0.0f)
                     {
-                        Debug.Log($"{ch_obj.name}: Setting slot {i} to overlayImage.fillAmount =0f");
+                        //Debug.Log($"{ch_obj.name}: Setting slot {i} to overlayImage.fillAmount =0f");
                         overlayImage.fillAmount = 0.0f;
-                        Debug.Log($"Post-set: fillAmount = {overlayImage.fillAmount}");
+                        //Debug.Log($"Post-set: fillAmount = {overlayImage.fillAmount}");
                     } else
                     {
-                        Debug.Log($"{ch_obj.name}: Setting slot {i} to fraction {remainingCooldown}/{skill.cooldown}");
+                        //Debug.Log($"{ch_obj.name}: Setting slot {i} to fraction {remainingCooldown}/{skill.cooldown}");
                         overlayImage.fillAmount = Mathf.Clamp01(remainingCooldown / skill.cooldown);
                     }
 

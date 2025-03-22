@@ -36,7 +36,7 @@ public class CombatManager : MonoBehaviour
         }
     }
 
-    public void ResolveMelee(GameObject attacker, GameObject target)
+    public void ResolveMelee(GameObject attacker, GameObject target, bool critOverride = false)
     {
         Combat _combatOfDefender = target.GetComponent<Combat>();         // Get target's combat component
         EntityStats _attackerStats = attacker.GetComponent<EntityStats>();
@@ -76,7 +76,7 @@ public class CombatManager : MonoBehaviour
             critChance = CalculateCritChance(_attackerStats);
             float rndNum = Random.value;
             //Debug.Log($"CritChance= {critChance} Random Crit num = {rndNum}");
-            if (rndNum < critChance) 
+            if (rndNum < critChance || critOverride) 
             {
                 damageType = "crit";
                 damageReceived = damageReceived * 2;
@@ -223,7 +223,7 @@ public class CombatManager : MonoBehaviour
         float SOL = attackerStats.soul;
 
         critChance = attackerStats.equipped_meleeWeapon.critChance_base * ( 1 + ( ( CritCalc(str_w,STR)+CritCalc(dex_w,DEX)+CritCalc(int_w, INT)+CritCalc(will_w, WLL)+ CritCalc(soul_w, SOL)) / (str_w + dex_w + int_w + will_w + soul_w ) ) );
-        Debug.Log($"Crit Chance = {critChance}");
+        //Debug.Log($"Crit Chance = {critChance}");
 
         return critChance;
     }

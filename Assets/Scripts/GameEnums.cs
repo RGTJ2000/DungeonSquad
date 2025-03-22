@@ -25,3 +25,17 @@ public enum CombatType
     magic,
     incant
 }
+
+public enum Targeting_Tag
+{
+    enemy,
+    character
+}
+
+public enum Targeting_Type
+{
+    other,
+    group,
+    self,
+    area
+}

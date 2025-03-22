@@ -350,13 +350,13 @@ public class SquadManager : MonoBehaviour
     {
         if (context.performed && select_active != -1)
         {
-            Vector2 inputVector = context.ReadValue<Vector2>();
+            float inputValue = context.ReadValue<float>();
 
             EntityStats _entityStats = ch_info_array[select_active].obj_ref.GetComponent<EntityStats>();
 
             int new_activeSlot = _entityStats.active_skillSlot;
 
-            if (Mathf.Sign(inputVector.x) == 1)
+            if (inputValue > 0 )
             {
                 new_activeSlot++;
                 if (new_activeSlot > _entityStats.skill_slot.Length - 1)
@@ -369,7 +369,7 @@ public class SquadManager : MonoBehaviour
                 }
 
             }
-            else if (Mathf.Sign(inputVector.x) == -1)
+            else if (inputValue < 0 )
             {
                 new_activeSlot--;
 
