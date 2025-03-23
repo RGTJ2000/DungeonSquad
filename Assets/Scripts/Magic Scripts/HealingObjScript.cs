@@ -19,8 +19,7 @@ public class HealingObjScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.position = target_obj.transform.position;
-        _targetHealth.Heal(healing_rate * Time.deltaTime);
+        
 
         if ((target_obj == null || source_obj == null || _targetHealth.currentHealth >= _targetHealth.maxHealth) && !waitingToDestroy )
         {
@@ -29,8 +28,9 @@ public class HealingObjScript : MonoBehaviour
            waitingToDestroy=true;
 
         }
-       
 
+        transform.position = target_obj.transform.position;
+        _targetHealth.Heal(healing_rate * Time.deltaTime);
 
     }
 

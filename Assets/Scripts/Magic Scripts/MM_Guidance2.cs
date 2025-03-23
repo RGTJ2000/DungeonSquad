@@ -125,7 +125,7 @@ public class MM_Guidance2 : MonoBehaviour
 
     public void SetMMParameters(GameObject originObj, GameObject target, float castTime, float acc, float _damageBase, float _damageRange, float mm_hitChanceMultiplier, float magicAR)
     {
-        Debug.Log("Magic Missile target: " + target.name);
+        //Debug.Log("Magic Missile target: " + target.name);
         origin_obj = originObj;
         missile_target = target;
         riseDuration = castTime;

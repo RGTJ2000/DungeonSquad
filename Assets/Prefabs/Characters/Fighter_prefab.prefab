@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 6852843093252720738}
   - component: {fileID: -8387748906942977624}
   m_Layer: 7
-  m_Name: Red CH Prefab
+  m_Name: Fighter_prefab
   m_TagString: Character
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

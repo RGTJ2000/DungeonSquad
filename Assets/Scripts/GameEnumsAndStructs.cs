@@ -39,3 +39,25 @@ public enum Targeting_Type
     self,
     area
 }
+
+public enum Character_Type
+{
+    fighter,
+    cleric,
+    wizard,
+    ranger
+}
+
+public struct ch_info
+{
+    public string ch_type;
+    public int slot_number;
+    public GameObject obj_ref;
+    // Constructor
+    public ch_info(string type, int slot, GameObject obj)
+    {
+        ch_type = type;
+        slot_number = slot;
+        obj_ref = obj;
+    }
+}

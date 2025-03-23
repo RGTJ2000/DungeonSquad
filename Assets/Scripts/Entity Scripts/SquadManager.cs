@@ -13,40 +13,21 @@ public class SquadManager : MonoBehaviour
 
     //public static event Action<GameObject, int> OnUISelected;
 
-    public struct ch_info
-    {
-        public string ch_type;
-        public int slot_number;
-        public GameObject obj_ref;
-        // Constructor
-        public ch_info(string type, int slot, GameObject obj)
-        {
-            ch_type = type;
-            slot_number = slot;
-            obj_ref = obj;
-        }
-    }
+  
+  
 
-    private ch_info[] ch_info_array = new ch_info[4]
-    {
-        new ch_info("Red", 0, null),
-        new ch_info("Yellow", 1, null),
-        new ch_info("Blue", 2, null),
-        new ch_info("Green", 3, null),
+    private GameObject[] ch_in_slot_array = null;
 
-    };
-
+    /*
     private string[] select_activeToStrings = new string[4] { "fighter", "cleric", "wizard", "ranger" };
 
     public GameObject RedPrefab;
     public GameObject GreenPrefab;
     public GameObject BluePrefab;
     public GameObject YellowPrefab;
+    */
 
     public int select_active = -1;
-
-
-
 
     private PlayerInputActions playerControls;
     private InputAction SelectRed;
@@ -63,9 +44,9 @@ public class SquadManager : MonoBehaviour
 
     private GameObject selectring_obj;
     public GameObject selectring_prefab;
-    public GameObject core_prefab;
+    //public GameObject core_prefab;
     private GameObject core_obj_ref;
-    private MoveInput moveinput;
+    private MoveInput _core_moveInput;
 
     public GameObject main_camera_obj;
 
@@ -74,10 +55,11 @@ public class SquadManager : MonoBehaviour
     private void Awake()
     {
         playerControls = new PlayerInputActions();
-        core_obj_ref = Instantiate(core_prefab, Vector3.zero, Quaternion.identity);
-        moveinput = core_obj_ref.GetComponent<MoveInput>();
 
-        InstantiateCHPrefabs();
+        //core_obj_ref = Instantiate(core_prefab, Vector3.zero, Quaternion.identity);
+        //moveinput = core_obj_ref.GetComponent<MoveInput>();
+
+        //InstantiateCHPrefabs();
         //AssignWeaponsToCharacters();
 
         main_camera_obj.GetComponent<CameraFollow>().core = core_obj_ref;
@@ -167,8 +149,12 @@ public class SquadManager : MonoBehaviour
     }
 
 
-    //************************ CLASS METHODS *************************************************************************
+   /*
+    * SQUAD CONTROL METHODS
+    * 
+    */
 
+    /*
     void InstantiateCHPrefabs()
     {
         for (int i = 0; i < ch_info_array.Length; i++)
@@ -195,9 +181,9 @@ public class SquadManager : MonoBehaviour
             if (prefabToInstantiate != null)
             {
                 ch_info_array[i].obj_ref = Instantiate(prefabToInstantiate, new Vector3(i * 2.0f, 0, 0), Quaternion.identity);
-                Ch_Behavior controller = ch_info_array[i].obj_ref.GetComponent<Ch_Behavior>();
-                controller.slot_num = i;
-                controller.core_obj = core_obj_ref;
+                Ch_Behavior _chBehavior = ch_info_array[i].obj_ref.GetComponent<Ch_Behavior>();
+                _chBehavior.slot_num = i;
+                _chBehavior.core_obj = core_obj_ref;
 
             }
             else
@@ -207,7 +193,9 @@ public class SquadManager : MonoBehaviour
 
         }
     }
+    */
 
+    /*
     private void AssignWeaponsToCharacters()
     {
         ch_info_array[0].obj_ref.GetComponent<EntityStats>().equipped_meleeWeapon = WeaponDatabase.Instance.GetWeaponByName("Crude Iron Sword");
@@ -219,6 +207,7 @@ public class SquadManager : MonoBehaviour
 
 
     }
+    */
 
     private void OnEngage(InputAction.CallbackContext context)
     {
@@ -334,14 +323,14 @@ public class SquadManager : MonoBehaviour
 
         select_active = pressed_select_index;
         SoundManager.Instance.PlayCharacterSelectAffirm(select_active);
-        if (ch_info_array[pressed_select_index].obj_ref != null)
+        if (ch_in_slot_array[pressed_select_index] != null)
         {
             ActivateCharacterSelectLines(select_active);
 
         }
 
         //event trigger UI update
-        OnCharacterSelected?.Invoke(ch_info_array[select_active].obj_ref);
+        OnCharacterSelected?.Invoke(ch_in_slot_array[select_active]);
 
 
     }
@@ -352,7 +341,7 @@ public class SquadManager : MonoBehaviour
         {
             float inputValue = context.ReadValue<float>();
 
-            EntityStats _entityStats = ch_info_array[select_active].obj_ref.GetComponent<EntityStats>();
+            EntityStats _entityStats = ch_in_slot_array[select_active].GetComponent<EntityStats>();
 
             int new_activeSlot = _entityStats.active_skillSlot;
 
@@ -395,7 +384,7 @@ public class SquadManager : MonoBehaviour
                 DeactivateCharacterSelectLines(select_active);
                 ActivateCharacterSelectLines(select_active);
 
-                OnCharacterSelected?.Invoke(ch_info_array[select_active].obj_ref); //trigger update to UI
+                OnCharacterSelected?.Invoke(ch_in_slot_array[select_active]); //trigger update to UI
 
 
 
@@ -412,19 +401,19 @@ public class SquadManager : MonoBehaviour
 
     private void EngageTarget()
     {
-        SkillCooldownTracker _skillCooldownTracker = ch_info_array[select_active].obj_ref.GetComponent<SkillCooldownTracker>();
-        Skill_SO active_skill = ch_info_array[select_active].obj_ref.GetComponent<EntityStats>().selected_skill;
+        SkillCooldownTracker _skillCooldownTracker = ch_in_slot_array[select_active].GetComponent<SkillCooldownTracker>();
+        Skill_SO active_skill = ch_in_slot_array[select_active].GetComponent<EntityStats>().selected_skill;
        
 
         if (_skillCooldownTracker == null || !_skillCooldownTracker.IsSkillOnCooldown(active_skill))
         {
-            ch_info_array[select_active].obj_ref.GetComponent<TargetingScan>().SetTargetedEntity(); //set highlighted entity to target entity
+            ch_in_slot_array[select_active].GetComponent<TargetingScan>().SetTargetedEntity(); //set highlighted entity to target entity
 
             //change performed skill to the currently active skill in stats
-            ch_info_array[select_active].obj_ref.GetComponent<Ch_Behavior>().SetSkillPerforming(ch_info_array[select_active].obj_ref.GetComponent<EntityStats>().selected_skill);
+            ch_in_slot_array[select_active].GetComponent<Ch_Behavior>().SetSkillPerforming(ch_in_slot_array[select_active].GetComponent<EntityStats>().selected_skill);
 
             //turn on isEngaging
-            ch_info_array[select_active].obj_ref.GetComponent<Ch_Behavior>().isEngaging = true;
+            ch_in_slot_array[select_active].GetComponent<Ch_Behavior>().isEngaging = true;
 
             DeactivateCharacterSelectLines(select_active);
             select_active = -1;
@@ -437,20 +426,20 @@ public class SquadManager : MonoBehaviour
 
     private void ActivateCharacterSelectLines(int select_index)
     {
-        selectring_obj = Instantiate(selectring_prefab, ch_info_array[select_index].obj_ref.transform); //create selectingring on character
+        selectring_obj = Instantiate(selectring_prefab, ch_in_slot_array[select_index].transform); //create selectingring on character
 
-        ch_info_array[select_index].obj_ref.GetComponent<TargetingScan>().scanningOn = true;  //turn on enemy scanning
+        ch_in_slot_array[select_index].GetComponent<TargetingScan>().scanningOn = true;  //turn on enemy scanning
 
-        moveinput.rotation_lock = true; //lock squad rotation when selecting active
+        _core_moveInput.rotation_lock = true; //lock squad rotation when selecting active
     }
 
     private void DeactivateCharacterSelectLines(int select_index)
     {
 
-        moveinput.rotation_lock = false; //turn off squard rotation lock
-        if (ch_info_array[select_index].obj_ref != null)
+        _core_moveInput.rotation_lock = false; //turn off squard rotation lock
+        if (ch_in_slot_array[select_index] != null)
         {
-            ch_info_array[select_index].obj_ref.GetComponent<TargetingScan>().scanningOn = false; //turn off scanning
+            ch_in_slot_array[select_index].GetComponent<TargetingScan>().scanningOn = false; //turn off scanning
         }
 
         Destroy(selectring_obj); //remove the selection ring
@@ -467,7 +456,7 @@ public class SquadManager : MonoBehaviour
     {
         if (select_active >= 0)
         {
-            ch_info_array[select_active].obj_ref.GetComponent<Ch_Behavior>().CancelEngage();
+            ch_in_slot_array[select_active].GetComponent<Ch_Behavior>().CancelEngage();
             DeactivateCharacterSelectLines(select_active);
             select_active = -1;
         }
@@ -477,9 +466,9 @@ public class SquadManager : MonoBehaviour
     {
         for (int i = 0; i < 4; i++)
         {
-            if (ch_info_array[i].obj_ref != null)
+            if (ch_in_slot_array[i] != null)
             {
-                ch_info_array[i].obj_ref.GetComponent<Ch_Behavior>().CancelEngage();
+                ch_in_slot_array[i].GetComponent<Ch_Behavior>().CancelEngage();
 
             }
 
@@ -498,11 +487,11 @@ public class SquadManager : MonoBehaviour
         {
             if (context.performed)
             {
-                ch_info_array[select_active].obj_ref.GetComponent<TargetingScan>().SelectNewEntity(Rotate.ReadValue<Vector2>());
+                ch_in_slot_array[select_active].GetComponent<TargetingScan>().SelectNewEntity(Rotate.ReadValue<Vector2>());
             }
             else if (context.canceled)
             {
-                ch_info_array[select_active].obj_ref.GetComponent<TargetingScan>().ResetNewSelectionMade();
+                ch_in_slot_array[select_active].GetComponent<TargetingScan>().ResetNewSelectionMade();
             }
         }
     }
@@ -530,8 +519,18 @@ public class SquadManager : MonoBehaviour
         }
     }
 
+    public void SetCoreObj(GameObject obj)
+    {
+        core_obj_ref = obj;
+    }
 
+    public void SetCharactersInSlots(GameObject[] slots)
+    {
+        ch_in_slot_array = slots;
 
+        _core_moveInput = core_obj_ref.GetComponent<MoveInput>();
+
+    }
 
 }
 

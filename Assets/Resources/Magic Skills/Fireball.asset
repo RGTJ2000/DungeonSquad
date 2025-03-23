@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skill_type: magic
   skill_name: Fireball
-  skill_targetType: other
-  skill_icon: {fileID: 21300000, guid: 277c45d518ce5314f865f9afbe69adc5, type: 3}
+  skill_targetType: 0
   cooldown: 10
+  skill_icon: {fileID: 21300000, guid: 277c45d518ce5314f865f9afbe69adc5, type: 3}
   castingTime: 3
   castingOffsetfromCaster: {x: 0, y: 1, z: 1}
   hitChanceMultiplier: 1

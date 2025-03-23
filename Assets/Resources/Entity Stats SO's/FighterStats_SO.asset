@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26c434c908a17d74382537f3fdaf44c5, type: 3}
+  m_Name: FighterStats_SO
+  m_EditorClassIdentifier: 
+  character_ID: 0
+  character_name: Fighter
+  visible_distance: 50
+  health_max: 100
+  walking_speed: 5
+  running_speed: 10
+  entity_radius: 0.5
+  strength: 50
+  dexterity: 50
+  intelligence: 50
+  will: 50
+  soul: 50
+  melee_attackRating: 15
+  melee_defenseRating: 10
+  ranged_attackRating: 15
+  ranged_defenseRating: 10
+  magic_attackRating: 15
+  confusion_defenseRating: 10
+  fear_defenseRating: 10
+  fire_defenseRating: 10
+  frost_defenseRating: 10
+  poison_defenseRating: 10
+  sleep_defenseRating: 10
+  equipped_meleeWeapon: {fileID: 0}
+  equipped_rangedWeapon: {fileID: 0}
+  equipped_missile: {fileID: 0}
+  active_targetingTag: Enemy
+  maxSkillSlots: 5
+  skill_slot: []
+  active_skillSlot: 0
+  enemy_defaultBehavior_SO: {fileID: 0}
+  enemy_alertBehavior_SO: {fileID: 0}
+  enemy_engageBehavior_SO: {fileID: 0}
+  confusion_AL: 20
+  fear_AL: 20
+  fire_AL: 20
+  frost_AL: 20
+  poison_AL: 20
+  sleep_AL: 20
+  confusion_dissipationRate: 1
+  fear_dissipationRate: 1
+  fire_dissipationRate: 2
+  frost_dissipationRate: 1
+  poison_dissipationRate: 1
+  sleep_dissipationRate: 1
+  confusion_damageMultiplier: 1
+  fear_damageMultiplier: 1
+  fire_damageMultiplier: 2
+  frost_damageMultiplier: 1
+  poison_damageMultiplier: 1
+  sleep_damageMultiplier: 1

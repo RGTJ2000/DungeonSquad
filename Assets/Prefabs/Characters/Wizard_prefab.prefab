@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: -9155544235218888937}
   - component: {fileID: 3113746365223992660}
   m_Layer: 7
-  m_Name: Blue CH Prefab
+  m_Name: Wizard_prefab
   m_TagString: Character
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

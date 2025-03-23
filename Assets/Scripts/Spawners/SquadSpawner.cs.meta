@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: a28bff6ff2de0c642bf4337132b71d2c
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - core_prefab: {fileID: 1488026939116399470, guid: 41f27f9df2a5d014784c21c94909e2ed,
+      type: 3}
+  - fighter_prefab: {fileID: 525372921199117038, guid: 49a255bb42b54f245abf1bec956f45c6,
+      type: 3}
+  - cleric_prefab: {fileID: 525372921199117038, guid: 5757749b4bfeda748bc8d0279049202b,
+      type: 3}
+  - wizard_prefab: {fileID: 3476890055290762964, guid: 18725154c9635454498aa915f2ca69f6,
+      type: 3}
+  - ranger_prefab: {fileID: 8418205321826417663, guid: 123b7cb0b981bfd438ce77e7e599d7c3,
+      type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

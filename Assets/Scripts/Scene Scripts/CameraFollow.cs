@@ -13,14 +13,31 @@ public class CameraFollow : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        transform.position = new Vector3 (core.transform.position.x + x_offset, core.transform.position.y + y_offset, core.transform.position.z - z_setback);
-        transform.LookAt(core.transform.position);   
+        core = GameObject.Find("Core(Clone)");
+
+        if (core != null)
+        {
+            transform.position = new Vector3(core.transform.position.x + x_offset, core.transform.position.y + y_offset, core.transform.position.z - z_setback);
+            transform.LookAt(core.transform.position);
+
+        }
+        else
+        {
+            Debug.Log("WARNING: CameraFollow did not find CORE");
+            
+        }
+
+
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        transform.position = new Vector3(core.transform.position.x + x_offset, core.transform.position.y + y_offset, core.transform.position.z - z_setback);
-        transform.LookAt(core.transform.position);
+        if (core != null)
+        {
+            transform.position = new Vector3(core.transform.position.x + x_offset, core.transform.position.y + y_offset, core.transform.position.z - z_setback);
+            transform.LookAt(core.transform.position);
+        }
+
     }
 }
