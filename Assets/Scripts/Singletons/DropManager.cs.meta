@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: f437a35a146348541b047d93d750aa4c
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - goldDrop_prefab: {fileID: 5354593761984515055, guid: 9eb4a6edc4de08a47ac96cc2b46235e6,
+      type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

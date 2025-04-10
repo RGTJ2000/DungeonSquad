@@ -163,6 +163,7 @@ MonoBehaviour:
   core_obj: {fileID: 0}
   isInFormation: 1
   isEngaging: 0
+  skill_performing: {fileID: 0}
 --- !u!195 &-2298483221366490695
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -223,7 +224,7 @@ MonoBehaviour:
   red_line_mat: {fileID: 2100000, guid: cbc141048f4600a4d84228829a92e183, type: 2}
   green_line_mat: {fileID: 2100000, guid: 10d4f3ed38b344c489780eb35654cc73, type: 2}
   blue_line_mat: {fileID: 2100000, guid: 0340aec1e48e14343a82b87e60b11688, type: 2}
-  yellow_line_mat: {fileID: 2100000, guid: a8bddb2b8d373cd4c9c5c6e31e251624, type: 2}
+  yellow_line_mat: {fileID: 2100000, guid: af6321a23d9808e4e82ede1d424f5664, type: 2}
   lineMaterialArray: []
   character_lineMaterial: {fileID: 0}
   target_arrow_on: 0
@@ -299,7 +300,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 89a87b22ebdaf504eb7215cd34c86953, type: 2}
   - {fileID: 11400000, guid: 68269be72b2a8734c92db619120d46be, type: 2}
   active_skillSlot: 0
-  active_skill: {fileID: 0}
+  selected_skill: {fileID: 0}
   confusion_AL: 20
   fear_AL: 20
   fire_AL: 20

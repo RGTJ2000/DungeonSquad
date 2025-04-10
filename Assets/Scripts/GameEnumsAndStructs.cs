@@ -61,3 +61,11 @@ public struct ch_info
         obj_ref = obj;
     }
 }
+
+public enum CoinType
+{
+    copper,
+    silver,
+    gold,
+    platinum
+}

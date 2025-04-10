@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 2478805163498442786}
   - component: {fileID: 3548719630717265920}
   - component: {fileID: 6182601809259373197}
+  - component: {fileID: -7230519720751827061}
   m_Layer: 10
   m_Name: Enemy_v2_Wizard
   m_TagString: Enemy
@@ -197,7 +198,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   character_ID: 100
   visible_distance: 50
-  health_max: 100
+  health_max: 30
   walking_speed: 2
   running_speed: 3
   entity_radius: 0.5
@@ -326,3 +327,16 @@ MonoBehaviour:
   activeTriggerFilled: 0
   farTriggerFilled: 0
   engage_state: 0
+--- !u!114 &-7230519720751827061
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1880400774692741218}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db404c2fd17683d4aaeebce7fb296df6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gold_count: 2

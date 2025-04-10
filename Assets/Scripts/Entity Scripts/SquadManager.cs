@@ -384,6 +384,7 @@ public class SquadManager : MonoBehaviour
                 DeactivateCharacterSelectLines(select_active);
                 ActivateCharacterSelectLines(select_active);
 
+                
                 OnCharacterSelected?.Invoke(ch_in_slot_array[select_active]); //trigger update to UI
 
 
@@ -483,7 +484,7 @@ public class SquadManager : MonoBehaviour
 
     private void OnRotate(InputAction.CallbackContext context)
     {
-        if (select_active >= 0)
+        if (select_active >= 0 && ch_in_slot_array[select_active] != null)
         {
             if (context.performed)
             {

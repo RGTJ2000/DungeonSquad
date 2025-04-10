@@ -1,2 +1,18 @@
 fileFormatVersion: 2
 guid: 3775ed8d8f091624699a0511b967b599
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - targeted_entity: {instanceID: 0}
+  - highlighted_target: {instanceID: 0}
+  - red_line_mat: {fileID: 2100000, guid: cbc141048f4600a4d84228829a92e183, type: 2}
+  - green_line_mat: {fileID: 2100000, guid: 10d4f3ed38b344c489780eb35654cc73, type: 2}
+  - blue_line_mat: {fileID: 2100000, guid: 0340aec1e48e14343a82b87e60b11688, type: 2}
+  - yellow_line_mat: {fileID: 2100000, guid: af6321a23d9808e4e82ede1d424f5664, type: 2}
+  - character_lineMaterial: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
