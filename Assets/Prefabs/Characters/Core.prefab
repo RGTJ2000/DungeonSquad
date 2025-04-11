@@ -15,9 +15,10 @@ GameObject:
   - component: {fileID: 1499287039815252444}
   - component: {fileID: 555727762611537203}
   - component: {fileID: 5344202232259362077}
+  - component: {fileID: 5563617292406395849}
   m_Layer: 8
   m_Name: Core
-  m_TagString: Untagged
+  m_TagString: Core
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -167,6 +168,22 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &5563617292406395849
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1488026939116399470}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db404c2fd17683d4aaeebce7fb296df6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  copper_count: 0
+  silver_count: 0
+  gold_count: 0
+  platinum_count: 0
 --- !u!1 &4076837569317092631
 GameObject:
   m_ObjectHideFlags: 0

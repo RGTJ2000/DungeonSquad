@@ -1292,6 +1292,60 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 1
+--- !u!1 &459384294
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 459384296}
+  - component: {fileID: 459384295}
+  m_Layer: 0
+  m_Name: DropManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &459384295
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 459384294}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f437a35a146348541b047d93d750aa4c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dropLaunchVector: {x: 1, y: 0, z: 0}
+  dropLaunchSpeed: 5
+  copperDrop_prefab: {fileID: 1555692340112214691, guid: c72a4293e818fa64995c52373ee7c229,
+    type: 3}
+  silverDrop_prefab: {fileID: 1809518750401371718, guid: 610a630d28372ed4d810c6995ec3a191,
+    type: 3}
+  goldDrop_prefab: {fileID: 3931043361794794062, guid: 7927c1c85cdb3d5479eae9b03e32bad5,
+    type: 3}
+  platinumDrop_prefab: {fileID: 3557239968127561436, guid: bb992ebd538137347be771cadc7612ab,
+    type: 3}
+--- !u!4 &459384296
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 459384294}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &566565173
 GameObject:
   m_ObjectHideFlags: 0
@@ -2024,7 +2078,7 @@ GameObject:
   - component: {fileID: 1073604863}
   m_Layer: 6
   m_Name: Floor
-  m_TagString: Untagged
+  m_TagString: Floor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2036,7 +2090,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1073604858}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: fac5e07313ade7c439c817496a071f6a, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -3473,7 +3527,7 @@ MonoBehaviour:
   enemy_prefabs_array:
   - {fileID: 2167847887569344889, guid: a29005b1dd3c1da4e8ce512e19535eaf, type: 3}
   - {fileID: 4739953954638166795, guid: a063fab21be9b8e4ca709ebaed89c560, type: 3}
-  number_of_enemies: 30
+  number_of_enemies: 20
   boundmax_x: 80
   boundmax_z: 80
 --- !u!1001 &6194641793005389680
@@ -3761,3 +3815,4 @@ SceneRoots:
   - {fileID: 6194641793005389680}
   - {fileID: 1907099554}
   - {fileID: 1844759759}
+  - {fileID: 459384296}

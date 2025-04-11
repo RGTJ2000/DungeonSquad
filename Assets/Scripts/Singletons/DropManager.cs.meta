@@ -4,7 +4,13 @@ MonoImporter:
   externalObjects: {}
   serializedVersion: 2
   defaultReferences:
-  - goldDrop_prefab: {fileID: 5354593761984515055, guid: 9eb4a6edc4de08a47ac96cc2b46235e6,
+  - copperDrop_prefab: {fileID: 1555692340112214691, guid: c72a4293e818fa64995c52373ee7c229,
+      type: 3}
+  - silverDrop_prefab: {fileID: 1809518750401371718, guid: 610a630d28372ed4d810c6995ec3a191,
+      type: 3}
+  - goldDrop_prefab: {fileID: 3931043361794794062, guid: 7927c1c85cdb3d5479eae9b03e32bad5,
+      type: 3}
+  - platinumDrop_prefab: {fileID: 3557239968127561436, guid: bb992ebd538137347be771cadc7612ab,
       type: 3}
   executionOrder: 0
   icon: {instanceID: 0}

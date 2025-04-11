@@ -21,6 +21,8 @@ GameObject:
   - component: {fileID: -8764742920080897526}
   - component: {fileID: -9155544235218888937}
   - component: {fileID: 3113746365223992660}
+  - component: {fileID: -8153487138653482307}
+  - component: {fileID: -3949613531913634027}
   m_Layer: 7
   m_Name: Wizard_prefab
   m_TagString: Character
@@ -330,6 +332,37 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cooldownPairs: []
+--- !u!114 &-8153487138653482307
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3476890055290762964}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db404c2fd17683d4aaeebce7fb296df6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  copper_count: 0
+  silver_count: 0
+  gold_count: 0
+  platinum_count: 0
+--- !u!114 &-3949613531913634027
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3476890055290762964}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a334586fef17292448e6068bdc511592, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  floatingTextPrefab: {fileID: 8424693797070645721, guid: a46f4fc061cfedf45aa46af33ee1f59a,
+    type: 3}
+  textOffset: {x: 0, y: 2, z: 0}
 --- !u!1001 &1494701462682559719
 PrefabInstance:
   m_ObjectHideFlags: 0

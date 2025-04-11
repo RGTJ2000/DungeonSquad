@@ -4,8 +4,15 @@ using UnityEngine;
 
 public class DropManager : MonoBehaviour
 {
-    [SerializeField] private Vector3 dropLaunchVector = new Vector3(1, 0.5f, 0).normalized;
+
+
+    [SerializeField] private Vector3 dropLaunchVector = new Vector3(1, 0, 0).normalized;
     [SerializeField] private float dropLaunchSpeed = 5f;
+
+    [SerializeField] private GameObject copperDrop_prefab;
+    [SerializeField] private GameObject silverDrop_prefab;
+    [SerializeField] private GameObject goldDrop_prefab;
+    [SerializeField] private GameObject platinumDrop_prefab;
 
     private static bool isQuitting = false;
     void OnApplicationQuit() => isQuitting = true;
@@ -44,24 +51,43 @@ public class DropManager : MonoBehaviour
         }
     }
 
-    public GameObject goldDrop_prefab;
+   
 
     public void DropLoot(GameObject deadEntity)
     {
         Inventory _inventory = deadEntity.GetComponent<Inventory>();
         if (_inventory != null)
         {
+            int copper_count = _inventory.copper_count;
+            _inventory.copper_count = 0;
+            if (copper_count > 0)
+            {
+                ThrowLoot(copperDrop_prefab, copper_count, deadEntity);
+            }
+
+            int silver_count = _inventory.silver_count;
+            _inventory.silver_count = 0;
+            if (silver_count > 0)
+            {
+                ThrowLoot(silverDrop_prefab, silver_count, deadEntity);
+            }
+
             //get gold count
             int gold_count = _inventory.gold_count;
             _inventory.gold_count = 0;
-
-
-            Debug.Log($"{deadEntity.name} DROPPED {gold_count} GOLD.");
-
             if (gold_count > 0)
             {
                 ThrowLoot(goldDrop_prefab, gold_count, deadEntity);
             }
+
+            int platinum_count = _inventory.platinum_count;
+            _inventory.platinum_count = 0;
+            if(platinum_count > 0)
+            {
+                ThrowLoot(platinumDrop_prefab, platinum_count, deadEntity);
+            }
+
+
         }
 
     }

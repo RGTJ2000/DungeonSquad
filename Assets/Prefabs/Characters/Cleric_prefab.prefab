@@ -22,6 +22,8 @@ GameObject:
   - component: {fileID: 1095088263647837193}
   - component: {fileID: 334864164966623341}
   - component: {fileID: 2623316963647210310}
+  - component: {fileID: 1221334792757593299}
+  - component: {fileID: -2532869898066745355}
   m_Layer: 7
   m_Name: Cleric_prefab
   m_TagString: Character
@@ -346,6 +348,37 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cooldownPairs: []
+--- !u!114 &1221334792757593299
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 525372921199117038}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db404c2fd17683d4aaeebce7fb296df6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  copper_count: 0
+  silver_count: 0
+  gold_count: 0
+  platinum_count: 0
+--- !u!114 &-2532869898066745355
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 525372921199117038}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a334586fef17292448e6068bdc511592, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  floatingTextPrefab: {fileID: 8424693797070645721, guid: a46f4fc061cfedf45aa46af33ee1f59a,
+    type: 3}
+  textOffset: {x: 0, y: 2, z: 0}
 --- !u!1001 &222059336848345568
 PrefabInstance:
   m_ObjectHideFlags: 0

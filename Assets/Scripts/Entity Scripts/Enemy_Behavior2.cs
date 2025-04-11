@@ -324,7 +324,7 @@ public class Enemy_Behavior2 : MonoBehaviour
                         if (Physics.Raycast(transform.position, target.transform.position - transform.position, out hit, _entityStats.visible_distance, ~0, QueryTriggerInteraction.Ignore) && hit.transform.gameObject.tag == "Character")
                         {
                             isRangedAttacking = true;
-                            Debug.Log("Calling Ranged Skill. target=" + target.name);
+                            //Debug.Log("Calling Ranged Skill. target=" + target.name);
                             engageBehavior_SO.skill_SO.Use(gameObject, target);
 
                             StartCoroutine(RangedAttackCooldown(_entityStats.equipped_rangedWeapon.attackCooldown));

@@ -339,4 +339,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db404c2fd17683d4aaeebce7fb296df6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  copper_count: 0
+  silver_count: 0
   gold_count: 2
+  platinum_count: 2

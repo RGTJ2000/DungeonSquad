@@ -8,6 +8,8 @@ public class FloatingTextBehavior : MonoBehaviour
     private Transform parentTransform; // Cache parent for position sync
     private Vector3 initialLocalOffset; // Store the starting offset
 
+    public float duration = 1.0f;
+
     void Start()
     {
         mainCamera = Camera.main;
@@ -31,7 +33,7 @@ public class FloatingTextBehavior : MonoBehaviour
 
     IEnumerator FloatAndFade()
     {
-        float duration = 1.0f; // Duration of the animation
+        //float duration = 1.0f; // Duration of the animation
         float elapsedTime = 0f;
 
        
@@ -43,7 +45,7 @@ public class FloatingTextBehavior : MonoBehaviour
             if (parentTransform != null)
             {
                 Vector3 basePosition = parentTransform.position + initialLocalOffset;
-                transform.position = Vector3.Lerp(basePosition, basePosition + new Vector3(0, 2.0f, 0), elapsedTime / duration);
+                transform.position = Vector3.Lerp(basePosition, basePosition + new Vector3(0, 3.0f, 0), elapsedTime / duration);
             }
 
             // Face camera in world space
