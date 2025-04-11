@@ -5,10 +5,12 @@ using System.Collections;
 public class FloatingTextBehavior : MonoBehaviour
 {
     private Camera mainCamera;
-    private Transform parentTransform; // Cache parent for position sync
+    public Transform parentTransform; // Cache parent for position sync
     private Vector3 initialLocalOffset; // Store the starting offset
 
     public float duration = 1.0f;
+
+    private float floatSpeed = 2.0f;
 
     void Start()
     {
@@ -19,9 +21,10 @@ public class FloatingTextBehavior : MonoBehaviour
             return;
         }
         //Debug.Log("transform position" + transform.position + "  parent position" + transform.parent.position);
-        parentTransform = transform.parent; // Store parent before unparenting
-        initialLocalOffset = transform.localPosition; // Capture offset before unparenting
-        transform.SetParent(null, false);
+        //parentTransform = transform.parent; // Store parent before unparenting
+        //initialLocalOffset = transform.localPosition; // Capture offset before unparenting
+        //transform.SetParent(null, false);
+        initialLocalOffset = transform.position - parentTransform.position;
         StartCoroutine(FloatAndFade());
     }
 
@@ -41,12 +44,20 @@ public class FloatingTextBehavior : MonoBehaviour
         {
             elapsedTime += Time.deltaTime;
 
+            
+            
             // Sync position with parent, then float up in world space
             if (parentTransform != null)
             {
+                /*
                 Vector3 basePosition = parentTransform.position + initialLocalOffset;
-                transform.position = Vector3.Lerp(basePosition, basePosition + new Vector3(0, 3.0f, 0), elapsedTime / duration);
+                transform.position = Vector3.Lerp(basePosition, basePosition + new Vector3(0, 2.0f, 0), elapsedTime / duration);
+                */
+                transform.position = parentTransform.position + initialLocalOffset + Vector3.up*floatSpeed*elapsedTime;
+                    
+
             }
+            
 
             // Face camera in world space
             if (mainCamera != null)

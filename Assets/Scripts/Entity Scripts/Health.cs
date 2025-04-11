@@ -106,9 +106,12 @@ public class Health : MonoBehaviour
         {
             // Instantiate the floating text at the entity's position with an offset
 
-            Vector3 randomOffset = new Vector3(Random.Range(-0.5f, 0.5f), 0, 0);
+            Vector3 randomOffset = new Vector3(Random.Range(-0.8f, 0.8f), 0, 0);
 
-            GameObject floatingText = Instantiate(floatingTextPrefab, transform.position + textOffset + randomOffset, Quaternion.identity, transform);
+            GameObject floatingText = Instantiate(floatingTextPrefab, transform.position + textOffset + randomOffset, Quaternion.identity);
+
+            FloatingTextBehavior _floatBehavior = floatingText.GetComponent<FloatingTextBehavior>();
+            _floatBehavior.parentTransform = transform;
             //mainCamera.transform.rotation
 
             TextMeshPro _textMeshProComponent = floatingText.GetComponent<TextMeshPro>();

@@ -28,9 +28,13 @@ public class HealingObjScript : MonoBehaviour
            waitingToDestroy=true;
 
         }
+        if (target_obj != null)
+        {
+            transform.position = target_obj.transform.position;
+            _targetHealth.Heal(healing_rate * Time.deltaTime);
 
-        transform.position = target_obj.transform.position;
-        _targetHealth.Heal(healing_rate * Time.deltaTime);
+        }
+      
 
     }
 

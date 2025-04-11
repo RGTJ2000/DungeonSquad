@@ -9,7 +9,7 @@ using UnityEngine.UIElements;
 
 public class MoveInput : MonoBehaviour
 {
-    private float speed = 8.0f;
+    private float speed = 7.0f;
     private float squeeze_cutoff = 0.9f;
     private float tilt_speed = 10.0f;
 
