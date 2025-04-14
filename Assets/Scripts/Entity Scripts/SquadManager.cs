@@ -322,7 +322,8 @@ public class SquadManager : MonoBehaviour
         }
 
         select_active = pressed_select_index;
-        SoundManager.Instance.PlayCharacterSelectAffirm(select_active);
+        SoundManager.Instance.PlayCharacterSelectAffirm(select_active, ch_in_slot_array[select_active]);
+
         if (ch_in_slot_array[pressed_select_index] != null)
         {
             ActivateCharacterSelectLines(select_active);

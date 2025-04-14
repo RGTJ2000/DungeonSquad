@@ -60,7 +60,7 @@ public class MissileLauncher : MonoBehaviour
 
         
 
-        SoundManager.Instance.PlayArrowLaunch();
+        SoundManager.Instance.PlayArrowLaunch(gameObject);
 
     }
 
