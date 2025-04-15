@@ -304,7 +304,7 @@ public class TargetingScan : MonoBehaviour
 
                         if (highlight_to_selection_angle < -20f && highlight_to_selection_angle >= -135f && entitiesOnNegativeAngles.Length > 0)
                         {
-                            SoundManager.Instance.PlayClick();
+                            SoundManager.Instance.PlaySoundByKey("single_click", SoundCategory.UI);
 
                             highlighted_target = entitiesOnNegativeAngles[0];
 
@@ -313,14 +313,14 @@ public class TargetingScan : MonoBehaviour
                         }
                         else if (highlight_to_selection_angle > 20f && highlight_to_selection_angle <= 135f && entitiesOnPositiveAngles.Length > 0)
                         {
-                            SoundManager.Instance.PlayClick();
+                            SoundManager.Instance.PlaySoundByKey("single_click", SoundCategory.UI);
 
                             highlighted_target = entitiesOnPositiveAngles[0];
                             newSelectionMade = true;
                         }
                         else if (highlight_to_selection_angle < -135f || highlight_to_selection_angle > 135f)
                         {
-                            SoundManager.Instance.PlayClick();
+                            SoundManager.Instance.PlaySoundByKey("single_click", SoundCategory.UI);
 
                             if (entitiesOnNegativeAngles.Length > 0 && entitiesOnPositiveAngles.Length > 0)
                             {

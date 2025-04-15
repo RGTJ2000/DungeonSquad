@@ -101,20 +101,18 @@ public class MM_Guidance2 : MonoBehaviour
         GameObject collided_obj = collision.gameObject;
         if (!hasCollided)
         {
-            SoundManager.Instance.PlayMMBoom();
+            SoundManager.Instance.PlaySoundByKeyAtPosition("magicMissile_boom", transform.position, SoundCategory.sfx);
             StartCoroutine(DeactivateDestroyMissile());
             hasCollided = true;
 
 
             if (collided_obj.tag == "Character" || collided_obj.tag == "Enemy")
             {
-                SoundManager.Instance.PlayMMBoom();
-                StartCoroutine(DeactivateDestroyMissile());
-                hasCollided = true;
+                
 
                 CombatManager.Instance.ResolveMagic(origin_obj, collided_obj, "physical", damage_base, damage_range, magic_hitChanceMultiplier, caster_magicAR);
 
-            } 
+            }
 
 
         }
@@ -187,67 +185,68 @@ public class MM_Guidance2 : MonoBehaviour
         }
     }
 
-        IEnumerator RiseToLaunchHeight()
+    IEnumerator RiseToLaunchHeight()
+    {
+        launchStarted = true;
+        _rb.isKinematic = true;
+        _capsuleCollider.enabled = false;
+        float start_time = Time.time;
+        Vector3 current_velocity = Vector3.zero;
+
+
+        while ((Time.time - start_time) < riseDuration && (transform.position - rise_target).magnitude > 0.1f)
         {
-            launchStarted = true;
-            _rb.isKinematic = true;
-            _capsuleCollider.enabled = false;
-            float start_time = Time.time;
-            Vector3 current_velocity = Vector3.zero;
-
-            //SoundManager.Instance.PlayMMLaunch();
-
-            while ((Time.time - start_time) < riseDuration && (transform.position - rise_target).magnitude > 0.1f)
-            {
-                transform.position = Vector3.SmoothDamp(transform.position, rise_target, ref current_velocity, riseDuration);
-                yield return null;
-            }
-
-            SoundManager.Instance.PlayMMLaunch();
-
-            yield return new WaitForSeconds(launchPause);
-
-
-            _rb.isKinematic = false;
-            _capsuleCollider.enabled = true;
-
-            seekTarget = true;
-
+            transform.position = Vector3.SmoothDamp(transform.position, rise_target, ref current_velocity, riseDuration);
+            yield return null;
         }
 
-        private void AccelerateToTarget()
-        {
-            _rb.linearVelocity = (_rb.linearVelocity.magnitude + mm_acc * Time.deltaTime) * heading.normalized;
-            //_rb.linearVelocity = heading.normalized * 40f;
-            //Debug.Log("heading:" + heading.normalized * 10f);
-        }
+        SoundManager.Instance.PlaySoundByKeyAtGameObject("magicMissile_launch", gameObject, SoundCategory.sfx);
+
+        // SoundManager.Instance.PlayMMLaunch();
+
+        yield return new WaitForSeconds(launchPause);
 
 
+        _rb.isKinematic = false;
+        _capsuleCollider.enabled = true;
 
-        public void SetTarget(GameObject target)
-        {
-            missile_target = target;
-        }
-
-        IEnumerator DeactivateDestroyMissile()
-        {
-            GetComponent<MeshRenderer>().enabled = false;
-            GetComponent<TrailRenderer>().enabled = false;
-
-            yield return new WaitForSeconds(0.2f); //let spark emit for a bit
-
-            //stop emission
-            GameObject particle_obj = transform.GetChild(0).gameObject;
-            GameObject sparks_obj = particle_obj.transform.GetChild(0).gameObject;
-            ParticleSystem _particleSystem = sparks_obj.GetComponent<ParticleSystem>();
-            var emission = _particleSystem.emission;
-            emission.enabled = false;
-            //stop light
-            particle_obj.transform.GetChild(1).gameObject.SetActive(false);
-
-            yield return new WaitForSeconds(1f); //wait for sparks to die out
-            Destroy(gameObject);
-
-        }
+        seekTarget = true;
 
     }
+
+    private void AccelerateToTarget()
+    {
+        _rb.linearVelocity = (_rb.linearVelocity.magnitude + mm_acc * Time.deltaTime) * heading.normalized;
+        //_rb.linearVelocity = heading.normalized * 40f;
+        //Debug.Log("heading:" + heading.normalized * 10f);
+    }
+
+
+
+    public void SetTarget(GameObject target)
+    {
+        missile_target = target;
+    }
+
+    IEnumerator DeactivateDestroyMissile()
+    {
+        GetComponent<MeshRenderer>().enabled = false;
+        GetComponent<TrailRenderer>().enabled = false;
+
+        yield return new WaitForSeconds(0.2f); //let spark emit for a bit
+
+        //stop emission
+        GameObject particle_obj = transform.GetChild(0).gameObject;
+        GameObject sparks_obj = particle_obj.transform.GetChild(0).gameObject;
+        ParticleSystem _particleSystem = sparks_obj.GetComponent<ParticleSystem>();
+        var emission = _particleSystem.emission;
+        emission.enabled = false;
+        //stop light
+        particle_obj.transform.GetChild(1).gameObject.SetActive(false);
+
+        yield return new WaitForSeconds(1f); //wait for sparks to die out
+        Destroy(gameObject);
+
+    }
+
+}

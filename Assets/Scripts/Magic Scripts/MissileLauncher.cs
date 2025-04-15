@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UIElements;
+using static SoundManager;
 
 public class MissileLauncher : MonoBehaviour
 {
@@ -58,9 +59,9 @@ public class MissileLauncher : MonoBehaviour
 
         //missile.GetComponent<MissileGuidance>().SetMissileParameters(origin_obj, launch_vector, damageBase, damageRange, missileSpeed, missileRange);
 
-        
 
-        SoundManager.Instance.PlayArrowLaunch(gameObject);
+        Debug.Log("Playing bowlaunch");
+        SoundManager.Instance.PlaySoundByKeyAtPosition("bow_launch", transform.position, SoundCategory.sfx);
 
     }
 

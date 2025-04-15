@@ -4,6 +4,7 @@ using System.IO.IsolatedStorage;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.HID;
 using UnityEngine.UIElements;
 using static UnityEditorInternal.VersionControl.ListControl;
 
@@ -322,11 +323,45 @@ public class SquadManager : MonoBehaviour
         }
 
         select_active = pressed_select_index;
-        SoundManager.Instance.PlayCharacterSelectAffirm(select_active, ch_in_slot_array[select_active]);
+        
+        
 
         if (ch_in_slot_array[pressed_select_index] != null)
         {
             ActivateCharacterSelectLines(select_active);
+
+            string variationID;
+
+            switch (pressed_select_index)
+            {
+
+                case 0:
+                    variationID = "fighterConfirm";
+                    break;
+                case 1:
+                    variationID = "clericConfirm";
+                    break;
+                case 2:
+                    variationID = "wizardConfirm";
+                    break;
+                case 3:
+                    variationID = "rangerConfirm";
+                    break;
+                default:
+                    variationID = "none";
+                    break;
+            }
+
+            if (variationID == "none")
+            {
+                Debug.Log("No audio variation found for ch_ID");
+            }
+
+            SoundManager.Instance.PlayVariationAtObject(variationID, ch_in_slot_array[pressed_select_index], SoundCategory.sfx);
+
+
+
+
 
         }
 
@@ -380,7 +415,7 @@ public class SquadManager : MonoBehaviour
             {
                 _entityStats.active_skillSlot = new_activeSlot; //change the slot that's active
                 _entityStats.selected_skill = _entityStats.skill_slot[_entityStats.active_skillSlot];
-                SoundManager.Instance.PlayClick();
+                SoundManager.Instance.PlaySoundByKey("single_click", SoundCategory.UI);
 
                 DeactivateCharacterSelectLines(select_active);
                 ActivateCharacterSelectLines(select_active);

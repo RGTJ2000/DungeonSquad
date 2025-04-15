@@ -44,6 +44,8 @@ public class Fireball_Guidance : MonoBehaviour
     private float stunTime = .2f;
     private bool disableStarted = false;
 
+    private AudioSource burningAudioSource;
+
     private struct explodedEntityInfo
     {
         public GameObject entity_obj;
@@ -57,7 +59,8 @@ public class Fireball_Guidance : MonoBehaviour
     void Start()
     {
         castingStage = 0;
-        SoundManager.Instance.PlayFireLoop(() => castingStage != 2);
+        //SoundManager.Instance.PlayFireLoop(() => castingStage != 2);
+        burningAudioSource = SoundManager.Instance.PlaySoundByKeyAtGameObject("fireball_burning", gameObject, SoundCategory.sfx, loop: true);
     }
 
     // Update is called once per frame
@@ -134,7 +137,8 @@ public class Fireball_Guidance : MonoBehaviour
         else if (!explosionBegun)
         {
             explosionBegun = true;
-            SoundManager.Instance.PlayFireballBoom();
+            SoundManager.Instance.StopLoopingSource(burningAudioSource);
+            SoundManager.Instance.PlaySoundByKeyAtPosition("fireball_blast", transform.position, SoundCategory.sfx);
             DamagAreaMakeList();
 
         }
