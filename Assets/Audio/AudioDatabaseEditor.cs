@@ -28,58 +28,60 @@ public class AudioDatabaseEditor : Editor
             ScanAllAudio();
         }
 
-      
+
     }
     private void ScanAllAudio()
     {
         AudioDatabase db = (AudioDatabase)target;
 
-        // Scan regular clips
-        db.uiClips = ScanFolder("Assets/Audio/SFX/UI");
-        db.gameplayClips = ScanFolder("Assets/Audio/SFX/Gameplay");
-        db.musicTracks = ScanFolder("Assets/Audio/Music");
-        db.characterVoices = ScanFolder("Assets/Audio/Voice");
-
-        // Scan variations
-        List<AudioVariation> sfxVariations = new List<AudioVariation>();
-        List<AudioVariation> voiceVariations = new List<AudioVariation>();
-
-        ScanVariations("Assets/Audio/SFX/Variations", sfxVariations);
-        ScanVariations("Assets/Audio/Voice/Variations", voiceVariations);
-
-        //Store results
-        db.sfxVariations = sfxVariations.ToArray();
-        db.voiceVariations = voiceVariations.ToArray();
-
-       
-
-        EditorUtility.SetDirty(db);
-        AssetDatabase.SaveAssets();
-
-        Debug.Log("Audio database scan completed successfully");
-
-    }
-    /*
-    private void ScanAudioClips()
-    {
-        AudioDatabase db = (AudioDatabase)target;
-
         // Clear existing arrays
         db.uiClips = ScanFolder("Assets/Audio/SFX/UI");
-        db.sfxClips = ScanFolder("Assets/Audio/SFX/Gameplay");
         db.musicTracks = ScanFolder("Assets/Audio/Music");
-        db.characterVoices = ScanFolder("Assets/Audio/Voice");
+
+        // Scan variations and individual clips
+        List<AudioVariation> sfxVariations = new List<AudioVariation>();
+        List<AudioVariation> voiceVariations = new List<AudioVariation>();
+        List<AudioClip> gameplayClips = new List<AudioClip>();
+        List<AudioClip> characterVoices = new List<AudioClip>();
+
+        // Process SFX
+        ScanVariations("Assets/Audio/SFX/Variations", sfxVariations);
+        gameplayClips.AddRange(ScanFolder("Assets/Audio/SFX/Gameplay"));
+        // Add all variation clips to gameplayClips too
+        foreach (var variation in sfxVariations)
+        {
+            gameplayClips.AddRange(variation.clips);
+        }
+
+        // Process Voice
+        ScanVariations("Assets/Audio/Voice/Variations", voiceVariations);
+        characterVoices.AddRange(ScanFolder("Assets/Audio/Voice"));
+        // Add all variation clips to characterVoices too
+        foreach (var variation in voiceVariations)
+        {
+            characterVoices.AddRange(variation.clips);
+        }
+
+        // Store results
+        db.sfxVariations = sfxVariations.ToArray();
+        db.voiceVariations = voiceVariations.ToArray();
+        db.gameplayClips = gameplayClips.ToArray();
+        db.characterVoices = characterVoices.ToArray();
 
         EditorUtility.SetDirty(db);
         AssetDatabase.SaveAssets();
-        Debug.Log($"Audio database updated with {db.uiClips.Length + db.sfxClips.Length + db.musicTracks.Length + db.characterVoices.Length} clips");
+        Debug.Log($"Audio database updated with:\n" +
+                 $"- {db.sfxVariations.Length} SFX variations\n" +
+                 $"- {db.voiceVariations.Length} voice variations\n" +
+                 $"- {db.gameplayClips.Length} gameplay clips\n" +
+                 $"- {db.characterVoices.Length} character voice clips");
+
     }
-    */
+
 
     private AudioClip[] ScanFolder(string folderPath)
     {
         List<AudioClip> clips = new List<AudioClip>();
-
         string[] guids = AssetDatabase.FindAssets("t:AudioClip", new[] { folderPath });
 
         foreach (string guid in guids)
@@ -103,7 +105,6 @@ public class AudioDatabaseEditor : Editor
             var parsed = ParseVariationName(clip.name);
             string groupKey = parsed.BaseID;
 
-            // Initialize all dictionaries for this group if needed
             if (!clipGroups.ContainsKey(groupKey))
             {
                 clipGroups[groupKey] = new List<AudioClip>();
@@ -111,18 +112,16 @@ public class AudioDatabaseEditor : Editor
                 fullNameGroups[groupKey] = new List<string>();
             }
 
-            // Add to all collections
             clipGroups[groupKey].Add(clip);
             nameGroups[groupKey].Add(GetDescriptivePart(clip.name));
             fullNameGroups[groupKey].Add(clip.name);
         }
 
-        // Create variations
         foreach (var group in clipGroups)
         {
-            // Sort by version number while keeping all collections in sync
             var sortedClips = group.Value
-                .Select((clip, index) => new {
+                .Select((clip, index) => new
+                {
                     Clip = clip,
                     DescriptiveName = nameGroups[group.Key][index],
                     FullName = fullNameGroups[group.Key][index],
@@ -143,19 +142,18 @@ public class AudioDatabaseEditor : Editor
 
     private ParsedVariationName ParseVariationName(string fullName)
     {
-        // Match patterns like: 
-        // "clericConfirm_v1" or "clericConfirm_hello_v12"
-        var match = Regex.Match(fullName, @"^(.*?)(?:_([a-zA-Z]+))?(?:_v(\d+))?$");
 
+        var match = Regex.Match(fullName, @"^(.*?)(?:_([a-zA-Z]+))?(?:_v(\d+))?$");
         return new ParsedVariationName
         {
             BaseID = match.Groups[1].Value,
             Description = match.Groups[2].Value,
             Variant = match.Groups[3].Value
         };
+        
     }
 
-  
+
     // Optional: Extract descriptive middle part
     private string GetDescriptivePart(string fullName)
     {

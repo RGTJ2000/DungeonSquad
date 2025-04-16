@@ -83,6 +83,11 @@ public class CombatManager : MonoBehaviour
                 //Debug.Log("CRIT. Damage x2");
             }
             //Debug.Log($"Damage Received = {damageReceived}");
+            SoundManager.Instance.PlayVariationAtPosition(_attackerStats.equipped_meleeWeapon.hitAudio_variationID, attacker.transform.position, SoundCategory.sfx);
+        }
+        else
+        {
+            SoundManager.Instance.PlayVariationAtPosition(_attackerStats.equipped_meleeWeapon.missAudio_variationID, attacker.transform.position, SoundCategory.sfx);
         }
 
         // Send the result to the target

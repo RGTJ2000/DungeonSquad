@@ -23,7 +23,16 @@ public class CoinAccelerationBehavior : MonoBehaviour
     {
         if (isAccelerating)
         {
-            _rb.linearVelocity = (  (targetTransform.position - transform.parent.transform.position).normalized * (_rb.linearVelocity.magnitude + coin_acc*Time.deltaTime) );
+            if (targetTransform != null)
+            {
+                _rb.linearVelocity = ((targetTransform.position - transform.parent.transform.position).normalized * (_rb.linearVelocity.magnitude + coin_acc * Time.deltaTime));
+            }
+            else
+            {
+                isAccelerating = false;
+            }
+
+            
 
             //_rb.AddForce((targetTransform.position - transform.parent.transform.position).normalized * coin_acc, ForceMode.Force);
         }

@@ -8,6 +8,8 @@ public class Weapon_SO : ScriptableObject
     //UNIVERSAL STATS
     public string weaponName; //e.g. "Crude Iron Sword"
     public weaponType weaponType; // enum "melee", "ranged"
+    public string hitAudio_variationID;
+    public string missAudio_variationID;
 
     //MELLE AND RANGED STATS
     public float attackCooldown;

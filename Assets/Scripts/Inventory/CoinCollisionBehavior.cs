@@ -16,6 +16,7 @@ public class CoinCollisionBehavior : MonoBehaviour
         {
             if (gameObject != null)
             {
+                SoundManager.Instance.PlaySoundByKeyAtPosition("coinCollect_v2", transform.position, SoundCategory.sfx);
                 Inventory _inventory = collision.gameObject.GetComponent<Inventory>();
                 if (_inventory != null) 
                 {

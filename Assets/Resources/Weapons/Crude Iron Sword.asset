@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponName: Crude Iron Sword
   weaponType: 0
+  hitAudio_variationID: swordHit
+  missAudio_variationID: swordMiss
   attackCooldown: 1
   critChance_base: 0.5
   critChance_weight_str: 0.75

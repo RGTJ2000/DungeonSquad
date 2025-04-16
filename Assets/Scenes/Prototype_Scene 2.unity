@@ -3002,6 +3002,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea84e1950db5b7748b014b3869199bb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  audioDatabase: {fileID: 11400000, guid: 37fc62b2b3ff2474d80dcb25f3ac2970, type: 2}
   initialPoolSize: 10
   audioSourcePrefab: {fileID: 5788396522390724867, guid: b76eceeabd9221a45ab1df58403e8eb9,
     type: 3}
@@ -3010,30 +3011,6 @@ MonoBehaviour:
   categorySettings: []
   logPoolStatistics: 0
   editorOnlyLogging: 1
-  characterVoices:
-  - characterID: 0
-    voiceClips:
-    - {fileID: 8300000, guid: e601a363e20fc2b4e8d68bbee5221cd7, type: 3}
-    - {fileID: 8300000, guid: 95af4d59686164c41963b315f41998bf, type: 3}
-  - characterID: 1
-    voiceClips:
-    - {fileID: 8300000, guid: 59d693608f04c2941a1b9a8dc1042864, type: 3}
-    - {fileID: 8300000, guid: c6d4293ee1d1dcc40b2177fd3ed0b464, type: 3}
-  - characterID: 2
-    voiceClips:
-    - {fileID: 8300000, guid: b0abd42cde91a0a4897ca1170bed4ac3, type: 3}
-    - {fileID: 8300000, guid: a9c09265fdad4eb42b353412dc1c0f34, type: 3}
-  - characterID: 3
-    voiceClips:
-    - {fileID: 8300000, guid: e2aba92810e1b9841aecad4263de39ba, type: 3}
-    - {fileID: 8300000, guid: 5bd1c601f95f310419c4228dc01a2e15, type: 3}
-  arrowLaunch: {fileID: 8300000, guid: 0a05843f2ecc80b4b9299a2fd4590925, type: 3}
-  mmClips:
-  - {fileID: 8300000, guid: ffd7cba0ab271814b836708ec3338703, type: 3}
-  - {fileID: 8300000, guid: cd69e61cb7ffc534cb5383f8ad27213c, type: 3}
-  click: {fileID: 8300000, guid: fa3683c4acc8cc640b40033cacc0e664, type: 3}
-  fireBurning: {fileID: 8300000, guid: 0fa7333d63114a2488ff197c4366a290, type: 3}
-  fireballBoom: {fileID: 8300000, guid: 164f1b9deec06ed4dbbc7303986b0c30, type: 3}
 --- !u!4 &1838032001
 Transform:
   m_ObjectHideFlags: 0

@@ -12,13 +12,62 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a83a745bd21e63478fface1644bec93, type: 3}
   m_Name: AudioDatabase
   m_EditorClassIdentifier: 
-  sfxVariations: []
+  sfxVariations:
+  - variationID: coinCollect
+    clips:
+    - {fileID: 8300000, guid: c1858412354b22c46a5b80868c868c73, type: 3}
+    - {fileID: 8300000, guid: b9bcbe4605de6d04ebf3b47e59dcc47d, type: 3}
+    descriptiveNames:
+    - coinCollect
+    - coinCollect
+    fullNames:
+    - coinCollect_v1
+    - coinCollect_v2
+  - variationID: swordHit
+    clips:
+    - {fileID: 8300000, guid: ee009e1c8106a2b4bb846c8c2bff75c8, type: 3}
+    - {fileID: 8300000, guid: ceda34c206828564b95a562baf8cf1d8, type: 3}
+    - {fileID: 8300000, guid: bf3765807ad93bf49a853ca0e8cc5ac8, type: 3}
+    descriptiveNames:
+    - swordHit
+    - swordHit
+    - swordHit
+    fullNames:
+    - swordHit_v1
+    - swordHit_v2
+    - swordHit_v3
+  - variationID: swordMiss
+    clips:
+    - {fileID: 8300000, guid: c44a588c88bdb5e479d9127237a6835a, type: 3}
+    - {fileID: 8300000, guid: 032664c5d35810243aa57e407fbaeb08, type: 3}
+    - {fileID: 8300000, guid: 6487cbffb995e0d44965cbf2bebf7247, type: 3}
+    - {fileID: 8300000, guid: 2a60264688843644caa047e37722a80c, type: 3}
+    descriptiveNames:
+    - swordMiss
+    - swordMiss
+    - swordMiss
+    - swordMiss
+    fullNames:
+    - swordMiss_v1
+    - swordMiss_v2
+    - swordMiss_v3
+    - swordMiss_v4
   gameplayClips:
-  - {fileID: 8300000, guid: 164f1b9deec06ed4dbbc7303986b0c30, type: 3}
   - {fileID: 8300000, guid: 0a05843f2ecc80b4b9299a2fd4590925, type: 3}
+  - {fileID: 8300000, guid: b64ee79958c4c834a86e2bd978658c01, type: 3}
+  - {fileID: 8300000, guid: 164f1b9deec06ed4dbbc7303986b0c30, type: 3}
   - {fileID: 8300000, guid: 0fa7333d63114a2488ff197c4366a290, type: 3}
   - {fileID: 8300000, guid: cd69e61cb7ffc534cb5383f8ad27213c, type: 3}
   - {fileID: 8300000, guid: ffd7cba0ab271814b836708ec3338703, type: 3}
+  - {fileID: 8300000, guid: c1858412354b22c46a5b80868c868c73, type: 3}
+  - {fileID: 8300000, guid: b9bcbe4605de6d04ebf3b47e59dcc47d, type: 3}
+  - {fileID: 8300000, guid: ee009e1c8106a2b4bb846c8c2bff75c8, type: 3}
+  - {fileID: 8300000, guid: ceda34c206828564b95a562baf8cf1d8, type: 3}
+  - {fileID: 8300000, guid: bf3765807ad93bf49a853ca0e8cc5ac8, type: 3}
+  - {fileID: 8300000, guid: c44a588c88bdb5e479d9127237a6835a, type: 3}
+  - {fileID: 8300000, guid: 032664c5d35810243aa57e407fbaeb08, type: 3}
+  - {fileID: 8300000, guid: 6487cbffb995e0d44965cbf2bebf7247, type: 3}
+  - {fileID: 8300000, guid: 2a60264688843644caa047e37722a80c, type: 3}
   voiceVariations:
   - variationID: clericConfirm
     clips:
@@ -61,6 +110,14 @@ MonoBehaviour:
     - wizardConfirm_theSpiritMovesMe_v1
     - wizardConfirm_whatHaveYou_v2
   characterVoices:
+  - {fileID: 8300000, guid: c6d4293ee1d1dcc40b2177fd3ed0b464, type: 3}
+  - {fileID: 8300000, guid: 59d693608f04c2941a1b9a8dc1042864, type: 3}
+  - {fileID: 8300000, guid: 95af4d59686164c41963b315f41998bf, type: 3}
+  - {fileID: 8300000, guid: e601a363e20fc2b4e8d68bbee5221cd7, type: 3}
+  - {fileID: 8300000, guid: e2aba92810e1b9841aecad4263de39ba, type: 3}
+  - {fileID: 8300000, guid: 5bd1c601f95f310419c4228dc01a2e15, type: 3}
+  - {fileID: 8300000, guid: b0abd42cde91a0a4897ca1170bed4ac3, type: 3}
+  - {fileID: 8300000, guid: a9c09265fdad4eb42b353412dc1c0f34, type: 3}
   - {fileID: 8300000, guid: c6d4293ee1d1dcc40b2177fd3ed0b464, type: 3}
   - {fileID: 8300000, guid: 59d693608f04c2941a1b9a8dc1042864, type: 3}
   - {fileID: 8300000, guid: 95af4d59686164c41963b315f41998bf, type: 3}

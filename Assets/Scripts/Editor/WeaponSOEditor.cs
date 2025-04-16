@@ -14,6 +14,8 @@ public class WeaponSOEditor : Editor
         EditorGUILayout.LabelField("Universal Stats", EditorStyles.boldLabel);
         weapon.weaponName = EditorGUILayout.TextField("Weapon Name", weapon.weaponName);
         weapon.weaponType = (weaponType)EditorGUILayout.EnumPopup("Weapon Type", weapon.weaponType);
+        weapon.hitAudio_variationID = EditorGUILayout.TextField("Hit Audio Var ID", weapon.hitAudio_variationID);
+        weapon.missAudio_variationID = EditorGUILayout.TextField("Miss Audio Var ID", weapon.missAudio_variationID);
 
         // Draw COMMON STATS (only for Melee and Ranged)
         if (weapon.weaponType == weaponType.melee || weapon.weaponType == weaponType.ranged)

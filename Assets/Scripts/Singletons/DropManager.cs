@@ -87,6 +87,10 @@ public class DropManager : MonoBehaviour
                 ThrowLoot(platinumDrop_prefab, platinum_count, deadEntity);
             }
 
+            if (copper_count+silver_count+gold_count+platinum_count > 0)
+            {
+                SoundManager.Instance.PlaySoundByKeyAtPosition("coin_drop", deadEntity.transform.position, SoundCategory.sfx);
+            }
 
         }
 
