@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 using static Unity.Collections.AllocatorManager;
 
 public enum SoundCategory
@@ -326,7 +327,7 @@ public class SoundManager : MonoBehaviour
         if (!_variationLookup.TryGetValue(variationID, out AudioVariation variation))
         {
             Debug.LogWarning($"Variation '{variationID}' not found in category {category}");
-            return null;
+            return PlaySoundByKey(variationID, category);
         }
 
         AudioClip clip = variation.GetRandomClip();
@@ -339,8 +340,11 @@ public class SoundManager : MonoBehaviour
         if (!_variationLookup.TryGetValue(variationID, out AudioVariation variation))
         {
             Debug.LogWarning($"Variation '{variationID}' not found!");
-            return null;
+            //try variation as a key
+            return PlaySoundByKeyAtPosition(variationID, position, category);
         }
+        
+
         return PlaySoundAtPosition(variation.GetRandomClip(), position, category, spatialBlend, volume, pitch);
     }
 
@@ -351,8 +355,11 @@ public class SoundManager : MonoBehaviour
         if (!_variationLookup.TryGetValue(variationID, out AudioVariation variation))
         {
             Debug.LogWarning($"Variation '{variationID}' not found!");
-            return null;
+            //try variation as a key
+            return PlaySoundByKeyAtGameObject(variationID, targetObject, category);
         }
+       
+
         return PlaySoundAtGameObject(variation.GetRandomClip(), targetObject, category,
                                    spatialBlend, volume, pitch, followObject, maxDistance);
     }

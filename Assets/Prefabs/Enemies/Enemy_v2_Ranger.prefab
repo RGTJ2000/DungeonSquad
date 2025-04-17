@@ -38,7 +38,7 @@ Transform:
   m_GameObject: {fileID: 4739953954638166795}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 20.54, y: 0.7500005, z: 18.32}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.5, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -183,7 +183,7 @@ Rigidbody:
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!114 &5422561065340188084
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -218,14 +218,15 @@ MonoBehaviour:
   frost_defenseRating: 10
   poison_defenseRating: 10
   sleep_defenseRating: 10
-  equipped_meleeWeapon: {fileID: 11400000, guid: c716234bedf972346b6f4eedadc1d706,
+  equipped_meleeWeapon: {fileID: 11400000, guid: c11ce7e4b9bf619419957a7f71b013e7,
     type: 2}
   equipped_rangedWeapon: {fileID: 11400000, guid: fff9698c686307a4698f242a7e669550,
     type: 2}
   equipped_missile: {fileID: 11400000, guid: 3ca1cf42af935e7439c3954489a8786e, type: 2}
   active_targetingTag: Character
   maxSkillSlots: 5
-  skill_slot: []
+  skill_slot:
+  - {fileID: 11400000, guid: 28ff90f9e96804c48b74d41e55173c35, type: 2}
   active_skillSlot: 0
   selected_skill: {fileID: 0}
   confusion_AL: 20

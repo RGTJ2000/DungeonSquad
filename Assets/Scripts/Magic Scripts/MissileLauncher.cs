@@ -24,8 +24,8 @@ public class MissileLauncher : MonoBehaviour
     {
         GameObject missile; //the missile to be instantiated
         EntityStats _attackerStats = origin_obj.GetComponent<EntityStats>();
-        Weapon_SO missile_SO = _attackerStats.equipped_missile;
-        GameObject missile_prefab = missile_SO.missile_prefab;
+        Missile_SO missile_SO = _attackerStats.equipped_missile;
+        GameObject missile_prefab = missile_SO.item_prefab;
 
         float missileSpeed = _attackerStats.equipped_rangedWeapon.launch_impulse / missile_SO.missile_weight;
 
@@ -61,7 +61,8 @@ public class MissileLauncher : MonoBehaviour
 
 
         Debug.Log("Playing bowlaunch");
-        SoundManager.Instance.PlaySoundByKeyAtPosition("bow_launch", transform.position, SoundCategory.sfx);
+        string soundID = _attackerStats.equipped_rangedWeapon.launchAudio_ID;
+        SoundManager.Instance.PlayVariationAtPosition(soundID, transform.position, SoundCategory.sfx);
 
     }
 

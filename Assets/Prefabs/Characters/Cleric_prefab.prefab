@@ -40,7 +40,7 @@ Transform:
   m_GameObject: {fileID: 525372921199117038}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.579304, y: 1.5264235, z: -8.294559}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.5, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -292,7 +292,7 @@ MonoBehaviour:
   frost_defenseRating: 10
   poison_defenseRating: 10
   sleep_defenseRating: 10
-  equipped_meleeWeapon: {fileID: 11400000, guid: c716234bedf972346b6f4eedadc1d706,
+  equipped_meleeWeapon: {fileID: 11400000, guid: c11ce7e4b9bf619419957a7f71b013e7,
     type: 2}
   equipped_rangedWeapon: {fileID: 0}
   equipped_missile: {fileID: 0}

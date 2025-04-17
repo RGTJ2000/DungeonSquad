@@ -11,7 +11,7 @@ public class MissileGuidance : MonoBehaviour
     private float damage_range;
     private float missile_AR;
     private float missile_critChance;
-    private Weapon_SO missile_SO;
+    private Missile_SO missile_SO;
 
     //private Vector3 launch_origin;
 
@@ -110,7 +110,7 @@ public class MissileGuidance : MonoBehaviour
     }
 
 
-    public void SetMissileParameters(GameObject originObj, Vector3 heading, Weapon_SO missile, float speed)
+    public void SetMissileParameters(GameObject originObj, Vector3 heading, Missile_SO missile, float speed)
     {
         inFlight = true;
         origin_obj = originObj;
@@ -120,7 +120,7 @@ public class MissileGuidance : MonoBehaviour
         
 
         damage_base = missile_SO.missile_damageBase;
-        damage_range = missile_SO.melee_damageRange;
+        damage_range = missile_SO.missile_damageRange;
 
         EntityStats _attackerStats = origin_obj.GetComponent<EntityStats>();
 

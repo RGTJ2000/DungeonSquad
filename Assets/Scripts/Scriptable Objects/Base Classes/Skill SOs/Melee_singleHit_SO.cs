@@ -4,7 +4,7 @@ using UnityEngine;
 public class Melee_singleHit_SO : Skill_SO
 {
     EntityStats _entityStats;
-    Weapon_SO equippedWeapon_SO;
+    Melee_Weapon_SO equippedWeapon_SO;
     SkillCooldownTracker _cooldownTracker;
 
     public override void Use(GameObject user, GameObject target)

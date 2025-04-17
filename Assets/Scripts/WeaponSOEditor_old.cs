@@ -2,13 +2,13 @@
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(Weapon_SO))]
-public class WeaponSOEditor : Editor
+[CustomEditor(typeof(Weapon_SO_old))]
+public class WeaponSOEditor_old : Editor
 {
     public override void OnInspectorGUI()
     {
         // Get the target Weapon_SO
-        Weapon_SO weapon = (Weapon_SO)target;
+        Weapon_SO_old weapon = (Weapon_SO_old)target;
 
         // Draw UNIVERSAL STATS (always shown)
         EditorGUILayout.LabelField("Universal Stats", EditorStyles.boldLabel);

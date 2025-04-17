@@ -9,24 +9,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a374e2a8f7c1da94eaa015d53adfd4a6, type: 3}
+  m_Script: {fileID: 11500000, guid: 6fa73bb647fd8b04ea59c8651e8af388, type: 3}
   m_Name: Wooden Arrow
   m_EditorClassIdentifier: 
-  weaponName: Wooden Arrow
-  weaponType: 2
-  attackCooldown: 0
-  critChance_base: 0
-  critChance_weight_str: 0
-  critChance_weight_dex: 0
-  critChance_weight_int: 0
-  critChance_weight_will: 0
-  critChance_weight_soul: 0
-  melee_damageBase: 0
-  melee_damageRange: 0
-  launch_impulse: 0
-  accuracy_factor: 0
+  item_name: Wooden Arrow
+  description: An arrow made of wood
+  category: 2
+  item_icon: {fileID: 0}
+  item_prefab: {fileID: 6660670465892539401, guid: 896be4032708c2c4eb60af12a71f69e0,
+    type: 3}
+  isStackable: 1
+  maxStack: 10
   missile_damageBase: 5
   missile_damageRange: 3
   missile_weight: 0.01
-  missile_prefab: {fileID: 6660670465892539401, guid: 896be4032708c2c4eb60af12a71f69e0,
-    type: 3}

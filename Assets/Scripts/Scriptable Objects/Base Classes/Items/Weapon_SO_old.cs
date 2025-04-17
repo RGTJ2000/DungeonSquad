@@ -3,7 +3,7 @@ using UnityEngine;
 public enum weaponType { melee, ranged, missile};
 
 [CreateAssetMenu(fileName = "Weapon_SO", menuName = "Weapon/Weapon_SO")]
-public class Weapon_SO : ScriptableObject
+public class Weapon_SO_old : ScriptableObject
 {
     //UNIVERSAL STATS
     public string weaponName; //e.g. "Crude Iron Sword"

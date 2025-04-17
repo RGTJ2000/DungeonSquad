@@ -83,18 +83,18 @@ public class CombatManager : MonoBehaviour
                 //Debug.Log("CRIT. Damage x2");
             }
             //Debug.Log($"Damage Received = {damageReceived}");
-            SoundManager.Instance.PlayVariationAtPosition(_attackerStats.equipped_meleeWeapon.hitAudio_variationID, attacker.transform.position, SoundCategory.sfx);
+            SoundManager.Instance.PlayVariationAtPosition(_attackerStats.equipped_meleeWeapon.hitAudio_ID, attacker.transform.position, SoundCategory.sfx);
         }
         else
         {
-            SoundManager.Instance.PlayVariationAtPosition(_attackerStats.equipped_meleeWeapon.missAudio_variationID, attacker.transform.position, SoundCategory.sfx);
+            SoundManager.Instance.PlayVariationAtPosition(_attackerStats.equipped_meleeWeapon.missAudio_ID, attacker.transform.position, SoundCategory.sfx);
         }
 
         // Send the result to the target
         _combatOfDefender.ReceiveCombatResult(isHit, damageType, damageReceived, attacker);
     }
 
-    public void ResolveMissile(GameObject attacker, GameObject target, Weapon_SO missile_SO, float missile_AR, float missile_critChance)
+    public void ResolveMissile(GameObject attacker, GameObject target, Missile_SO missile_SO, float missile_AR, float missile_critChance)
     {
         Combat _combatOfDefender = target.GetComponent<Combat>();         // Get target's combat component
         //EntityStats _attackerStats = attacker.GetComponent<EntityStats>();
@@ -227,6 +227,7 @@ public class CombatManager : MonoBehaviour
         float WLL = attackerStats.will;
         float SOL = attackerStats.soul;
 
+        // This can increase the critChance by 2x at attribute=100. If attribute >100 then critchance keeps going up.
         critChance = attackerStats.equipped_meleeWeapon.critChance_base * ( 1 + ( ( CritCalc(str_w,STR)+CritCalc(dex_w,DEX)+CritCalc(int_w, INT)+CritCalc(will_w, WLL)+ CritCalc(soul_w, SOL)) / (str_w + dex_w + int_w + will_w + soul_w ) ) );
         //Debug.Log($"Crit Chance = {critChance}");
 

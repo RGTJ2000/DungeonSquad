@@ -7,7 +7,7 @@ public class WeaponDatabase : MonoBehaviour
     public static WeaponDatabase Instance { get; private set; }
 
     // Dictionary to store weapons by name
-    private Dictionary<string, Weapon_SO> weaponDictionary;
+    private Dictionary<string, Weapon_SO_old> weaponDictionary;
 
     private void Awake()
     {
@@ -27,13 +27,13 @@ public class WeaponDatabase : MonoBehaviour
     // Initialize the database by loading all Weapon_SO assets
     private void InitializeDatabase()
     {
-        weaponDictionary = new Dictionary<string, Weapon_SO>();
+        weaponDictionary = new Dictionary<string, Weapon_SO_old>();
 
         // Load all Weapon_SO assets from the "Resources/Weapons" folder
-        Weapon_SO[] weapons = Resources.LoadAll<Weapon_SO>("Weapons");
+        Weapon_SO_old[] weapons = Resources.LoadAll<Weapon_SO_old>("Weapons");
 
         // Add each weapon to the dictionary
-        foreach (Weapon_SO weapon in weapons)
+        foreach (Weapon_SO_old weapon in weapons)
         {
             if (!weaponDictionary.ContainsKey(weapon.weaponName))
             {
@@ -49,9 +49,9 @@ public class WeaponDatabase : MonoBehaviour
     }
 
     // Get a weapon by name
-    public Weapon_SO GetWeaponByName(string weaponName)
+    public Weapon_SO_old GetWeaponByName(string weaponName)
     {
-        if (weaponDictionary.TryGetValue(weaponName, out Weapon_SO weapon))
+        if (weaponDictionary.TryGetValue(weaponName, out Weapon_SO_old weapon))
         {
             return weapon;
         }
@@ -63,8 +63,8 @@ public class WeaponDatabase : MonoBehaviour
     }
 
     // Get all weapons in the database
-    public List<Weapon_SO> GetAllWeapons()
+    public List<Weapon_SO_old> GetAllWeapons()
     {
-        return new List<Weapon_SO>(weaponDictionary.Values);
+        return new List<Weapon_SO_old>(weaponDictionary.Values);
     }
 }

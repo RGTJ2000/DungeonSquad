@@ -9,26 +9,25 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a374e2a8f7c1da94eaa015d53adfd4a6, type: 3}
+  m_Script: {fileID: 11500000, guid: 7ae7652cccefeba40aa42f1cc017fc48, type: 3}
   m_Name: Crude Iron Sword
   m_EditorClassIdentifier: 
-  weaponName: Crude Iron Sword
-  weaponType: 0
-  hitAudio_variationID: swordHit
-  missAudio_variationID: swordMiss
+  item_name: Crude Iron Sword
+  description: A simple sword made of crude iron
+  category: 0
+  item_icon: {fileID: 0}
+  item_prefab: {fileID: 0}
+  isStackable: 0
+  maxStack: 1
   attackCooldown: 1
-  critChance_base: 0.5
-  critChance_weight_str: 0.75
-  critChance_weight_dex: 0.25
+  critChance_base: 1
+  critChance_weight_str: 1
+  critChance_weight_dex: 0.5
   critChance_weight_int: 0
   critChance_weight_will: 0
   critChance_weight_soul: 0
   melee_reach: 1
   melee_damageBase: 10
   melee_damageRange: 5
-  launch_impulse: 0
-  accuracy_factor: 0
-  missile_damageBase: 0
-  missile_damageRange: 0
-  missile_weight: 0
-  missile_prefab: {fileID: 0}
+  hitAudio_ID: swordHit
+  missAudio_ID: swordMiss

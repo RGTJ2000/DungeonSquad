@@ -147,55 +147,66 @@ public class TargetingScan : MonoBehaviour
 
     public GameObject[] ScanForVisibleTargets()
     {
-        Targeting_Type type = _entityStats.selected_skill.skill_targetType;
-        //string type = _entityStats.selected_skill.skill_targetType;
-        string targetingTag = "none";
-
-        switch (type)
+        if (_entityStats.selected_skill != null)
         {
-            case Targeting_Type.self:
-                break;
-            case Targeting_Type.group:
-                targetingTag = "Character";
-                break;
-            case Targeting_Type.other:
-                targetingTag = "Enemy";
-                break;
-            case Targeting_Type.area:
-                break;
-            default:
-                targetingTag = "none";
-                break;
-        }
+            Targeting_Type type = _entityStats.selected_skill.skill_targetType;
 
+            //string type = _entityStats.selected_skill.skill_targetType;
+            string targetingTag = "none";
 
-        GameObject[] allTargets = GameObject.FindGameObjectsWithTag(targetingTag);
-
-        List<GameObject> visibleTargetsList = new List<GameObject>();
-
-        foreach (GameObject target in allTargets)
-        {
-            if (target.CompareTag(targetingTag))
+            switch (type)
             {
-                if (HitTargetBeforeWall(target))
-                {
-                    visibleTargetsList.Add(target);
-                }
-
+                case Targeting_Type.self:
+                    break;
+                case Targeting_Type.group:
+                    targetingTag = "Character";
+                    break;
+                case Targeting_Type.other:
+                    targetingTag = "Enemy";
+                    break;
+                case Targeting_Type.area:
+                    break;
+                default:
+                    targetingTag = "none";
+                    break;
             }
-        }
-
-        GameObject[] visibleTargetsArray = visibleTargetsList.ToArray();
 
 
-        if (visibleTargetsArray != null)
-        {
-            return visibleTargetsArray;
+            GameObject[] allTargets = GameObject.FindGameObjectsWithTag(targetingTag);
+
+            List<GameObject> visibleTargetsList = new List<GameObject>();
+
+            foreach (GameObject target in allTargets)
+            {
+                if (target.CompareTag(targetingTag))
+                {
+                    if (HitTargetBeforeWall(target))
+                    {
+                        visibleTargetsList.Add(target);
+                    }
+
+                }
+            }
+
+            GameObject[] visibleTargetsArray = visibleTargetsList.ToArray();
+
+
+            if (visibleTargetsArray != null)
+            {
+                return visibleTargetsArray;
+            }
+            else
+            {
+                return null;
+            }
+
+
+
+
+
         }
-        else
-        {
-            return null;
-        }
+        else { return null; }
+       
     }
 
 

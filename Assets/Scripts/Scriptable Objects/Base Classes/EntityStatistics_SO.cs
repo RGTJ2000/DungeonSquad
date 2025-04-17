@@ -36,9 +36,9 @@ public class EntityStatistics_SO : ScriptableObject
     public float sleep_defenseRating = 10f;
 
 
-    public Weapon_SO equipped_meleeWeapon;
-    public Weapon_SO equipped_rangedWeapon;
-    public Weapon_SO equipped_missile;
+    public Weapon_SO_old equipped_meleeWeapon;
+    public Weapon_SO_old equipped_rangedWeapon;
+    public Weapon_SO_old equipped_missile;
 
     public string active_targetingTag = "Enemy";
 

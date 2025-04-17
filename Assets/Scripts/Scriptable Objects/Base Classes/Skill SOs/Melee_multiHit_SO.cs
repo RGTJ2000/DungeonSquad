@@ -5,7 +5,7 @@ public class Melee_multiHit_SO : Skill_SO
 {
     [SerializeField] int numberOfHits = 3;
     EntityStats _entityStats;
-    Weapon_SO equippedWeapon_SO;
+    Melee_Weapon_SO equippedWeapon_SO;
     SkillCooldownTracker _cooldownTracker;
 
     public override void Use(GameObject user, GameObject target)
