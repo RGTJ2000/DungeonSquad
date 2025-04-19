@@ -3009,7 +3009,7 @@ MonoBehaviour:
   expandPoolWhenEmpty: 1
   poolExpandAmount: 5
   categorySettings: []
-  logPoolStatistics: 0
+  logPoolStatistics: 1
   editorOnlyLogging: 1
 --- !u!4 &1838032001
 Transform:

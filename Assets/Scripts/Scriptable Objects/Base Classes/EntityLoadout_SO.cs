@@ -1,7 +1,9 @@
+using NUnit.Framework;
+using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "EntityStatistics_SO", menuName = "Entity Data/EntityStatistics_SO")]
-public class EntityStatistics_SO : ScriptableObject
+[CreateAssetMenu(fileName = "EntityStatistics_SO", menuName = "Entity Data/EntityLoadout_SO")]
+public class EntityLoadout_SO : ScriptableObject
 {
     public int character_ID = 0;
     public string character_name;
@@ -36,22 +38,17 @@ public class EntityStatistics_SO : ScriptableObject
     public float sleep_defenseRating = 10f;
 
 
-    public Weapon_SO_old equipped_meleeWeapon;
-    public Weapon_SO_old equipped_rangedWeapon;
-    public Weapon_SO_old equipped_missile;
+    public StartingItemData equipped_meleeWeapon;
+    public StartingItemData equipped_rangedWeapon;
+    public StartingItemData equipped_missile;
 
-    public string active_targetingTag = "Enemy";
 
     public int maxSkillSlots = 5;
 
-    //public SkillData[] skill_slot;
-    [SerializeField] public Skill_SO[] skill_slot;
+    public Skill_SO[] skill_slot;
     public int active_skillSlot = 0;
 
-    //public Skill_SO selected_skill;
-    public DefaultBehavior_SO enemy_defaultBehavior_SO;
-    public AlertBehavior_SO enemy_alertBehavior_SO;
-    public EngageBehavior_SO enemy_engageBehavior_SO;
+    
 
     public float confusion_AL = 20;  //activaton limit
     public float fear_AL = 20;
@@ -74,7 +71,8 @@ public class EntityStatistics_SO : ScriptableObject
     public float poison_damageMultiplier = 1f;
     public float sleep_damageMultiplier = 1f;
 
-
+    //Inventory
+    public List<StartingItemData> inventoryItems;
 
 
 

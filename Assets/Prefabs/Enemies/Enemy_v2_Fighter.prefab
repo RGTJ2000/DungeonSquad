@@ -343,3 +343,13 @@ MonoBehaviour:
   silver_count: 2
   gold_count: 2
   platinum_count: 3
+  meleeWeapons: []
+  rangedWeapons: []
+  missiles: []
+  armors: []
+  shields: []
+  potions: []
+  scrolls: []
+  amulets: []
+  rings: []
+  gems: []

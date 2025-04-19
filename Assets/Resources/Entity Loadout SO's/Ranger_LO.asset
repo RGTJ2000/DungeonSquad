@@ -1,0 +1,76 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: Ranger_LO
+  m_EditorClassIdentifier: Assembly-CSharp::EntityLoadout_SO
+  character_ID: 1
+  character_name: Ranger
+  visible_distance: 50
+  health_max: 100
+  walking_speed: 5
+  running_speed: 10
+  entity_radius: 0.5
+  strength: 50
+  dexterity: 50
+  intelligence: 50
+  will: 50
+  soul: 50
+  melee_attackRating: 15
+  melee_defenseRating: 10
+  ranged_attackRating: 15
+  ranged_defenseRating: 10
+  magic_attackRating: 15
+  confusion_defenseRating: 10
+  fear_defenseRating: 10
+  fire_defenseRating: 10
+  frost_defenseRating: 10
+  poison_defenseRating: 10
+  sleep_defenseRating: 10
+  equipped_meleeWeapon:
+    baseItem: {fileID: 11400000, guid: 99addd19d2a9ce7448797625b7aa00f3, type: 2}
+    stackCount: 1
+    attachedCharms: []
+  equipped_rangedWeapon:
+    baseItem: {fileID: 11400000, guid: fff9698c686307a4698f242a7e669550, type: 2}
+    stackCount: 1
+    attachedCharms: []
+  equipped_missile:
+    baseItem: {fileID: 11400000, guid: 3ca1cf42af935e7439c3954489a8786e, type: 2}
+    stackCount: 1
+    attachedCharms: []
+  maxSkillSlots: 5
+  skill_slot:
+  - {fileID: 11400000, guid: 28ff90f9e96804c48b74d41e55173c35, type: 2}
+  - {fileID: 11400000, guid: 68269be72b2a8734c92db619120d46be, type: 2}
+  active_skillSlot: 0
+  confusion_AL: 20
+  fear_AL: 20
+  fire_AL: 20
+  frost_AL: 20
+  poison_AL: 20
+  sleep_AL: 20
+  confusion_dissipationRate: 1
+  fear_dissipationRate: 1
+  fire_dissipationRate: 2
+  frost_dissipationRate: 1
+  poison_dissipationRate: 1
+  sleep_dissipationRate: 1
+  confusion_damageMultiplier: 1
+  fear_damageMultiplier: 1
+  fire_damageMultiplier: 2
+  frost_damageMultiplier: 1
+  poison_damageMultiplier: 1
+  sleep_damageMultiplier: 1
+  inventoryItems:
+  - baseItem: {fileID: 11400000, guid: 99addd19d2a9ce7448797625b7aa00f3, type: 2}
+    stackCount: 0
+    attachedCharms: []

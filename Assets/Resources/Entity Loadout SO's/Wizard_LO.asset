@@ -9,11 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 26c434c908a17d74382537f3fdaf44c5, type: 3}
-  m_Name: FighterStats_SO
-  m_EditorClassIdentifier: 
-  character_ID: 0
-  character_name: Fighter
+  m_Script: {fileID: 0}
+  m_Name: Wizard_LO
+  m_EditorClassIdentifier: Assembly-CSharp::EntityLoadout_SO
+  character_ID: 2
+  character_name: Wizard
   visible_distance: 50
   health_max: 100
   walking_speed: 5
@@ -35,16 +35,23 @@ MonoBehaviour:
   frost_defenseRating: 10
   poison_defenseRating: 10
   sleep_defenseRating: 10
-  equipped_meleeWeapon: {fileID: 0}
-  equipped_rangedWeapon: {fileID: 0}
-  equipped_missile: {fileID: 0}
-  active_targetingTag: Enemy
+  equipped_meleeWeapon:
+    baseItem: {fileID: 11400000, guid: c11ce7e4b9bf619419957a7f71b013e7, type: 2}
+    stackCount: 1
+    attachedCharms: []
+  equipped_rangedWeapon:
+    baseItem: {fileID: 0}
+    stackCount: 1
+    attachedCharms: []
+  equipped_missile:
+    baseItem: {fileID: 0}
+    stackCount: 1
+    attachedCharms: []
   maxSkillSlots: 5
-  skill_slot: []
+  skill_slot:
+  - {fileID: 11400000, guid: 1124a068fe6ce9b40aa23da75dcdff3a, type: 2}
+  - {fileID: 11400000, guid: 64af0cfa5e122484b991de7afb1a5a5f, type: 2}
   active_skillSlot: 0
-  enemy_defaultBehavior_SO: {fileID: 0}
-  enemy_alertBehavior_SO: {fileID: 0}
-  enemy_engageBehavior_SO: {fileID: 0}
   confusion_AL: 20
   fear_AL: 20
   fire_AL: 20
@@ -63,3 +70,7 @@ MonoBehaviour:
   frost_damageMultiplier: 1
   poison_damageMultiplier: 1
   sleep_damageMultiplier: 1
+  inventoryItems:
+  - baseItem: {fileID: 11400000, guid: 99addd19d2a9ce7448797625b7aa00f3, type: 2}
+    stackCount: 0
+    attachedCharms: []

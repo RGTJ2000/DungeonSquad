@@ -30,7 +30,7 @@ public class EnemySpawner : MonoBehaviour
 
                 if (!Physics.CheckSphere(random_position + Vector3.up, _entityStats.entity_radius))
                 {
-                    Debug.Log("Spawning Enemy#"+i+" :"+enemyToInstantiate.name + "location:"+random_position);
+                    //Debug.Log("Spawning Enemy#"+i+" :"+enemyToInstantiate.name + "location:"+random_position);
                     
                     Instantiate(enemyToInstantiate, random_position+Vector3.up, Quaternion.identity);
                     spawnSuccssful = true;

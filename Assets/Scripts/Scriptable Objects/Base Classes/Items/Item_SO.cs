@@ -1,3 +1,5 @@
+using NUnit.Framework;
+using System.Collections.Generic;
 using UnityEngine;
 
 // Inventory categorization
@@ -38,7 +40,8 @@ public abstract class Item_SO : ScriptableObject
     public bool isStackable = false;
     public int maxStack = 1; // 1 = not stackable
 
-  
+    //Charms
+    public List<Charm_SO> attachedCharms;
 
 
 }
