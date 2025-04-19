@@ -13,7 +13,7 @@ public class MeleePursuit_SO : EngageBehavior_SO
 
             RaycastHit hit;
             Vector3 direction = (_scanForCharacters.targeted_character.transform.position - enemy_obj.transform.position).normalized;
-            float meleeDistance = _entityStats.equipped_meleeWeapon.melee_reach + _entityStats.entity_radius;
+            float meleeDistance = _entityStats.equipped_meleeWeapon.MeleeWeapon.melee_reach + _entityStats.entity_radius;
 
             if (Physics.Raycast(enemy_obj.transform.position, direction, out hit, meleeDistance, ~0, QueryTriggerInteraction.Ignore))
             {

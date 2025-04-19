@@ -290,7 +290,7 @@ public class Enemy_Behavior2 : MonoBehaviour
                 {
                     RaycastHit hit;
                     Vector3 direction = (target.transform.position - transform.position).normalized;
-                    float maxDistance = _entityStats.equipped_meleeWeapon.melee_reach + _entityStats.entity_radius;
+                    float maxDistance = _entityStats.equipped_meleeWeapon.MeleeWeapon.melee_reach + _entityStats.entity_radius;
 
                     if (Physics.Raycast(transform.position, direction, out hit, maxDistance, ~0, QueryTriggerInteraction.Ignore))
                     {
@@ -302,7 +302,7 @@ public class Enemy_Behavior2 : MonoBehaviour
 
                                 engageBehavior_SO.skill_SO.Use(gameObject, target);
 
-                                StartCoroutine(MeleeAttackCooldown(_entityStats.equipped_meleeWeapon.attackCooldown));
+                                StartCoroutine(MeleeAttackCooldown(_entityStats.equipped_meleeWeapon.MeleeWeapon.attackCooldown));
                             }
                         }
                     }
@@ -327,7 +327,7 @@ public class Enemy_Behavior2 : MonoBehaviour
                             //Debug.Log("Calling Ranged Skill. target=" + target.name);
                             engageBehavior_SO.skill_SO.Use(gameObject, target);
 
-                            StartCoroutine(RangedAttackCooldown(_entityStats.equipped_rangedWeapon.attackCooldown));
+                            StartCoroutine(RangedAttackCooldown(_entityStats.equipped_rangedWeapon.RangedWeapon.attackCooldown));
                         }
                     }
 

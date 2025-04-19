@@ -170,9 +170,26 @@ public class SquadSpawner : MonoBehaviour
         stats.sleep_defenseRating = loadout.sleep_defenseRating;
 
         // --- EQUIPPED ITEMS ---
+
+        if (loadout.equipped_meleeWeapon?.baseItem is Melee_Weapon_SO meleeSO)
+        {
+            stats.equipped_meleeWeapon = new RuntimeItem(meleeSO);
+        }
+
+        if (loadout.equipped_rangedWeapon?.baseItem is Ranged_Weapon_SO rangedSO)
+        {
+            stats.equipped_rangedWeapon = new RuntimeItem(rangedSO);
+        }
+
+        if (loadout.equipped_missile?.baseItem is Missile_SO missileSO)
+        {
+            stats.equipped_missile = new RuntimeItem(missileSO);
+        }
+        /*
         stats.equipped_meleeWeapon = loadout.equipped_meleeWeapon?.baseItem as Melee_Weapon_SO;
         stats.equipped_rangedWeapon = loadout.equipped_rangedWeapon?.baseItem as Ranged_Weapon_SO;
         stats.equipped_missile = loadout.equipped_missile?.baseItem as Missile_SO;
+        */
 
         // --- STATUS LIMITS / DISSIPATION ---
         stats.confusion_AL = loadout.confusion_AL;

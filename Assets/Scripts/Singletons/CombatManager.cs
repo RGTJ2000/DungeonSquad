@@ -43,8 +43,8 @@ public class CombatManager : MonoBehaviour
         EntityStats _defenderStats = target.GetComponent<EntityStats>();
 
         float attackRating = _attackerStats.melee_attackRating;
-        float damageBase = _attackerStats.equipped_meleeWeapon.melee_damageBase;
-        float damageRange = _attackerStats.equipped_meleeWeapon.melee_damageRange;
+        float damageBase = _attackerStats.equipped_meleeWeapon.MeleeWeapon.melee_damageBase;
+        float damageRange = _attackerStats.equipped_meleeWeapon.MeleeWeapon.melee_damageRange;
         float critChance;
 
         float defenseRating = _defenderStats.melee_defenseRating;
@@ -83,26 +83,26 @@ public class CombatManager : MonoBehaviour
                 //Debug.Log("CRIT. Damage x2");
             }
             //Debug.Log($"Damage Received = {damageReceived}");
-            SoundManager.Instance.PlayVariationAtPosition(_attackerStats.equipped_meleeWeapon.hitAudio_ID, attacker.transform.position, SoundCategory.sfx);
+            SoundManager.Instance.PlayVariationAtPosition(_attackerStats.equipped_meleeWeapon.MeleeWeapon.hitAudio_ID, attacker.transform.position, SoundCategory.sfx);
         }
         else
         {
-            SoundManager.Instance.PlayVariationAtPosition(_attackerStats.equipped_meleeWeapon.missAudio_ID, attacker.transform.position, SoundCategory.sfx);
+            SoundManager.Instance.PlayVariationAtPosition(_attackerStats.equipped_meleeWeapon.MeleeWeapon.missAudio_ID, attacker.transform.position, SoundCategory.sfx);
         }
 
         // Send the result to the target
         _combatOfDefender.ReceiveCombatResult(isHit, damageType, damageReceived, attacker);
     }
 
-    public void ResolveMissile(GameObject attacker, GameObject target, Missile_SO missile_SO, float missile_AR, float missile_critChance)
+    public void ResolveMissile(GameObject attacker, GameObject target, RuntimeItem missile_SO, float missile_AR, float missile_critChance)
     {
         Combat _combatOfDefender = target.GetComponent<Combat>();         // Get target's combat component
         //EntityStats _attackerStats = attacker.GetComponent<EntityStats>();
         EntityStats _defenderStats = target.GetComponent<EntityStats>();
 
         float attackRating = missile_AR;
-        float damageBase = missile_SO.missile_damageBase;
-        float damageRange = missile_SO.missile_damageRange;
+        float damageBase = missile_SO.Missile.missile_damageBase;
+        float damageRange = missile_SO.Missile.missile_damageRange;
         float critChance = missile_critChance;
 
         bool isHit = false;
@@ -214,12 +214,12 @@ public class CombatManager : MonoBehaviour
     {
         float critChance = 0f;
 
-        float str_w = attackerStats.equipped_meleeWeapon.critChance_weight_str;
+        float str_w = attackerStats.equipped_meleeWeapon.MeleeWeapon.critChance_weight_str;
 
-        float dex_w = attackerStats.equipped_meleeWeapon.critChance_weight_dex;
-        float int_w = attackerStats.equipped_meleeWeapon.critChance_weight_int;
-        float will_w = attackerStats.equipped_meleeWeapon.critChance_weight_will;
-        float soul_w = attackerStats.equipped_meleeWeapon.critChance_weight_soul;
+        float dex_w = attackerStats.equipped_meleeWeapon.MeleeWeapon.critChance_weight_dex;
+        float int_w = attackerStats.equipped_meleeWeapon.MeleeWeapon.critChance_weight_int;
+        float will_w = attackerStats.equipped_meleeWeapon.MeleeWeapon.critChance_weight_will;
+        float soul_w = attackerStats.equipped_meleeWeapon.MeleeWeapon.critChance_weight_soul;
 
         float STR = attackerStats.strength;
         float DEX = attackerStats.dexterity;
@@ -228,7 +228,7 @@ public class CombatManager : MonoBehaviour
         float SOL = attackerStats.soul;
 
         // This can increase the critChance by 2x at attribute=100. If attribute >100 then critchance keeps going up.
-        critChance = attackerStats.equipped_meleeWeapon.critChance_base * ( 1 + ( ( CritCalc(str_w,STR)+CritCalc(dex_w,DEX)+CritCalc(int_w, INT)+CritCalc(will_w, WLL)+ CritCalc(soul_w, SOL)) / (str_w + dex_w + int_w + will_w + soul_w ) ) );
+        critChance = attackerStats.equipped_meleeWeapon.MeleeWeapon.critChance_base * ( 1 + ( ( CritCalc(str_w,STR)+CritCalc(dex_w,DEX)+CritCalc(int_w, INT)+CritCalc(will_w, WLL)+ CritCalc(soul_w, SOL)) / (str_w + dex_w + int_w + will_w + soul_w ) ) );
         //Debug.Log($"Crit Chance = {critChance}");
 
         return critChance;

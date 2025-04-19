@@ -36,4 +36,20 @@ public class RuntimeItem
         // Could combine charm names, rarity colors, etc.
         return baseItem.item_name;
     }
+
+
+    // --- Typed Accessors ---
+    public Melee_Weapon_SO MeleeWeapon => baseItem as Melee_Weapon_SO;
+    public Ranged_Weapon_SO RangedWeapon => baseItem as Ranged_Weapon_SO;
+    public Missile_SO Missile => baseItem as Missile_SO;
+
+    /*
+    public Armor_SO Armor => baseItem as Armor_SO;
+    public Shield_SO Shield => baseItem as Shield_SO;
+    public Potion_SO Potion => baseItem as Potion_SO;
+    public Scroll_SO Scroll => baseItem as Scroll_SO;
+    public Amulet_SO Amulet => baseItem as Amulet_SO;
+    public Ring_SO Ring => baseItem as Ring_SO;
+    public Gem_SO Gem => baseItem as Gem_SO;
+    */
 }

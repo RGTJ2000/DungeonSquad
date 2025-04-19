@@ -218,10 +218,18 @@ MonoBehaviour:
   frost_defenseRating: 10
   poison_defenseRating: 10
   sleep_defenseRating: 10
-  equipped_meleeWeapon: {fileID: 11400000, guid: 99addd19d2a9ce7448797625b7aa00f3,
-    type: 2}
-  equipped_rangedWeapon: {fileID: 0}
-  equipped_missile: {fileID: 0}
+  equipped_meleeWeapon:
+    baseItem: {fileID: 11400000, guid: 99addd19d2a9ce7448797625b7aa00f3, type: 2}
+    stackCount: 0
+    attachedCharms: []
+  equipped_rangedWeapon:
+    baseItem: {fileID: 0}
+    stackCount: 0
+    attachedCharms: []
+  equipped_missile:
+    baseItem: {fileID: 0}
+    stackCount: 0
+    attachedCharms: []
   active_targetingTag: Character
   maxSkillSlots: 5
   skill_slot:

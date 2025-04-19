@@ -33,9 +33,9 @@ public class EntityStats : MonoBehaviour
     public float sleep_defenseRating = 10f;
 
 
-    public Melee_Weapon_SO equipped_meleeWeapon;
-    public Ranged_Weapon_SO equipped_rangedWeapon;
-    public Missile_SO equipped_missile;
+    public RuntimeItem equipped_meleeWeapon;
+    public RuntimeItem equipped_rangedWeapon;
+    public RuntimeItem equipped_missile;
 
     public string active_targetingTag = "Enemy";
 

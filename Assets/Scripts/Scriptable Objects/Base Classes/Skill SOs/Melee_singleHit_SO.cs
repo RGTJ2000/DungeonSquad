@@ -4,7 +4,7 @@ using UnityEngine;
 public class Melee_singleHit_SO : Skill_SO
 {
     EntityStats _entityStats;
-    Melee_Weapon_SO equippedWeapon_SO;
+    RuntimeItem equippedWeapon_SO;
     SkillCooldownTracker _cooldownTracker;
 
     public override void Use(GameObject user, GameObject target)
@@ -14,7 +14,7 @@ public class Melee_singleHit_SO : Skill_SO
 
         equippedWeapon_SO = _entityStats.equipped_meleeWeapon;
 
-        cooldown = equippedWeapon_SO.attackCooldown; //set the cooldown to atacker's weapon
+        cooldown = equippedWeapon_SO.MeleeWeapon.attackCooldown; //set the cooldown to atacker's weapon
 
         CombatManager.Instance.ResolveMelee(user, target);
 

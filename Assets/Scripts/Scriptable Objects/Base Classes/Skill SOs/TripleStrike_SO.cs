@@ -20,7 +20,7 @@ public class TripleStrike_SO : Skill_SO
 
         RaycastHit hit;
         Vector3 direction = (target.transform.position - attacker.transform.position).normalized;
-        float maxDistance = _attackerStats.equipped_meleeWeapon.melee_reach + _attackerStats.entity_radius;
+        float maxDistance = _attackerStats.equipped_meleeWeapon.MeleeWeapon.melee_reach + _attackerStats.entity_radius;
 
         if (!Physics.Raycast(attacker.transform.position, direction, out hit, maxDistance, ~0, QueryTriggerInteraction.Ignore))
         {

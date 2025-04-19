@@ -3487,12 +3487,16 @@ MonoBehaviour:
     type: 3}
   fighter_prefab: {fileID: 525372921199117038, guid: 49a255bb42b54f245abf1bec956f45c6,
     type: 3}
+  fighter_loadout: {fileID: 11400000, guid: 6806c010642c5bb4db541d017e21690c, type: 2}
   cleric_prefab: {fileID: 525372921199117038, guid: 5757749b4bfeda748bc8d0279049202b,
     type: 3}
+  cleric_loadout: {fileID: 11400000, guid: a38204597613e6442a984732319ffede, type: 2}
   wizard_prefab: {fileID: 3476890055290762964, guid: 18725154c9635454498aa915f2ca69f6,
     type: 3}
+  wizard_loadout: {fileID: 11400000, guid: 3ab8548845e176b4d968616aa5166e1e, type: 2}
   ranger_prefab: {fileID: 8418205321826417663, guid: 123b7cb0b981bfd438ce77e7e599d7c3,
     type: 3}
+  ranger_loadout: {fileID: 11400000, guid: cf40f10eb0887a341a3d9c9f60aa0fef, type: 2}
 --- !u!114 &1907099556
 MonoBehaviour:
   m_ObjectHideFlags: 0

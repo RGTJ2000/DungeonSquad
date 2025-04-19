@@ -11,7 +11,7 @@ public class MissileGuidance : MonoBehaviour
     private float damage_range;
     private float missile_AR;
     private float missile_critChance;
-    private Missile_SO missile_SO;
+    private RuntimeItem missile_SO;
 
     //private Vector3 launch_origin;
 
@@ -110,7 +110,7 @@ public class MissileGuidance : MonoBehaviour
     }
 
 
-    public void SetMissileParameters(GameObject originObj, Vector3 heading, Missile_SO missile, float speed)
+    public void SetMissileParameters(GameObject originObj, Vector3 heading, RuntimeItem missile, float speed)
     {
         inFlight = true;
         origin_obj = originObj;
@@ -119,8 +119,8 @@ public class MissileGuidance : MonoBehaviour
 
         
 
-        damage_base = missile_SO.missile_damageBase;
-        damage_range = missile_SO.missile_damageRange;
+        damage_base = missile_SO.Missile.missile_damageBase;
+        damage_range = missile_SO.Missile.missile_damageRange;
 
         EntityStats _attackerStats = origin_obj.GetComponent<EntityStats>();
 
@@ -159,11 +159,11 @@ public class MissileGuidance : MonoBehaviour
     {
         float critChance = 0f;
 
-        float str_w = attackerStats.equipped_meleeWeapon.critChance_weight_str;
-        float dex_w = attackerStats.equipped_meleeWeapon.critChance_weight_dex;
-        float int_w = attackerStats.equipped_meleeWeapon.critChance_weight_int;
-        float will_w = attackerStats.equipped_meleeWeapon.critChance_weight_will;
-        float soul_w = attackerStats.equipped_meleeWeapon.critChance_weight_soul;
+        float str_w = attackerStats.equipped_rangedWeapon.RangedWeapon.critChance_weight_str;
+        float dex_w = attackerStats.equipped_rangedWeapon.RangedWeapon.critChance_weight_dex;
+        float int_w = attackerStats.equipped_rangedWeapon.RangedWeapon.critChance_weight_int;
+        float will_w = attackerStats.equipped_rangedWeapon.RangedWeapon.critChance_weight_will;
+        float soul_w = attackerStats.equipped_rangedWeapon.RangedWeapon.critChance_weight_soul;
 
         float STR = attackerStats.strength;
         float DEX = attackerStats.dexterity;
@@ -171,7 +171,7 @@ public class MissileGuidance : MonoBehaviour
         float WLL = attackerStats.will;
         float SOL = attackerStats.soul;
 
-        critChance = attackerStats.equipped_meleeWeapon.critChance_base * (1 + ((CritCalc(str_w, STR) + CritCalc(dex_w, DEX) + CritCalc(int_w, INT) + CritCalc(will_w, WLL) + CritCalc(soul_w, SOL)) / (str_w + dex_w + int_w + will_w + soul_w)));
+        critChance = attackerStats.equipped_rangedWeapon.RangedWeapon.critChance_base * (1 + ((CritCalc(str_w, STR) + CritCalc(dex_w, DEX) + CritCalc(int_w, INT) + CritCalc(will_w, WLL) + CritCalc(soul_w, SOL)) / (str_w + dex_w + int_w + will_w + soul_w)));
 
         return critChance;
     }

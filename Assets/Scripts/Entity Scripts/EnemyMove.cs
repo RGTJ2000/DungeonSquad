@@ -93,7 +93,7 @@ public class EnemyMove : MonoBehaviour
 
         RaycastHit hit;
         Vector3 direction = (obj_to_pursue.transform.position - transform.position).normalized;
-        float maxDistance = _entityStats.equipped_meleeWeapon.melee_reach + _entityStats.entity_radius;
+        float maxDistance = _entityStats.equipped_meleeWeapon.MeleeWeapon.melee_reach + _entityStats.entity_radius;
 
         if (Physics.Raycast(transform.position, direction, out hit, maxDistance))
         {
@@ -108,7 +108,7 @@ public class EnemyMove : MonoBehaviour
                     Debug.Log("Skill to use:" + skill.skill_name);
                     skill.Use(gameObject, obj_to_pursue);
 
-                    StartCoroutine(MeleeAttackCooldown(_entityStats.equipped_meleeWeapon.attackCooldown));
+                    StartCoroutine(MeleeAttackCooldown(_entityStats.equipped_meleeWeapon.MeleeWeapon.attackCooldown));
                 }
             }
         }

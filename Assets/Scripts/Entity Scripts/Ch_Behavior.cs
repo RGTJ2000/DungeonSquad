@@ -169,7 +169,7 @@ public class Ch_Behavior : MonoBehaviour
                 Skill_SO skill = skill_performing;
                 skill.Use(gameObject, obj_to_ranged);
 
-                StartCoroutine(RangedAttackCooldown(_entityStats.equipped_rangedWeapon.attackCooldown));
+                StartCoroutine(RangedAttackCooldown(_entityStats.equipped_rangedWeapon.RangedWeapon.attackCooldown));
             }
         }
 

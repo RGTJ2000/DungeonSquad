@@ -72,7 +72,7 @@ public class Combat : MonoBehaviour
     {
         RaycastHit hit;
         Vector3 direction = (target_obj.transform.position - transform.position).normalized;
-        float maxDistance = _entityStats.equipped_meleeWeapon.melee_reach + _entityStats.entity_radius;
+        float maxDistance = _entityStats.equipped_meleeWeapon.MeleeWeapon.melee_reach + _entityStats.entity_radius;
 
         if (Physics.Raycast(transform.position, direction, out hit, maxDistance))
         {
@@ -251,7 +251,7 @@ public class Combat : MonoBehaviour
         isMeleeAttacking = true; // Set the cooldown flag
 
         // Wait for the cooldown duration
-        yield return new WaitForSeconds(_entityStats.equipped_meleeWeapon.attackCooldown);
+        yield return new WaitForSeconds(_entityStats.equipped_meleeWeapon.MeleeWeapon.attackCooldown);
 
         isMeleeAttacking = false; // Reset the cooldown flag
     }
@@ -259,7 +259,7 @@ public class Combat : MonoBehaviour
     IEnumerator RangedAttackCooldown()
     {
         isRangedAttacking = true;
-        yield return new WaitForSeconds(_entityStats.equipped_rangedWeapon.attackCooldown);
+        yield return new WaitForSeconds(_entityStats.equipped_rangedWeapon.RangedWeapon.attackCooldown);
         isRangedAttacking = false;
     }
 
