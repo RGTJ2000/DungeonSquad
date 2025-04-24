@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: MeleePursuit_SO
   m_EditorClassIdentifier: 
   combatType: 0
-  skill_SO: {fileID: 11400000, guid: 68269be72b2a8734c92db619120d46be, type: 2}
+  skill_SO: {fileID: 11400000, guid: 38ab527eb6f2c2749a12a3949fb94c7b, type: 2}

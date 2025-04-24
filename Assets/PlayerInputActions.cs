@@ -118,13 +118,22 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""UISelect"",
+                    ""name"": ""SkillSelect"",
                     ""type"": ""Value"",
                     ""id"": ""4c0ae20d-222a-4d7e-94f9-4052c6a50a49"",
                     ""expectedControlType"": ""Axis"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""InventorySelect"",
+                    ""type"": ""Button"",
+                    ""id"": ""16b33a87-94e2-494d-83ea-115b00ff17fd"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -509,7 +518,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""UISelect"",
+                    ""action"": ""SkillSelect"",
                     ""isComposite"": true,
                     ""isPartOfComposite"": false
                 },
@@ -520,7 +529,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""UISelect"",
+                    ""action"": ""SkillSelect"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -531,7 +540,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""UISelect"",
+                    ""action"": ""SkillSelect"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -542,7 +551,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""UISelect"",
+                    ""action"": ""SkillSelect"",
                     ""isComposite"": true,
                     ""isPartOfComposite"": false
                 },
@@ -553,7 +562,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""UISelect"",
+                    ""action"": ""SkillSelect"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -564,9 +573,20 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""UISelect"",
+                    ""action"": ""SkillSelect"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3393e293-7db4-4842-afa5-11e017e951f0"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""InventorySelect"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -1162,7 +1182,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Player_ReturnToFormation = m_Player.FindAction("ReturnToFormation", throwIfNotFound: true);
         m_Player_Engage = m_Player.FindAction("Engage", throwIfNotFound: true);
         m_Player_AllReturnToFormation = m_Player.FindAction("AllReturnToFormation", throwIfNotFound: true);
-        m_Player_UISelect = m_Player.FindAction("UISelect", throwIfNotFound: true);
+        m_Player_SkillSelect = m_Player.FindAction("SkillSelect", throwIfNotFound: true);
+        m_Player_InventorySelect = m_Player.FindAction("InventorySelect", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1252,7 +1273,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_ReturnToFormation;
     private readonly InputAction m_Player_Engage;
     private readonly InputAction m_Player_AllReturnToFormation;
-    private readonly InputAction m_Player_UISelect;
+    private readonly InputAction m_Player_SkillSelect;
+    private readonly InputAction m_Player_InventorySelect;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -1267,7 +1289,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @ReturnToFormation => m_Wrapper.m_Player_ReturnToFormation;
         public InputAction @Engage => m_Wrapper.m_Player_Engage;
         public InputAction @AllReturnToFormation => m_Wrapper.m_Player_AllReturnToFormation;
-        public InputAction @UISelect => m_Wrapper.m_Player_UISelect;
+        public InputAction @SkillSelect => m_Wrapper.m_Player_SkillSelect;
+        public InputAction @InventorySelect => m_Wrapper.m_Player_InventorySelect;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1307,9 +1330,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @AllReturnToFormation.started += instance.OnAllReturnToFormation;
             @AllReturnToFormation.performed += instance.OnAllReturnToFormation;
             @AllReturnToFormation.canceled += instance.OnAllReturnToFormation;
-            @UISelect.started += instance.OnUISelect;
-            @UISelect.performed += instance.OnUISelect;
-            @UISelect.canceled += instance.OnUISelect;
+            @SkillSelect.started += instance.OnSkillSelect;
+            @SkillSelect.performed += instance.OnSkillSelect;
+            @SkillSelect.canceled += instance.OnSkillSelect;
+            @InventorySelect.started += instance.OnInventorySelect;
+            @InventorySelect.performed += instance.OnInventorySelect;
+            @InventorySelect.canceled += instance.OnInventorySelect;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -1344,9 +1370,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @AllReturnToFormation.started -= instance.OnAllReturnToFormation;
             @AllReturnToFormation.performed -= instance.OnAllReturnToFormation;
             @AllReturnToFormation.canceled -= instance.OnAllReturnToFormation;
-            @UISelect.started -= instance.OnUISelect;
-            @UISelect.performed -= instance.OnUISelect;
-            @UISelect.canceled -= instance.OnUISelect;
+            @SkillSelect.started -= instance.OnSkillSelect;
+            @SkillSelect.performed -= instance.OnSkillSelect;
+            @SkillSelect.canceled -= instance.OnSkillSelect;
+            @InventorySelect.started -= instance.OnInventorySelect;
+            @InventorySelect.performed -= instance.OnInventorySelect;
+            @InventorySelect.canceled -= instance.OnInventorySelect;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -1539,7 +1568,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnReturnToFormation(InputAction.CallbackContext context);
         void OnEngage(InputAction.CallbackContext context);
         void OnAllReturnToFormation(InputAction.CallbackContext context);
-        void OnUISelect(InputAction.CallbackContext context);
+        void OnSkillSelect(InputAction.CallbackContext context);
+        void OnInventorySelect(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

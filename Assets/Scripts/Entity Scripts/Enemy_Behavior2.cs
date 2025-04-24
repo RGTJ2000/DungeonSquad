@@ -285,7 +285,6 @@ public class Enemy_Behavior2 : MonoBehaviour
         switch (engageBehavior_SO.combatType)
         {
             case (CombatType.melee):
-
                 if (target != null)
                 {
                     RaycastHit hit;
@@ -298,6 +297,8 @@ public class Enemy_Behavior2 : MonoBehaviour
                         {
                             if (!isMeleeAttacking)
                             {
+                               
+
                                 isMeleeAttacking = true;
 
                                 engageBehavior_SO.skill_SO.Use(gameObject, target);

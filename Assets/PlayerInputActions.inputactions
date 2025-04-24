@@ -96,13 +96,22 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "UISelect",
+                    "name": "SkillSelect",
                     "type": "Value",
                     "id": "4c0ae20d-222a-4d7e-94f9-4052c6a50a49",
                     "expectedControlType": "Axis",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "InventorySelect",
+                    "type": "Button",
+                    "id": "16b33a87-94e2-494d-83ea-115b00ff17fd",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -487,7 +496,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "UISelect",
+                    "action": "SkillSelect",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
@@ -498,7 +507,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "UISelect",
+                    "action": "SkillSelect",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -509,7 +518,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "UISelect",
+                    "action": "SkillSelect",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -520,7 +529,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "UISelect",
+                    "action": "SkillSelect",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
@@ -531,7 +540,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "UISelect",
+                    "action": "SkillSelect",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -542,9 +551,20 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "UISelect",
+                    "action": "SkillSelect",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "3393e293-7db4-4842-afa5-11e017e951f0",
+                    "path": "<Keyboard>/tab",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "InventorySelect",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },

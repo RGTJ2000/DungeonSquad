@@ -12,7 +12,7 @@ public class SquadManager : MonoBehaviour
 {
     public static event Action<GameObject> OnCharacterSelected;
 
-    //public static event Action<GameObject, int> OnUISelected;
+    public static event Action<GameObject> OnInventorySelected;
 
   
   
@@ -36,7 +36,8 @@ public class SquadManager : MonoBehaviour
     private InputAction SelectBlue;
     private InputAction SelectYellow;
     private InputAction Engage;
-    private InputAction UISelect;
+    private InputAction SkillSelect;
+    private InputAction InventorySelect;
 
     private InputAction ReturnToFormation;
     private InputAction AllReturnToFormation;
@@ -105,9 +106,13 @@ public class SquadManager : MonoBehaviour
         Rotate.performed += OnRotate;
         Rotate.canceled += OnRotate;
 
-        UISelect = playerControls.Player.UISelect;
-        UISelect.Enable();
-        UISelect.performed += OnUISelect;
+        SkillSelect = playerControls.Player.SkillSelect;
+        SkillSelect.Enable();
+        SkillSelect.performed += OnUISelect;
+
+        InventorySelect = playerControls.Player.InventorySelect;
+        InventorySelect.Enable();
+        InventorySelect.performed += OnInventorySelect;
 
 
     }
@@ -143,9 +148,11 @@ public class SquadManager : MonoBehaviour
         Rotate.canceled -= OnRotate;
         Rotate.Disable();
 
-        UISelect.performed -= OnUISelect;
-        UISelect.Disable();
+        SkillSelect.performed -= OnUISelect;
+        SkillSelect.Disable();
 
+        InventorySelect.performed -= OnInventorySelect;
+        InventorySelect.Disable();
 
     }
 
@@ -435,6 +442,22 @@ public class SquadManager : MonoBehaviour
 
         }
     }
+
+    private void OnInventorySelect(InputAction.CallbackContext context)
+    {
+        if (select_active >= 0)
+        {
+            OnInventorySelected?.Invoke(ch_in_slot_array[select_active]);
+
+        }
+        else
+        {
+            OnInventorySelected?.Invoke(null);
+
+        }
+    }
+
+
 
     private void EngageTarget()
     {

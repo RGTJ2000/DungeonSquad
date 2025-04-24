@@ -184,6 +184,31 @@ MonoBehaviour:
   silver_count: 0
   gold_count: 0
   platinum_count: 0
+  meleeWeapons:
+  - baseItem: {fileID: 11400000, guid: 99addd19d2a9ce7448797625b7aa00f3, type: 2}
+    stackCount: 1
+    attachedCharms: []
+  - baseItem: {fileID: 11400000, guid: 99addd19d2a9ce7448797625b7aa00f3, type: 2}
+    stackCount: 1
+    attachedCharms: []
+  rangedWeapons:
+  - baseItem: {fileID: 11400000, guid: 3ca1cf42af935e7439c3954489a8786e, type: 2}
+    stackCount: 1
+    attachedCharms: []
+  missiles:
+  - baseItem: {fileID: 11400000, guid: 3ca1cf42af935e7439c3954489a8786e, type: 2}
+    stackCount: 1
+    attachedCharms: []
+  - baseItem: {fileID: 11400000, guid: 3ca1cf42af935e7439c3954489a8786e, type: 2}
+    stackCount: 1
+    attachedCharms: []
+  armors: []
+  shields: []
+  potions: []
+  scrolls: []
+  amulets: []
+  rings: []
+  gems: []
 --- !u!1 &4076837569317092631
 GameObject:
   m_ObjectHideFlags: 0

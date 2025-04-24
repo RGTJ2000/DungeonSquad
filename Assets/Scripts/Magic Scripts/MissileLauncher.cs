@@ -60,7 +60,6 @@ public class MissileLauncher : MonoBehaviour
         //missile.GetComponent<MissileGuidance>().SetMissileParameters(origin_obj, launch_vector, damageBase, damageRange, missileSpeed, missileRange);
 
 
-        Debug.Log("Playing bowlaunch");
         string soundID = _attackerStats.equipped_rangedWeapon.RangedWeapon.launchAudio_ID;
         SoundManager.Instance.PlayVariationAtPosition(soundID, transform.position, SoundCategory.sfx);
 
