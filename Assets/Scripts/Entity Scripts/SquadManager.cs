@@ -461,24 +461,30 @@ public class SquadManager : MonoBehaviour
 
     private void EngageTarget()
     {
-        SkillCooldownTracker _skillCooldownTracker = ch_in_slot_array[select_active].GetComponent<SkillCooldownTracker>();
-        Skill_SO active_skill = ch_in_slot_array[select_active].GetComponent<EntityStats>().selected_skill;
-       
-
-        if (_skillCooldownTracker == null || !_skillCooldownTracker.IsSkillOnCooldown(active_skill))
+        if (ch_in_slot_array[select_active] != null)
         {
-            ch_in_slot_array[select_active].GetComponent<TargetingScan>().SetTargetedEntity(); //set highlighted entity to target entity
+            SkillCooldownTracker _skillCooldownTracker = ch_in_slot_array[select_active].GetComponent<SkillCooldownTracker>();
+            Skill_SO active_skill = ch_in_slot_array[select_active].GetComponent<EntityStats>().selected_skill;
 
-            //change performed skill to the currently active skill in stats
-            ch_in_slot_array[select_active].GetComponent<Ch_Behavior>().SetSkillPerforming(ch_in_slot_array[select_active].GetComponent<EntityStats>().selected_skill);
 
-            //turn on isEngaging
-            ch_in_slot_array[select_active].GetComponent<Ch_Behavior>().isEngaging = true;
+            if (_skillCooldownTracker == null || !_skillCooldownTracker.IsSkillOnCooldown(active_skill))
+            {
+                ch_in_slot_array[select_active].GetComponent<TargetingScan>().SetTargetedEntity(); //set highlighted entity to target entity
 
-            DeactivateCharacterSelectLines(select_active);
-            select_active = -1;
+                //change performed skill to the currently active skill in stats
+                ch_in_slot_array[select_active].GetComponent<Ch_Behavior>().SetSkillPerforming(ch_in_slot_array[select_active].GetComponent<EntityStats>().selected_skill);
+
+                //turn on isEngaging
+                ch_in_slot_array[select_active].GetComponent<Ch_Behavior>().isEngaging = true;
+
+                DeactivateCharacterSelectLines(select_active);
+                select_active = -1;
+
+            }
+
 
         }
+       
 
      
 

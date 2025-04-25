@@ -1,7 +1,11 @@
+using NUnit.Framework;
+using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 
@@ -16,17 +20,35 @@ public class UICanvasManager : MonoBehaviour
     [SerializeField] private Transform meleePanel;
     [SerializeField] private Transform rangedPanel;
     [SerializeField] private Transform missilePanel;
-    [SerializeField] private GameObject itemEntry_button;
+    [SerializeField] private GameObject itemEntry_prefab;
 
     private Inventory _coreInventory;
 
-    //[SerializeField] private GameObject skillPanel;      // parent of your grid
-    [SerializeField] private GameObject inventoryPanel;  // your ScrollView parent
+    [SerializeField] private GameObject inventoryPanel;
+    private ScrollRect _scrollRect;
+    private RectTransform _srContent;
+    private RectTransform _srViewport;
 
     private bool inventoryActive = false;
 
+    List<GameObject> inventoryEntries = new List<GameObject>();
+    private int inventoryIndex = 0;
+
+    private Coroutine _scrollCoroutine;
+
+
+    private PlayerInputActions _playerInputActions;
+
+    private void Awake()
+    {
+        _playerInputActions = new PlayerInputActions();
+
+    }
     private void OnEnable()
     {
+        _playerInputActions.Player.Enable();
+        _playerInputActions.Player.UI_navigate.performed += OnUINavigate;
+
         SquadManager.OnCharacterSelected += HandleSkillsUI;
         SquadManager.OnInventorySelected += HandleInventoryUI;
 
@@ -34,6 +56,9 @@ public class UICanvasManager : MonoBehaviour
 
     private void OnDisable()
     {
+        _playerInputActions.Player.Disable();
+        _playerInputActions.Player.UI_navigate.performed -= OnUINavigate;
+
         SquadManager.OnCharacterSelected -= HandleSkillsUI;
         SquadManager.OnInventorySelected -= HandleInventoryUI;
 
@@ -42,6 +67,18 @@ public class UICanvasManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        //inventory panel
+        _scrollRect = inventoryPanel.GetComponentInChildren<ScrollRect>();
+        if (_scrollRect != null)
+        {
+            Debug.Log("Scroll Rect FOUND!");
+        }
+        else
+        { Debug.Log("SCROLL RECT = NULL"); }
+
+        _srContent = _scrollRect.content;
+        _srViewport = _scrollRect.viewport;
+
         //populate slot_array with slot gameobjects
         slots_array = new GameObject[grid.childCount];
         for (int i = 0; i < slots_array.Length; i++)
@@ -121,7 +158,11 @@ public class UICanvasManager : MonoBehaviour
         {
             ClearInventoryUI();
             PopulateInventoryPanel();
+
+            
             ActivateInventoryUI(ch_obj);
+            //set scrollview to top
+            _scrollRect.verticalNormalizedPosition = 1;
             inventoryActive = true;
         }
         else
@@ -243,9 +284,47 @@ public class UICanvasManager : MonoBehaviour
         }
     }
 
+    private void OnUINavigate(InputAction.CallbackContext context)
+    {
+        if (inventoryEntries.Count > 0)
+        {
+            Vector2 input = context.ReadValue<Vector2>();
+
+            if (input.y > 0f)
+            {
+                MoveInventorySelectIndex(-1);
+            }
+            else if (input.y < 0f)
+            {
+                MoveInventorySelectIndex(1);
+            }
+
+
+        }
+
+    }
+
+    private void MoveInventorySelectIndex(int indexChange)
+    {
+        int newIndex = Mathf.Clamp(inventoryIndex + indexChange, 0, inventoryEntries.Count - 1);
+
+        if (newIndex != inventoryIndex)
+        {
+            //deselect inventory index
+            DeselectInventoryItem(inventoryEntries[inventoryIndex]);
+            //select new index
+            SelectInventoryItem(inventoryEntries[newIndex]);
+
+            inventoryIndex = newIndex;
+
+            ScrollToItem(inventoryEntries[inventoryIndex]);
+        }
+    }
+
 
     private void PopulateInventoryPanel()
     {
+
         //ClearInventoryPanel();
         foreach (var meleeItem in _coreInventory.meleeWeapons)
         {
@@ -257,9 +336,11 @@ public class UICanvasManager : MonoBehaviour
             AddItemToCategoryPanel(rangedItem, rangedPanel);
         }
 
+
         foreach (var missiles in _coreInventory.missiles)
         {
             AddItemToCategoryPanel(missiles, missilePanel);
+
         }
 
     }
@@ -269,6 +350,13 @@ public class UICanvasManager : MonoBehaviour
         ClearPanel(meleePanel);
         ClearPanel(rangedPanel);
         ClearPanel(missilePanel);
+        //clear main list
+        inventoryEntries.Clear();
+        //reset index
+        inventoryIndex = 0;
+        //reset scroll view
+        _scrollRect.verticalNormalizedPosition = 1;
+
     }
 
     void ClearPanel(Transform panel)
@@ -281,30 +369,174 @@ public class UICanvasManager : MonoBehaviour
                 Destroy(panel.GetChild(i).gameObject);
             }
         }
+
+        
     }
 
     private void AddItemToCategoryPanel(RuntimeItem item, Transform categoryPanel)
     {
-        GameObject newObj = Instantiate(itemEntry_button, categoryPanel);
-        Button newButton = newObj.GetComponent<Button>();
+        GameObject newObj = Instantiate(itemEntry_prefab, categoryPanel);
 
+        Transform itemName = newObj.transform.Find("ItemName");
+        TextMeshProUGUI nameText = itemName.GetComponent<TextMeshProUGUI>();
 
-        // Update the button's label text
-        TextMeshProUGUI label = newButton.GetComponentInChildren<TextMeshProUGUI>();
-        if (label != null)
+        nameText.text = item.item_name;
+
+        inventoryEntries.Add(newObj);
+
+        //activate/deactivate selection options
+        if (inventoryEntries.Count == 1)
         {
-            label.text = item.item_name;
+            SelectInventoryItem(newObj);
+            //ScrollToItem(newObj);
+        }
+        else if (inventoryEntries.Count > 1)
+        {
+            DeselectInventoryItem(newObj);
+
         }
 
-        /*
-        // Optional: Select this button as the current selected UI object
-        if (shouldSelectFirstItem)
-        {
-            EventSystem.current.SetSelectedGameObject(newButton.gameObject);
-        }
-        */
+
     }
 
+    private void DeselectInventoryItem(GameObject entry)
+    {
+        Transform itemName = entry.transform.Find("ItemName");
+        TextMeshProUGUI nameText = itemName.GetComponent<TextMeshProUGUI>();
+
+        Transform equipText = entry.transform.Find("Equip");
+        Transform dropText = entry.transform.Find("Drop");
+        Image background = entry.GetComponentInChildren<Image>();
+
+        nameText.fontStyle = FontStyles.Normal;
+        equipText.gameObject.SetActive(false);
+        dropText.gameObject.SetActive(false);
+        background.color = new Color32(152, 152, 152, 22);
+    }
+
+    private void SelectInventoryItem(GameObject entry)
+    {
+        Transform itemName = entry.transform.Find("ItemName");
+        TextMeshProUGUI nameText = itemName.GetComponent<TextMeshProUGUI>();
+
+        Transform equipText = entry.transform.Find("Equip");
+        Transform dropText = entry.transform.Find("Drop");
+        Image background = entry.GetComponentInChildren<Image>();
+
+        nameText.fontStyle = FontStyles.Bold;
+        equipText.gameObject.SetActive(true);
+        dropText.gameObject.SetActive(true);
+        background.color = new Color32(221, 147, 39, 20);
+    }
+
+    private void ScrollToItem(GameObject entry)
+    {
+        RectTransform entryRect = entry.GetComponent<RectTransform>();
+
+        // Calculate the world space bounds
+        Bounds entryBounds = GetWorldSpaceBounds(entryRect);
+        Bounds viewportBounds = GetWorldSpaceBounds(_srViewport);
+
+        // Find the index of this entry in our list
+        int entryIndex = inventoryEntries.IndexOf(entry);
+
+        // Special handling for top items (first 2 items)
+        if (entryIndex <= 2)
+        {
+            // For the first few items, just scroll all the way to the top
+            if (_scrollCoroutine != null)
+                StopCoroutine(_scrollCoroutine);
+
+            _scrollCoroutine = StartCoroutine(SmoothScrollTo(1.0f)); // 1.0 = top position
+            return;
+        }
+
+        // Standard visibility check
+        if (viewportBounds.Contains(entryBounds.min) && viewportBounds.Contains(entryBounds.max))
+        {
+            // Item is fully visible, no need to scroll
+            return;
+        }
+
+        // Calculate target position for other items
+        Vector2 entryPosition = entryRect.anchoredPosition;
+        float itemHeight = entryRect.rect.height;
+        float contentHeight = _srContent.rect.height;
+        float viewportHeight = _srViewport.rect.height;
+
+        
+
+        float targetPosition;
+
+        // Determine target scroll position based on item visibility
+        if (entryBounds.min.y > viewportBounds.max.y)
+        {
+            // Item is above viewport
+            targetPosition = -entryPosition.y;
+        }
+        else if (entryBounds.max.y < viewportBounds.min.y)
+        {
+            // Item is below viewport
+            targetPosition = -entryPosition.y - itemHeight + viewportHeight;
+        }
+        else if (entryBounds.min.y < viewportBounds.min.y)
+        {
+            // Bottom of item is outside viewport
+            targetPosition = -entryPosition.y - itemHeight + viewportHeight;
+        }
+        else
+        {
+            // Top of item is outside viewport
+            targetPosition = -entryPosition.y;
+        }
+
+        // Convert to normalized position
+        float targetScrollPosition = 1 - (targetPosition / (contentHeight - viewportHeight));
+        targetScrollPosition = Mathf.Clamp01(targetScrollPosition);
+
+        // Start smooth scrolling
+        if (_scrollCoroutine != null)
+            StopCoroutine(_scrollCoroutine);
+
+        _scrollCoroutine = StartCoroutine(SmoothScrollTo(targetScrollPosition));
+    }
+
+
+    // Helper method to get world space bounds of a RectTransform
+    private Bounds GetWorldSpaceBounds(RectTransform rectTransform)
+    {
+        Vector3[] corners = new Vector3[4];
+        rectTransform.GetWorldCorners(corners);
+
+        Bounds bounds = new Bounds(corners[0], Vector3.zero);
+        for (int i = 1; i < 4; i++)
+        {
+            bounds.Encapsulate(corners[i]);
+        }
+
+        return bounds;
+    }
+
+    private IEnumerator SmoothScrollTo(float targetScrollPosition)
+    {
+        float startPosition = _scrollRect.verticalNormalizedPosition;
+        float time = 0;
+        float duration = 0.2f; // Adjust time as needed
+
+        while (time < duration)
+        {
+            time += Time.deltaTime;
+            float t = time / duration;
+            // Ease in-out for smoother feel
+            t = t < 0.5f ? 2 * t * t : 1 - Mathf.Pow(-2 * t + 2, 2) / 2;
+
+            _scrollRect.verticalNormalizedPosition = Mathf.Lerp(startPosition, targetScrollPosition, t);
+            yield return null;
+        }
+
+        _scrollRect.verticalNormalizedPosition = targetScrollPosition;
+        _scrollCoroutine = null;
+    }
 
     private void DeactivateSkillsUI()
     {
