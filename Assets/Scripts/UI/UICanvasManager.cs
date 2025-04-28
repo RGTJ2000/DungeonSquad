@@ -1,19 +1,14 @@
-using NUnit.Framework;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
-
-
 
 public class UICanvasManager : MonoBehaviour
 {
 
-
+    private SquadManager _squadManager;
     private GameObject[] slots_array;
     private GameObject current_character;
     [SerializeField] private Transform grid;
@@ -22,7 +17,6 @@ public class UICanvasManager : MonoBehaviour
     [SerializeField] private Transform missilePanel;
     [SerializeField] private GameObject itemEntry_prefab;
 
-    private Inventory _coreInventory;
 
     [SerializeField] private GameObject inventoryPanel;
     private ScrollRect _scrollRect;
@@ -32,6 +26,7 @@ public class UICanvasManager : MonoBehaviour
     private bool inventoryActive = false;
 
     List<GameObject> inventoryEntries = new List<GameObject>();
+    List<RuntimeItem> inventoryItems = new List<RuntimeItem>();
     private int inventoryIndex = 0;
 
     private Coroutine _scrollCoroutine;
@@ -50,6 +45,7 @@ public class UICanvasManager : MonoBehaviour
         _playerInputActions.Player.UI_navigate.performed += OnUINavigate;
 
         SquadManager.OnCharacterSelected += HandleSkillsUI;
+        SquadManager.OnCharacterSelected += UpdateInventoryPanel;
         SquadManager.OnInventorySelected += HandleInventoryUI;
 
     }
@@ -60,6 +56,7 @@ public class UICanvasManager : MonoBehaviour
         _playerInputActions.Player.UI_navigate.performed -= OnUINavigate;
 
         SquadManager.OnCharacterSelected -= HandleSkillsUI;
+        SquadManager.OnCharacterSelected -= UpdateInventoryPanel;
         SquadManager.OnInventorySelected -= HandleInventoryUI;
 
     }
@@ -67,6 +64,7 @@ public class UICanvasManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        _squadManager = FindFirstObjectByType<SquadManager>();
         //inventory panel
         _scrollRect = inventoryPanel.GetComponentInChildren<ScrollRect>();
         if (_scrollRect != null)
@@ -88,12 +86,18 @@ public class UICanvasManager : MonoBehaviour
 
         }
 
+        /*
         //assign coreInventory
         GameObject core = GameObject.FindWithTag("Core");
         _coreInventory = core.GetComponent<Inventory>();
+        */
 
         //set Inventory Panel state
         inventoryPanel.SetActive(false);
+
+        //clear inventory lists to ensure clean slate
+        inventoryEntries.Clear();
+        inventoryItems.Clear();
 
     }
     private void Update()
@@ -147,7 +151,15 @@ public class UICanvasManager : MonoBehaviour
         }
     }
 
+    private void UpdateInventoryPanel(GameObject ch_obj)
+    {
+       if (inventoryActive)
+        {
+            SelectInventoryItem(inventoryEntries[inventoryIndex]);
 
+        }
+
+    }
 
 
     private void HandleInventoryUI(GameObject ch_obj)
@@ -286,24 +298,59 @@ public class UICanvasManager : MonoBehaviour
 
     private void OnUINavigate(InputAction.CallbackContext context)
     {
-        if (inventoryEntries.Count > 0)
+        if (!inventoryActive)
         {
-            Vector2 input = context.ReadValue<Vector2>();
+            return;
+        }
+        else
+        {
 
-            if (input.y > 0f)
-            {
-                MoveInventorySelectIndex(-1);
-            }
-            else if (input.y < 0f)
-            {
-                MoveInventorySelectIndex(1);
-            }
 
+            if (inventoryEntries.Count > 0)
+            {
+                Vector2 input = context.ReadValue<Vector2>();
+
+                if (input.y > 0f)
+                {
+                    MoveInventorySelectIndex(-1);
+                }
+                else if (input.y < 0f)
+                {
+                    MoveInventorySelectIndex(1);
+                }
+                else if (input.x > 0f)
+                {
+                    DropItem(inventoryIndex, inventoryItems[inventoryIndex]);
+                }
+
+
+            }
 
         }
+       
 
     }
 
+
+    private void DropItem(int index, RuntimeItem item)
+    {
+        Debug.Log("Dropping item " + inventoryItems[index].item_name);
+        //destroy entry prefab
+        Destroy(inventoryEntries[index]);
+
+        //remove from lists
+        inventoryEntries.RemoveAt(index);
+        inventoryItems.RemoveAt(index);
+
+        //remove item from core inventory and instantiate on ground
+        InventoryManager.Instance.DropItemFromCore(item);
+
+        //set inventory index to new location
+        inventoryIndex = Mathf.Clamp(index-1, 0, inventoryEntries.Count-1);
+        SelectInventoryItem(inventoryEntries[inventoryIndex]);
+        ScrollToItem(inventoryEntries[inventoryIndex]);
+        
+    }
     private void MoveInventorySelectIndex(int indexChange)
     {
         int newIndex = Mathf.Clamp(inventoryIndex + indexChange, 0, inventoryEntries.Count - 1);
@@ -326,18 +373,18 @@ public class UICanvasManager : MonoBehaviour
     {
 
         //ClearInventoryPanel();
-        foreach (var meleeItem in _coreInventory.meleeWeapons)
+        foreach (var meleeItem in InventoryManager.Instance.GetCoreMeleeWeaponsList())
         {
             AddItemToCategoryPanel(meleeItem, meleePanel); // prefab instantiation + text set
         }
 
-        foreach (var rangedItem in _coreInventory.rangedWeapons)
+        foreach (var rangedItem in InventoryManager.Instance.GetCoreRangedWeaponsList())
         {
             AddItemToCategoryPanel(rangedItem, rangedPanel);
         }
 
 
-        foreach (var missiles in _coreInventory.missiles)
+        foreach (var missiles in InventoryManager.Instance.GetCoreMissilesList())
         {
             AddItemToCategoryPanel(missiles, missilePanel);
 
@@ -350,8 +397,9 @@ public class UICanvasManager : MonoBehaviour
         ClearPanel(meleePanel);
         ClearPanel(rangedPanel);
         ClearPanel(missilePanel);
-        //clear main list
+        //clear main lists
         inventoryEntries.Clear();
+        inventoryItems.Clear();
         //reset index
         inventoryIndex = 0;
         //reset scroll view
@@ -383,9 +431,10 @@ public class UICanvasManager : MonoBehaviour
         nameText.text = item.item_name;
 
         inventoryEntries.Add(newObj);
+        inventoryItems.Add(item);
 
         //activate/deactivate selection options
-        if (inventoryEntries.Count == 1)
+        if (inventoryEntries.Count == 1) //first object
         {
             SelectInventoryItem(newObj);
             //ScrollToItem(newObj);
@@ -419,12 +468,20 @@ public class UICanvasManager : MonoBehaviour
         Transform itemName = entry.transform.Find("ItemName");
         TextMeshProUGUI nameText = itemName.GetComponent<TextMeshProUGUI>();
 
+
         Transform equipText = entry.transform.Find("Equip");
         Transform dropText = entry.transform.Find("Drop");
         Image background = entry.GetComponentInChildren<Image>();
 
         nameText.fontStyle = FontStyles.Bold;
-        equipText.gameObject.SetActive(true);
+        if (_squadManager.select_active == -1 || (_squadManager.select_active != -1 && _squadManager.ch_in_slot_array[_squadManager.select_active] == null))
+        {
+            equipText.gameObject.SetActive(false);
+        }
+        else
+        {
+            equipText.gameObject.SetActive(true);
+        }
         dropText.gameObject.SetActive(true);
         background.color = new Color32(221, 147, 39, 20);
     }

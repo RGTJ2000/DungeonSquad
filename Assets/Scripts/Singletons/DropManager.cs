@@ -114,6 +114,33 @@ public class DropManager : MonoBehaviour
 
     }
 
+    public void ThrowRuntimeItem(RuntimeItem item, GameObject entity)
+    {
+        GameObject _prefab = item.item_prefab;
+
+        if (_prefab != null)
+        {
+            GameObject thisDrop;
+            thisDrop = Instantiate(_prefab, entity.transform.position, Quaternion.identity);
+            //set the RuntimeItem reference in prefab
+            DroppedItemBehavior _droppedItemBehavior = thisDrop.GetComponent<DroppedItemBehavior>();
+            _droppedItemBehavior.RuntimeItem = item;
+
+            //throw item
+            Rigidbody _rb = thisDrop.GetComponent<Rigidbody>();
+            {
+
+                _rb.linearVelocity = RandomizeLaunchVector(dropLaunchVector) * dropLaunchSpeed;
+
+            }
+             SoundManager.Instance.PlaySoundByKeyAtPosition(item.baseItem.dropAudio_ID, entity.transform.position, SoundCategory.sfx);
+            Debug.Log("drop audio = " + item.baseItem.dropAudio_ID);
+        }
+        
+
+    }
+
+
     private Vector3 RandomizeLaunchVector(Vector3 vector)
     {
         float randomDegrees = Random.Range(0f, 360f); // Random angle between 0-360

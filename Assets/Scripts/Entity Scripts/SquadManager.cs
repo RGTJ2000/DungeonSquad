@@ -17,7 +17,7 @@ public class SquadManager : MonoBehaviour
   
   
 
-    private GameObject[] ch_in_slot_array = null;
+    public GameObject[] ch_in_slot_array = null;
 
     /*
     private string[] select_activeToStrings = new string[4] { "fighter", "cleric", "wizard", "ranger" };
@@ -424,7 +424,7 @@ public class SquadManager : MonoBehaviour
                 _entityStats.selected_skill = _entityStats.skill_slot[_entityStats.active_skillSlot];
                 SoundManager.Instance.PlaySoundByKey("single_click", SoundCategory.UI);
 
-                DeactivateCharacterSelectLines(select_active);
+                //DeactivateCharacterSelectLines(select_active);
                 ActivateCharacterSelectLines(select_active);
 
                 
@@ -510,7 +510,7 @@ public class SquadManager : MonoBehaviour
 
         Destroy(selectring_obj); //remove the selection ring
         DisableActiveEntityReturnLines(); //turn off all enemy selection lines
-        //select_active = -1; //the active select index is turned off
+        select_active = -1; //the active select index is turned off
 
         //UI deactivate because no character selected
         OnCharacterSelected?.Invoke(null);
@@ -522,8 +522,13 @@ public class SquadManager : MonoBehaviour
     {
         if (select_active >= 0)
         {
-            ch_in_slot_array[select_active].GetComponent<Ch_Behavior>().CancelEngage();
-            DeactivateCharacterSelectLines(select_active);
+            if (ch_in_slot_array[select_active] != null)
+            {
+                ch_in_slot_array[select_active].GetComponent<Ch_Behavior>().CancelEngage();
+                DeactivateCharacterSelectLines(select_active);
+                
+
+            }
             select_active = -1;
         }
     }

@@ -620,15 +620,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Point"",
-                    ""type"": ""PassThrough"",
-                    ""id"": ""b98a1dc0-320f-4401-b295-783f06787a27"",
-                    ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
-                },
-                {
                     ""name"": ""Click"",
                     ""type"": ""PassThrough"",
                     ""id"": ""dfe7724f-9a8f-418d-b44e-9bf74cc49b7c"",
@@ -660,24 +651,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""type"": ""PassThrough"",
                     ""id"": ""bd27463f-e868-40c8-a724-adf5cf55c56e"",
                     ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""TrackedDevicePosition"",
-                    ""type"": ""PassThrough"",
-                    ""id"": ""a5ea9ae1-3156-45e5-a4c6-850c2a22309d"",
-                    ""expectedControlType"": ""Vector3"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""TrackedDeviceOrientation"",
-                    ""type"": ""PassThrough"",
-                    ""id"": ""0015227e-2ce5-4566-af57-b11b941e7fcc"",
-                    ""expectedControlType"": ""Quaternion"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -774,39 +747,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""c52c8e0b-8179-41d3-b8a1-d149033bbe86"",
-                    ""path"": ""<Mouse>/position"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Point"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""e1394cbc-336e-44ce-9ea8-6007ed6193f7"",
-                    ""path"": ""<Pen>/position"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Point"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""5693e57a-238a-46ed-b5ae-e64e6e574302"",
-                    ""path"": ""<Touchscreen>/touch*/position"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Touch"",
-                    ""action"": ""Point"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""4faf7dc9-b979-4210-aa8c-e808e1ef89f5"",
                     ""path"": ""<Mouse>/leftButton"",
                     ""interactions"": """",
@@ -879,28 +819,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""RightClick"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""7236c0d9-6ca3-47cf-a6ee-a97f5b59ea77"",
-                    ""path"": ""<XRController>/devicePosition"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""XR"",
-                    ""action"": ""TrackedDevicePosition"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""23e01e3a-f935-4948-8d8b-9bcac77714fb"",
-                    ""path"": ""<XRController>/deviceRotation"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""XR"",
-                    ""action"": ""TrackedDeviceOrientation"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -990,13 +908,10 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
         m_UI_Submit = m_UI.FindAction("Submit", throwIfNotFound: true);
         m_UI_Cancel = m_UI.FindAction("Cancel", throwIfNotFound: true);
-        m_UI_Point = m_UI.FindAction("Point", throwIfNotFound: true);
         m_UI_Click = m_UI.FindAction("Click", throwIfNotFound: true);
         m_UI_ScrollWheel = m_UI.FindAction("ScrollWheel", throwIfNotFound: true);
         m_UI_MiddleClick = m_UI.FindAction("MiddleClick", throwIfNotFound: true);
         m_UI_RightClick = m_UI.FindAction("RightClick", throwIfNotFound: true);
-        m_UI_TrackedDevicePosition = m_UI.FindAction("TrackedDevicePosition", throwIfNotFound: true);
-        m_UI_TrackedDeviceOrientation = m_UI.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
     }
 
     ~@PlayerInputActions()
@@ -1209,13 +1124,10 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_UI_Navigate;
     private readonly InputAction m_UI_Submit;
     private readonly InputAction m_UI_Cancel;
-    private readonly InputAction m_UI_Point;
     private readonly InputAction m_UI_Click;
     private readonly InputAction m_UI_ScrollWheel;
     private readonly InputAction m_UI_MiddleClick;
     private readonly InputAction m_UI_RightClick;
-    private readonly InputAction m_UI_TrackedDevicePosition;
-    private readonly InputAction m_UI_TrackedDeviceOrientation;
     public struct UIActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -1223,13 +1135,10 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @Navigate => m_Wrapper.m_UI_Navigate;
         public InputAction @Submit => m_Wrapper.m_UI_Submit;
         public InputAction @Cancel => m_Wrapper.m_UI_Cancel;
-        public InputAction @Point => m_Wrapper.m_UI_Point;
         public InputAction @Click => m_Wrapper.m_UI_Click;
         public InputAction @ScrollWheel => m_Wrapper.m_UI_ScrollWheel;
         public InputAction @MiddleClick => m_Wrapper.m_UI_MiddleClick;
         public InputAction @RightClick => m_Wrapper.m_UI_RightClick;
-        public InputAction @TrackedDevicePosition => m_Wrapper.m_UI_TrackedDevicePosition;
-        public InputAction @TrackedDeviceOrientation => m_Wrapper.m_UI_TrackedDeviceOrientation;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1248,9 +1157,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Cancel.started += instance.OnCancel;
             @Cancel.performed += instance.OnCancel;
             @Cancel.canceled += instance.OnCancel;
-            @Point.started += instance.OnPoint;
-            @Point.performed += instance.OnPoint;
-            @Point.canceled += instance.OnPoint;
             @Click.started += instance.OnClick;
             @Click.performed += instance.OnClick;
             @Click.canceled += instance.OnClick;
@@ -1263,12 +1169,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @RightClick.started += instance.OnRightClick;
             @RightClick.performed += instance.OnRightClick;
             @RightClick.canceled += instance.OnRightClick;
-            @TrackedDevicePosition.started += instance.OnTrackedDevicePosition;
-            @TrackedDevicePosition.performed += instance.OnTrackedDevicePosition;
-            @TrackedDevicePosition.canceled += instance.OnTrackedDevicePosition;
-            @TrackedDeviceOrientation.started += instance.OnTrackedDeviceOrientation;
-            @TrackedDeviceOrientation.performed += instance.OnTrackedDeviceOrientation;
-            @TrackedDeviceOrientation.canceled += instance.OnTrackedDeviceOrientation;
         }
 
         private void UnregisterCallbacks(IUIActions instance)
@@ -1282,9 +1182,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Cancel.started -= instance.OnCancel;
             @Cancel.performed -= instance.OnCancel;
             @Cancel.canceled -= instance.OnCancel;
-            @Point.started -= instance.OnPoint;
-            @Point.performed -= instance.OnPoint;
-            @Point.canceled -= instance.OnPoint;
             @Click.started -= instance.OnClick;
             @Click.performed -= instance.OnClick;
             @Click.canceled -= instance.OnClick;
@@ -1297,12 +1194,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @RightClick.started -= instance.OnRightClick;
             @RightClick.performed -= instance.OnRightClick;
             @RightClick.canceled -= instance.OnRightClick;
-            @TrackedDevicePosition.started -= instance.OnTrackedDevicePosition;
-            @TrackedDevicePosition.performed -= instance.OnTrackedDevicePosition;
-            @TrackedDevicePosition.canceled -= instance.OnTrackedDevicePosition;
-            @TrackedDeviceOrientation.started -= instance.OnTrackedDeviceOrientation;
-            @TrackedDeviceOrientation.performed -= instance.OnTrackedDeviceOrientation;
-            @TrackedDeviceOrientation.canceled -= instance.OnTrackedDeviceOrientation;
         }
 
         public void RemoveCallbacks(IUIActions instance)
@@ -1386,12 +1277,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnNavigate(InputAction.CallbackContext context);
         void OnSubmit(InputAction.CallbackContext context);
         void OnCancel(InputAction.CallbackContext context);
-        void OnPoint(InputAction.CallbackContext context);
         void OnClick(InputAction.CallbackContext context);
         void OnScrollWheel(InputAction.CallbackContext context);
         void OnMiddleClick(InputAction.CallbackContext context);
         void OnRightClick(InputAction.CallbackContext context);
-        void OnTrackedDevicePosition(InputAction.CallbackContext context);
-        void OnTrackedDeviceOrientation(InputAction.CallbackContext context);
     }
 }

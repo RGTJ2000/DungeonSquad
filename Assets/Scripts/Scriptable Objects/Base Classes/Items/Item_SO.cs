@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using UnityEngine;
 
 // Inventory categorization
@@ -30,7 +31,8 @@ public abstract class Item_SO : ScriptableObject
 
     public Sprite item_icon;
     public GameObject item_prefab;
-
+    public string pickupAudio_ID;
+    public string dropAudio_ID;
     
 
     

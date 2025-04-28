@@ -385,18 +385,23 @@ public class TargetingScan : MonoBehaviour
 
         for (int i = 0; i < targets_array.Length; i++)
         {
-            float angleValue;
-
-            angleValue = Vector3.SignedAngle(reference_vector, (targets_array[i].transform.position - transform.position).normalized, Vector3.up);
-
-            if (angleValue < 0) //excluse 0 because that will be the currently highlighted entity
+            if (targets_array[i] != null)
             {
-                negative_list.Add(Tuple.Create(targets_array[i], Mathf.Abs(angleValue)));
+                float angleValue;
+
+                angleValue = Vector3.SignedAngle(reference_vector, (targets_array[i].transform.position - transform.position).normalized, Vector3.up);
+
+                if (angleValue < 0) //excluse 0 because that will be the currently highlighted entity
+                {
+                    negative_list.Add(Tuple.Create(targets_array[i], Mathf.Abs(angleValue)));
+                }
+                else if (angleValue > 0)
+                {
+                    positive_list.Add(Tuple.Create(targets_array[i], Mathf.Abs(angleValue)));
+                }
+
             }
-            else if (angleValue>0)
-            {
-                positive_list.Add(Tuple.Create(targets_array[i], Mathf.Abs(angleValue)));
-            }
+            
 
         }
 

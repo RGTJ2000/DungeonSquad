@@ -16,9 +16,13 @@ MonoBehaviour:
   description: A simple sword made of crude iron
   category: 0
   item_icon: {fileID: 0}
-  item_prefab: {fileID: 0}
+  item_prefab: {fileID: 6711430165638062514, guid: cce6503d62368e5419d2d83504fc8eb5,
+    type: 3}
+  pickupAudio_ID: 
+  dropAudio_ID: sword_drop
   isStackable: 0
   maxStack: 1
+  attachedCharms: []
   attackCooldown: 1
   critChance_base: 1
   critChance_weight_str: 1

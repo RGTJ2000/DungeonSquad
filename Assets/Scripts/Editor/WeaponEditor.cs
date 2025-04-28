@@ -14,6 +14,8 @@ public class WeaponEditor : Editor
         weapon.category = (ItemCategory)EditorGUILayout.EnumPopup("Category", weapon.category);
         weapon.item_icon = (Sprite)EditorGUILayout.ObjectField("Item Icon", weapon.item_icon, typeof(Sprite), false);
         weapon.item_prefab = (GameObject)EditorGUILayout.ObjectField("Item Prefab", weapon.item_prefab, typeof(GameObject), false);
+        weapon.pickupAudio_ID = EditorGUILayout.TextField("pickupAudio_ID", weapon.pickupAudio_ID);
+        weapon.dropAudio_ID = EditorGUILayout.TextField("dropAudio_ID", weapon.dropAudio_ID);
 
         weapon.isStackable = EditorGUILayout.Toggle("Is Stackable", weapon.isStackable);
         if (weapon.isStackable)
@@ -40,6 +42,8 @@ public class WeaponEditor : Editor
             "category",
             "item_icon",
             "item_prefab",
+            "pickupAudio_ID",
+            "dropAudio_ID",
             "isStackable",
             "maxStack",
             "attackCooldown",

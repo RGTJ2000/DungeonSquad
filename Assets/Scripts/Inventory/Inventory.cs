@@ -99,4 +99,32 @@ public class Inventory : MonoBehaviour
             return all;
         }
     }
+
+    public void RemoveItem(RuntimeItem item)
+    {
+        switch (item.category)
+        {
+            case ItemCategory.melee_weapon:
+                {
+                    meleeWeapons.Remove(item);
+                    break;
+                }
+            case ItemCategory.ranged_weapon:
+                {
+                    rangedWeapons.Remove(item);
+                    break;
+                }
+            case ItemCategory.missile:
+                {
+                    missiles.Remove(item);
+                    break;
+                }
+            default:
+                {
+                    Debug.LogWarning("Unknown item category to remove: " + item.baseItem.item_name);
+
+                    break;
+                }
+        }
+    }
 }
