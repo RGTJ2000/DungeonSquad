@@ -46,15 +46,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""Fire"",
-                    ""type"": ""Button"",
-                    ""id"": ""f0bcb190-14ad-4934-aeb4-bef2852c8e37"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""SelectRed"",
                     ""type"": ""Button"",
                     ""id"": ""44e73045-a3fa-4dd7-adf1-cbf9f46dd612"",
@@ -100,15 +91,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Engage"",
-                    ""type"": ""Button"",
-                    ""id"": ""b68ecc52-6c4e-4725-be7a-93af62a46aa7"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""AllReturnToFormation"",
                     ""type"": ""Button"",
                     ""id"": ""4811ecb2-d841-4369-bb43-4f0b45e0bdf6"",
@@ -143,6 +125,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""ToggleScanMode"",
+                    ""type"": ""Button"",
+                    ""id"": ""5258a3aa-2198-43e1-b870-ba04955bfe79"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -242,61 +233,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Joystick"",
                     ""action"": ""Rotate"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""143bb1cd-cc10-4eca-a2f0-a3664166fe91"",
-                    ""path"": ""<Gamepad>/rightTrigger"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Gamepad"",
-                    ""action"": ""Fire"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""05f6913d-c316-48b2-a6bb-e225f14c7960"",
-                    ""path"": ""<Mouse>/leftButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""Fire"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""886e731e-7071-4ae4-95c0-e61739dad6fd"",
-                    ""path"": ""<Touchscreen>/primaryTouch/tap"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Touch"",
-                    ""action"": ""Fire"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""ee3d0cd2-254e-47a7-a8cb-bc94d9658c54"",
-                    ""path"": ""<Joystick>/trigger"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Joystick"",
-                    ""action"": ""Fire"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""8255d333-5683-4943-a58a-ccb207ff1dce"",
-                    ""path"": ""<XRController>/{PrimaryAction}"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""XR"",
-                    ""action"": ""Fire"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -407,28 +343,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""ReturnToFormation"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""3f677f49-f0d6-49c4-81f4-6a4be5d34cad"",
-                    ""path"": ""<Gamepad>/rightStickPress"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Engage"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""c65e7a0d-09b5-480c-a9ab-60c35403688b"",
-                    ""path"": ""<Keyboard>/p"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Engage"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -585,6 +499,28 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""UI_navigate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""83674e3d-7391-4f5a-922d-4f4249f5c1c2"",
+                    ""path"": ""<Keyboard>/p"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ToggleScanMode"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ba46c28b-9a7f-444e-88bd-081fbe8cb3b3"",
+                    ""path"": ""<Gamepad>/rightStickPress"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ToggleScanMode"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -892,17 +828,16 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_Rotate = m_Player.FindAction("Rotate", throwIfNotFound: true);
-        m_Player_Fire = m_Player.FindAction("Fire", throwIfNotFound: true);
         m_Player_SelectRed = m_Player.FindAction("SelectRed", throwIfNotFound: true);
         m_Player_SelectGreen = m_Player.FindAction("SelectGreen", throwIfNotFound: true);
         m_Player_SelectBlue = m_Player.FindAction("SelectBlue", throwIfNotFound: true);
         m_Player_SelectYellow = m_Player.FindAction("SelectYellow", throwIfNotFound: true);
         m_Player_ReturnToFormation = m_Player.FindAction("ReturnToFormation", throwIfNotFound: true);
-        m_Player_Engage = m_Player.FindAction("Engage", throwIfNotFound: true);
         m_Player_AllReturnToFormation = m_Player.FindAction("AllReturnToFormation", throwIfNotFound: true);
         m_Player_SkillSelect = m_Player.FindAction("SkillSelect", throwIfNotFound: true);
         m_Player_InventorySelect = m_Player.FindAction("InventorySelect", throwIfNotFound: true);
         m_Player_UI_navigate = m_Player.FindAction("UI_navigate", throwIfNotFound: true);
+        m_Player_ToggleScanMode = m_Player.FindAction("ToggleScanMode", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -981,34 +916,32 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
     private readonly InputAction m_Player_Move;
     private readonly InputAction m_Player_Rotate;
-    private readonly InputAction m_Player_Fire;
     private readonly InputAction m_Player_SelectRed;
     private readonly InputAction m_Player_SelectGreen;
     private readonly InputAction m_Player_SelectBlue;
     private readonly InputAction m_Player_SelectYellow;
     private readonly InputAction m_Player_ReturnToFormation;
-    private readonly InputAction m_Player_Engage;
     private readonly InputAction m_Player_AllReturnToFormation;
     private readonly InputAction m_Player_SkillSelect;
     private readonly InputAction m_Player_InventorySelect;
     private readonly InputAction m_Player_UI_navigate;
+    private readonly InputAction m_Player_ToggleScanMode;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
         public PlayerActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Player_Move;
         public InputAction @Rotate => m_Wrapper.m_Player_Rotate;
-        public InputAction @Fire => m_Wrapper.m_Player_Fire;
         public InputAction @SelectRed => m_Wrapper.m_Player_SelectRed;
         public InputAction @SelectGreen => m_Wrapper.m_Player_SelectGreen;
         public InputAction @SelectBlue => m_Wrapper.m_Player_SelectBlue;
         public InputAction @SelectYellow => m_Wrapper.m_Player_SelectYellow;
         public InputAction @ReturnToFormation => m_Wrapper.m_Player_ReturnToFormation;
-        public InputAction @Engage => m_Wrapper.m_Player_Engage;
         public InputAction @AllReturnToFormation => m_Wrapper.m_Player_AllReturnToFormation;
         public InputAction @SkillSelect => m_Wrapper.m_Player_SkillSelect;
         public InputAction @InventorySelect => m_Wrapper.m_Player_InventorySelect;
         public InputAction @UI_navigate => m_Wrapper.m_Player_UI_navigate;
+        public InputAction @ToggleScanMode => m_Wrapper.m_Player_ToggleScanMode;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1024,9 +957,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Rotate.started += instance.OnRotate;
             @Rotate.performed += instance.OnRotate;
             @Rotate.canceled += instance.OnRotate;
-            @Fire.started += instance.OnFire;
-            @Fire.performed += instance.OnFire;
-            @Fire.canceled += instance.OnFire;
             @SelectRed.started += instance.OnSelectRed;
             @SelectRed.performed += instance.OnSelectRed;
             @SelectRed.canceled += instance.OnSelectRed;
@@ -1042,9 +972,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @ReturnToFormation.started += instance.OnReturnToFormation;
             @ReturnToFormation.performed += instance.OnReturnToFormation;
             @ReturnToFormation.canceled += instance.OnReturnToFormation;
-            @Engage.started += instance.OnEngage;
-            @Engage.performed += instance.OnEngage;
-            @Engage.canceled += instance.OnEngage;
             @AllReturnToFormation.started += instance.OnAllReturnToFormation;
             @AllReturnToFormation.performed += instance.OnAllReturnToFormation;
             @AllReturnToFormation.canceled += instance.OnAllReturnToFormation;
@@ -1057,6 +984,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @UI_navigate.started += instance.OnUI_navigate;
             @UI_navigate.performed += instance.OnUI_navigate;
             @UI_navigate.canceled += instance.OnUI_navigate;
+            @ToggleScanMode.started += instance.OnToggleScanMode;
+            @ToggleScanMode.performed += instance.OnToggleScanMode;
+            @ToggleScanMode.canceled += instance.OnToggleScanMode;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -1067,9 +997,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Rotate.started -= instance.OnRotate;
             @Rotate.performed -= instance.OnRotate;
             @Rotate.canceled -= instance.OnRotate;
-            @Fire.started -= instance.OnFire;
-            @Fire.performed -= instance.OnFire;
-            @Fire.canceled -= instance.OnFire;
             @SelectRed.started -= instance.OnSelectRed;
             @SelectRed.performed -= instance.OnSelectRed;
             @SelectRed.canceled -= instance.OnSelectRed;
@@ -1085,9 +1012,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @ReturnToFormation.started -= instance.OnReturnToFormation;
             @ReturnToFormation.performed -= instance.OnReturnToFormation;
             @ReturnToFormation.canceled -= instance.OnReturnToFormation;
-            @Engage.started -= instance.OnEngage;
-            @Engage.performed -= instance.OnEngage;
-            @Engage.canceled -= instance.OnEngage;
             @AllReturnToFormation.started -= instance.OnAllReturnToFormation;
             @AllReturnToFormation.performed -= instance.OnAllReturnToFormation;
             @AllReturnToFormation.canceled -= instance.OnAllReturnToFormation;
@@ -1100,6 +1024,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @UI_navigate.started -= instance.OnUI_navigate;
             @UI_navigate.performed -= instance.OnUI_navigate;
             @UI_navigate.canceled -= instance.OnUI_navigate;
+            @ToggleScanMode.started -= instance.OnToggleScanMode;
+            @ToggleScanMode.performed -= instance.OnToggleScanMode;
+            @ToggleScanMode.canceled -= instance.OnToggleScanMode;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -1260,17 +1187,16 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     {
         void OnMove(InputAction.CallbackContext context);
         void OnRotate(InputAction.CallbackContext context);
-        void OnFire(InputAction.CallbackContext context);
         void OnSelectRed(InputAction.CallbackContext context);
         void OnSelectGreen(InputAction.CallbackContext context);
         void OnSelectBlue(InputAction.CallbackContext context);
         void OnSelectYellow(InputAction.CallbackContext context);
         void OnReturnToFormation(InputAction.CallbackContext context);
-        void OnEngage(InputAction.CallbackContext context);
         void OnAllReturnToFormation(InputAction.CallbackContext context);
         void OnSkillSelect(InputAction.CallbackContext context);
         void OnInventorySelect(InputAction.CallbackContext context);
         void OnUI_navigate(InputAction.CallbackContext context);
+        void OnToggleScanMode(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

@@ -23,12 +23,13 @@ public class ReturnLinePlot : MonoBehaviour
         GameObject lineObj = new GameObject("OtherLineRenderer");
         lineObj.transform.SetParent(transform, false); // Parent to this object
         _returnLineRenderer = lineObj.AddComponent<LineRenderer>();
+        _returnLineRenderer.enabled = false;
 
         // Configure the LineRenderer
-
         _returnLineRenderer.startWidth = 0.1f;      // Set the start width of the line
         _returnLineRenderer.endWidth = 0.1f;        // Set the end width of the line
         _returnLineRenderer.useWorldSpace = true;
+        _returnLineRenderer.numCapVertices = 10;
         // Set the number of points in the line
         _returnLineRenderer.positionCount = 2;
 
@@ -54,6 +55,7 @@ public class ReturnLinePlot : MonoBehaviour
 
                 bool hit_wall = false;
                 bool hit_target_before_wall = false;
+                bool hit_target = false;
 
                 for (int i = 0; i < hits_info.Length; i++)
                 {
@@ -62,15 +64,21 @@ public class ReturnLinePlot : MonoBehaviour
                         hit_wall = true;
 
                     }
-                    if (!hit_wall && hits_info[i].transform.gameObject == target_obj)
+                    if (hits_info[i].transform.gameObject == target_obj)
                     {
-                        hit_target_before_wall = true;
+                        hit_target = true;
+
+                        if (!hit_wall)
+                        {
+                            hit_target_before_wall = true;
+
+                        }
                     }
 
 
                 }
 
-                if (hit_target_before_wall)
+                if (hit_target && hit_target_before_wall)
                 {
                     _returnLineRenderer.enabled = true;
                     PlotActiveLine(target_obj.transform.position);
@@ -84,9 +92,12 @@ public class ReturnLinePlot : MonoBehaviour
 
 
             }
-           
-
-
+            else //if no hits from Raycast
+            {
+                _returnLineRenderer.enabled = false;
+                active_line = false;
+            }
+         
 
         }
         else
@@ -114,5 +125,17 @@ public class ReturnLinePlot : MonoBehaviour
     {
         _returnLineRenderer.SetPosition(0, transform.position);
         _returnLineRenderer.SetPosition(1, target_position);
+    }
+
+    public void SetSolidLine(Material material)
+    {
+        _returnLineRenderer.material = material;
+        _returnLineRenderer.textureMode = LineTextureMode.Stretch;
+    }
+
+    public void SetDottedLine(Material material)
+    {
+        _returnLineRenderer.material = material;
+        _returnLineRenderer.textureMode = LineTextureMode.Tile;
     }
 }

@@ -227,8 +227,14 @@ MonoBehaviour:
   green_line_mat: {fileID: 2100000, guid: 10d4f3ed38b344c489780eb35654cc73, type: 2}
   blue_line_mat: {fileID: 2100000, guid: 0340aec1e48e14343a82b87e60b11688, type: 2}
   yellow_line_mat: {fileID: 2100000, guid: af6321a23d9808e4e82ede1d424f5664, type: 2}
+  red_line_muted_mat: {fileID: 2100000, guid: 6ec26d65242f2d94fbe6588a3d73ef02, type: 2}
+  green_line_muted_mat: {fileID: 2100000, guid: a203961125f89704e8d90794fecd7b71,
+    type: 2}
+  blue_line_muted_mat: {fileID: 2100000, guid: f8f3a07068550d74b97492958c5e6afb, type: 2}
+  yellow_line_muted_mat: {fileID: 2100000, guid: 29061a5792d32f34793bde8cef39cb19,
+    type: 2}
   lineMaterialArray: []
-  character_lineMaterial: {fileID: 0}
+  mutedLineMaterialArray: []
   target_arrow_on: 0
 --- !u!114 &5109739414080883916
 MonoBehaviour:
@@ -290,11 +296,18 @@ MonoBehaviour:
   frost_defenseRating: 10
   poison_defenseRating: 10
   sleep_defenseRating: 10
-  equipped_meleeWeapon: {fileID: 11400000, guid: 99addd19d2a9ce7448797625b7aa00f3,
-    type: 2}
-  equipped_rangedWeapon: {fileID: 11400000, guid: fff9698c686307a4698f242a7e669550,
-    type: 2}
-  equipped_missile: {fileID: 11400000, guid: 3ca1cf42af935e7439c3954489a8786e, type: 2}
+  equipped_meleeWeapon:
+    baseItem: {fileID: 0}
+    stackCount: 0
+    attachedCharms: []
+  equipped_rangedWeapon:
+    baseItem: {fileID: 0}
+    stackCount: 0
+    attachedCharms: []
+  equipped_missile:
+    baseItem: {fileID: 0}
+    stackCount: 0
+    attachedCharms: []
   active_targetingTag: Enemy
   maxSkillSlots: 5
   skill_slot:
@@ -364,6 +377,16 @@ MonoBehaviour:
   silver_count: 0
   gold_count: 0
   platinum_count: 0
+  meleeWeapons: []
+  rangedWeapons: []
+  missiles: []
+  armors: []
+  shields: []
+  potions: []
+  scrolls: []
+  amulets: []
+  rings: []
+  gems: []
 --- !u!114 &1536420898591447427
 MonoBehaviour:
   m_ObjectHideFlags: 0

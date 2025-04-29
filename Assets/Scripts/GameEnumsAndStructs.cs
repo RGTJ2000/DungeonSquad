@@ -37,7 +37,8 @@ public enum Targeting_Type
     other,
     group,
     self,
-    area
+    area,
+    item
 }
 
 public enum Character_Type
@@ -68,4 +69,10 @@ public enum CoinType
     silver,
     gold,
     platinum
+}
+
+public enum EngageMode
+{
+    combat,
+    item
 }

@@ -3,6 +3,7 @@ using UnityEngine.AI;
 using System.Collections;
 using System;
 using UnityEditor.Experimental.GraphView;
+using static UnityEngine.UI.CanvasScaler;
 
 public class Ch_Behavior : MonoBehaviour
 {
@@ -34,6 +35,8 @@ public class Ch_Behavior : MonoBehaviour
     private bool isIncanting = false;
     private GameObject currentIncantTarget = null;
 
+    private EngageMode engageMode = EngageMode.combat;
+
     void Start()
     {
         _slotprojector = core_obj.GetComponent<SlotProjector>();
@@ -49,6 +52,7 @@ public class Ch_Behavior : MonoBehaviour
     {
         if (isEngaging)
         {
+           
             if (_targetingscan.targeted_entity != null)
             {
                 _targetingscan.ActivateTargetArrow();
@@ -80,7 +84,7 @@ public class Ch_Behavior : MonoBehaviour
                 {
                     CancelEngage();
                 }
-                else if (_targetingscan.SetandReturnNearestTargetEntity() == null)
+                else if (_targetingscan.SetandReturnNearestTargetEntity() == null || !_targetingscan.targeted_entity.CompareTag("Enemy") )
                 {
                     CancelEngage();
                 }
@@ -281,6 +285,74 @@ public class Ch_Behavior : MonoBehaviour
         */
 
     }
+
+
+    public bool ActivateEngage()
+    {
+
+        if (engageMode == EngageMode.combat)
+        {
+            Skill_SO active_skill = _entityStats.selected_skill;
+
+
+            if (_skillCooldownTracker == null || !_skillCooldownTracker.IsSkillOnCooldown(active_skill))
+            {
+                _targetingscan.SetTargetedEntity();  //set targeted entity
+                SetSkillPerforming(_entityStats.selected_skill);  //set the skill to perform
+
+                isEngaging = true;  //turn on engage mode
+
+
+
+                return true;
+
+
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+        else if (engageMode == EngageMode.item)
+        {
+            Debug.Log("Going for item.");
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+        
+
+
+    }
+
+    public void ToggleEngageMode()
+    {
+        if (engageMode == EngageMode.combat)
+        {
+            engageMode = EngageMode.item;
+            
+        }
+        else if (engageMode == EngageMode.item)
+        {
+            engageMode = EngageMode.combat;
+        }
+
+        _targetingscan.SetScanMode(engageMode);
+
+
+    }
+
+    public void SetEngageMode(EngageMode mode)
+    {
+        engageMode = mode;
+        _targetingscan.SetScanMode(engageMode);
+    }
+
+
+
     public void CancelEngage()
     {
         isEngaging = false;

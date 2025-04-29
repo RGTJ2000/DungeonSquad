@@ -14,8 +14,8 @@ public class SquadManager : MonoBehaviour
 
     public static event Action<GameObject> OnInventorySelected;
 
-  
-  
+
+
 
     public GameObject[] ch_in_slot_array = null;
 
@@ -46,7 +46,6 @@ public class SquadManager : MonoBehaviour
 
     private GameObject selectring_obj;
     public GameObject selectring_prefab;
-    //public GameObject core_prefab;
     private GameObject core_obj_ref;
     private MoveInput _core_moveInput;
 
@@ -58,17 +57,13 @@ public class SquadManager : MonoBehaviour
     {
         playerControls = new PlayerInputActions();
 
-        //core_obj_ref = Instantiate(core_prefab, Vector3.zero, Quaternion.identity);
-        //moveinput = core_obj_ref.GetComponent<MoveInput>();
-
-        //InstantiateCHPrefabs();
-        //AssignWeaponsToCharacters();
-
         main_camera_obj.GetComponent<CameraFollow>().core = core_obj_ref;
     }
 
     private void OnEnable()
     {
+        playerControls.Player.Enable();
+
         SelectRed = playerControls.Player.SelectRed;
         SelectRed.Enable();
         SelectRed.started += OnSelectRed;
@@ -97,9 +92,7 @@ public class SquadManager : MonoBehaviour
         AllReturnToFormation.Enable();
         AllReturnToFormation.performed += OnAllReturnToFormation;
 
-        Engage = playerControls.Player.Engage;
-        Engage.Enable();
-        Engage.performed += OnEngage;
+      
 
         Rotate = playerControls.Player.Rotate;
         Rotate.Enable();
@@ -114,11 +107,14 @@ public class SquadManager : MonoBehaviour
         InventorySelect.Enable();
         InventorySelect.performed += OnInventorySelect;
 
+        playerControls.Player.ToggleScanMode.started += OnToggleScanMode;
 
     }
 
     private void OnDisable()
     {
+        playerControls.Player.Disable();
+
         SelectRed.canceled -= OnSelectRed;
         SelectRed.started -= OnSelectRed;
         SelectRed.Disable();
@@ -141,8 +137,7 @@ public class SquadManager : MonoBehaviour
         AllReturnToFormation.performed -= OnAllReturnToFormation;
         AllReturnToFormation.Disable();
 
-        Engage.performed -= OnEngage;
-        Engage.Disable();
+      
 
         Rotate.performed -= OnRotate;
         Rotate.canceled -= OnRotate;
@@ -154,78 +149,20 @@ public class SquadManager : MonoBehaviour
         InventorySelect.performed -= OnInventorySelect;
         InventorySelect.Disable();
 
+        playerControls.Player.ToggleScanMode.started -= OnToggleScanMode;
+
     }
 
-
-   /*
-    * SQUAD CONTROL METHODS
-    * 
-    */
 
     /*
-    void InstantiateCHPrefabs()
-    {
-        for (int i = 0; i < ch_info_array.Length; i++)
-        {
-            // Determine which prefab to instantiate based on ch_type
-            GameObject prefabToInstantiate = null;
-            switch (ch_info_array[i].ch_type)
-            {
-                case "Red":
-                    prefabToInstantiate = RedPrefab;
-                    break;
-                case "Green":
-                    prefabToInstantiate = GreenPrefab;
-                    break;
-                case "Blue":
-                    prefabToInstantiate = BluePrefab;
-                    break;
-                case "Yellow":
-                    prefabToInstantiate = YellowPrefab;
-                    break;
-            }
+     * SQUAD CONTROL METHODS
+     * 
+     */
 
-            // Instantiate the prefab if it's found
-            if (prefabToInstantiate != null)
-            {
-                ch_info_array[i].obj_ref = Instantiate(prefabToInstantiate, new Vector3(i * 2.0f, 0, 0), Quaternion.identity);
-                Ch_Behavior _chBehavior = ch_info_array[i].obj_ref.GetComponent<Ch_Behavior>();
-                _chBehavior.slot_num = i;
-                _chBehavior.core_obj = core_obj_ref;
-
-            }
-            else
-            {
-                Debug.LogWarning($"No prefab found for type: {ch_info_array[i].ch_type}");
-            }
-
-        }
-    }
-    */
-
-    /*
-    private void AssignWeaponsToCharacters()
-    {
-        ch_info_array[0].obj_ref.GetComponent<EntityStats>().equipped_meleeWeapon = WeaponDatabase.Instance.GetWeaponByName("Crude Iron Sword");
-
-        ch_info_array[3].obj_ref.GetComponent<EntityStats>().equipped_meleeWeapon = WeaponDatabase.Instance.GetWeaponByName("Simple Bow");
-
-        ch_info_array[3].obj_ref.GetComponent<EntityStats>().equipped_missile = WeaponDatabase.Instance.GetWeaponByName("Wooden Arrow");
+   
 
 
-
-    }
-    */
-
-    private void OnEngage(InputAction.CallbackContext context)
-    {
-
-
-        if (select_active >= 0)
-        {
-            EngageTarget();
-        }
-    }
+ 
 
     private void OnSelectRed(InputAction.CallbackContext context)
     {
@@ -261,14 +198,6 @@ public class SquadManager : MonoBehaviour
             }
 
         }
-
-
-        /*
-        if (context.started)
-        {
-            SwitchCharacterSelect(1);
-        }
-        */
 
     }
 
@@ -330,8 +259,8 @@ public class SquadManager : MonoBehaviour
         }
 
         select_active = pressed_select_index;
-        
-        
+
+
 
         if (ch_in_slot_array[pressed_select_index] != null)
         {
@@ -372,7 +301,7 @@ public class SquadManager : MonoBehaviour
 
         }
 
-        //event trigger UI update
+        //event trigger for UI update (send the character gameobject)
         OnCharacterSelected?.Invoke(ch_in_slot_array[select_active]);
 
 
@@ -388,7 +317,7 @@ public class SquadManager : MonoBehaviour
 
             int new_activeSlot = _entityStats.active_skillSlot;
 
-            if (inputValue > 0 )
+            if (inputValue > 0)
             {
                 new_activeSlot++;
                 if (new_activeSlot > _entityStats.skill_slot.Length - 1)
@@ -401,7 +330,7 @@ public class SquadManager : MonoBehaviour
                 }
 
             }
-            else if (inputValue < 0 )
+            else if (inputValue < 0)
             {
                 new_activeSlot--;
 
@@ -427,7 +356,7 @@ public class SquadManager : MonoBehaviour
                 //DeactivateCharacterSelectLines(select_active);
                 ActivateCharacterSelectLines(select_active);
 
-                
+
                 OnCharacterSelected?.Invoke(ch_in_slot_array[select_active]); //trigger update to UI
 
 
@@ -457,36 +386,31 @@ public class SquadManager : MonoBehaviour
         }
     }
 
+    private void OnToggleScanMode(InputAction.CallbackContext context)
+    {
+        Debug.Log("Toggle ScanMode pressed.");
 
+        if (select_active >= 0 && ch_in_slot_array[select_active] != null)
+        {
+            Ch_Behavior _chBehave = ch_in_slot_array[select_active].GetComponent<Ch_Behavior>();
+
+            _chBehave.ToggleEngageMode();
+           DisableActiveReturnLines();
+
+        }
+    }
 
     private void EngageTarget()
     {
         if (ch_in_slot_array[select_active] != null)
         {
-            SkillCooldownTracker _skillCooldownTracker = ch_in_slot_array[select_active].GetComponent<SkillCooldownTracker>();
-            Skill_SO active_skill = ch_in_slot_array[select_active].GetComponent<EntityStats>().selected_skill;
-
-
-            if (_skillCooldownTracker == null || !_skillCooldownTracker.IsSkillOnCooldown(active_skill))
+            if (ch_in_slot_array[select_active].GetComponent<Ch_Behavior>().ActivateEngage())
             {
-                ch_in_slot_array[select_active].GetComponent<TargetingScan>().SetTargetedEntity(); //set highlighted entity to target entity
-
-                //change performed skill to the currently active skill in stats
-                ch_in_slot_array[select_active].GetComponent<Ch_Behavior>().SetSkillPerforming(ch_in_slot_array[select_active].GetComponent<EntityStats>().selected_skill);
-
-                //turn on isEngaging
-                ch_in_slot_array[select_active].GetComponent<Ch_Behavior>().isEngaging = true;
-
                 DeactivateCharacterSelectLines(select_active);
                 select_active = -1;
-
             }
 
-
         }
-       
-
-     
 
     }
 
@@ -494,22 +418,27 @@ public class SquadManager : MonoBehaviour
     {
         selectring_obj = Instantiate(selectring_prefab, ch_in_slot_array[select_index].transform); //create selectingring on character
 
-        ch_in_slot_array[select_index].GetComponent<TargetingScan>().scanningOn = true;  //turn on enemy scanning
+        
 
-        _core_moveInput.rotation_lock = true; //lock squad rotation when selecting active
+        ch_in_slot_array[select_index].GetComponent<TargetingScan>().ActivateTaretingScan();
+
+        //ch_in_slot_array[select_index].GetComponent<TargetingScan>().scanningOn = true;  //turn on enemy scanning
+
+        //don't need to lock rotation with current movement scheme
+        // _core_moveInput.rotation_lock = true; //lock squad rotation when selecting active
     }
 
     private void DeactivateCharacterSelectLines(int select_index)
     {
 
-        _core_moveInput.rotation_lock = false; //turn off squard rotation lock
+        //_core_moveInput.rotation_lock = false; //turn off squard rotation lock
         if (ch_in_slot_array[select_index] != null)
         {
             ch_in_slot_array[select_index].GetComponent<TargetingScan>().scanningOn = false; //turn off scanning
         }
 
         Destroy(selectring_obj); //remove the selection ring
-        DisableActiveEntityReturnLines(); //turn off all enemy selection lines
+        DisableActiveReturnLines(); //turn off all enemy selection lines
         select_active = -1; //the active select index is turned off
 
         //UI deactivate because no character selected
@@ -526,7 +455,7 @@ public class SquadManager : MonoBehaviour
             {
                 ch_in_slot_array[select_active].GetComponent<Ch_Behavior>().CancelEngage();
                 DeactivateCharacterSelectLines(select_active);
-                
+
 
             }
             select_active = -1;
@@ -567,12 +496,14 @@ public class SquadManager : MonoBehaviour
         }
     }
 
-    private void DisableActiveEntityReturnLines()
+    private void DisableActiveReturnLines()
     {
-        //Debug.Log("Squad Manager: DisablingActiveEntityReturnLines");
+        
         List<GameObject> entities = new List<GameObject>(GameObject.FindGameObjectsWithTag("Enemy"));
 
         entities.AddRange(new List<GameObject>(GameObject.FindGameObjectsWithTag("Character")));
+
+        entities.AddRange(new List<GameObject>(GameObject.FindGameObjectsWithTag("Item")));
 
         /*
         GameObject[] entities = GameObject.FindGameObjectsWithTag("Enemy");

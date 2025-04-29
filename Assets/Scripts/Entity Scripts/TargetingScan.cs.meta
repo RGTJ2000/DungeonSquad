@@ -10,7 +10,14 @@ MonoImporter:
   - green_line_mat: {fileID: 2100000, guid: 10d4f3ed38b344c489780eb35654cc73, type: 2}
   - blue_line_mat: {fileID: 2100000, guid: 0340aec1e48e14343a82b87e60b11688, type: 2}
   - yellow_line_mat: {fileID: 2100000, guid: af6321a23d9808e4e82ede1d424f5664, type: 2}
-  - character_lineMaterial: {instanceID: 0}
+  - red_line_muted_mat: {fileID: 2100000, guid: 6ec26d65242f2d94fbe6588a3d73ef02,
+      type: 2}
+  - green_line_muted_mat: {fileID: 2100000, guid: a203961125f89704e8d90794fecd7b71,
+      type: 2}
+  - blue_line_muted_mat: {fileID: 2100000, guid: f8f3a07068550d74b97492958c5e6afb,
+      type: 2}
+  - yellow_line_muted_mat: {fileID: 2100000, guid: 29061a5792d32f34793bde8cef39cb19,
+      type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
