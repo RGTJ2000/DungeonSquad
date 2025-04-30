@@ -124,7 +124,7 @@ public class DropManager : MonoBehaviour
             thisDrop = Instantiate(_prefab, entity.transform.position, Quaternion.identity);
             //set the RuntimeItem reference in prefab
             DroppedItemBehavior _droppedItemBehavior = thisDrop.GetComponent<DroppedItemBehavior>();
-            _droppedItemBehavior.RuntimeItem = item;
+            _droppedItemBehavior.SetRuntimeItem(item);
 
             //throw item
             Rigidbody _rb = thisDrop.GetComponent<Rigidbody>();

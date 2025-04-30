@@ -284,6 +284,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8adcc51a47453bc40b7ba58526d02db2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ch_in_slot_array: []
   select_active: -1
   selectring_prefab: {fileID: 6126380970685328500, guid: c8e048ea2a4ab0541a72ba642558a766,
     type: 3}

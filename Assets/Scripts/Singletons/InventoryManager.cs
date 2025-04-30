@@ -1,7 +1,19 @@
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 using UnityEngine;
+using static UnityEditor.Progress;
+
+public static class ItemEvents
+{
+    public static event Action OnItemPickedUp;
+
+    public static void RaiseItemPickedUp()
+    {
+        OnItemPickedUp?.Invoke();
+    }
+}
 
 public class InventoryManager : ManagerBase<InventoryManager>
 {

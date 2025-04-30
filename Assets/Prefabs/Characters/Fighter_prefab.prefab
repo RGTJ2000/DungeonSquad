@@ -163,7 +163,10 @@ MonoBehaviour:
   core_obj: {fileID: 0}
   isInFormation: 1
   isEngaging: 0
+  isPickingUp: 0
+  isPerusing: 0
   skill_performing: {fileID: 0}
+  actionMode: 0
 --- !u!195 &-6725781667187197507
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -219,6 +222,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scanningOn: 0
+  visibleTargets: []
   targeted_entity: {fileID: 0}
   highlighted_target: {fileID: 0}
   red_line_mat: {fileID: 2100000, guid: cbc141048f4600a4d84228829a92e183, type: 2}
@@ -234,6 +238,7 @@ MonoBehaviour:
   lineMaterialArray: []
   mutedLineMaterialArray: []
   target_arrow_on: 0
+  activeTargetTag: 
 --- !u!114 &6487196247645795817
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -334,6 +339,7 @@ MonoBehaviour:
   walking_speed: 5
   running_speed: 10
   entity_radius: 0.5
+  entity_reach: 3
   strength: 50
   dexterity: 50
   intelligence: 50

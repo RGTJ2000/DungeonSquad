@@ -394,7 +394,7 @@ public class SquadManager : MonoBehaviour
         {
             Ch_Behavior _chBehave = ch_in_slot_array[select_active].GetComponent<Ch_Behavior>();
 
-            _chBehave.ToggleEngageMode();
+           _chBehave.ToggleEngageMode();
            DisableActiveReturnLines();
 
         }
@@ -404,10 +404,23 @@ public class SquadManager : MonoBehaviour
     {
         if (ch_in_slot_array[select_active] != null)
         {
-            if (ch_in_slot_array[select_active].GetComponent<Ch_Behavior>().ActivateEngage())
+            Ch_Behavior _chB = ch_in_slot_array[select_active].GetComponent<Ch_Behavior>();
+
+            if (_chB.ActivateAction())
             {
-                DeactivateCharacterSelectLines(select_active);
-                select_active = -1;
+                if (_chB.actionMode == ActionMode.combat)
+                {
+                    DeactivateCharacterSelectLines(select_active);
+                    select_active = -1;
+
+                }
+                else if (_chB.actionMode == ActionMode.item)
+                {
+                    //leave CharacterSelectLines active
+                    //leave select active
+                }
+               
+                
             }
 
         }
@@ -416,11 +429,18 @@ public class SquadManager : MonoBehaviour
 
     private void ActivateCharacterSelectLines(int select_index)
     {
-        selectring_obj = Instantiate(selectring_prefab, ch_in_slot_array[select_index].transform); //create selectingring on character
+        DisableActiveReturnLines();
+
+        if (selectring_obj == null)
+        {
+            selectring_obj = Instantiate(selectring_prefab, ch_in_slot_array[select_index].transform); //create selectingring on character
+
+        }
+       
 
         
 
-        ch_in_slot_array[select_index].GetComponent<TargetingScan>().ActivateTaretingScan();
+        ch_in_slot_array[select_index].GetComponent<TargetingScan>().ActivateTargetingScan();
 
         //ch_in_slot_array[select_index].GetComponent<TargetingScan>().scanningOn = true;  //turn on enemy scanning
 
@@ -438,8 +458,9 @@ public class SquadManager : MonoBehaviour
         }
 
         Destroy(selectring_obj); //remove the selection ring
+        selectring_obj = null;
         DisableActiveReturnLines(); //turn off all enemy selection lines
-        select_active = -1; //the active select index is turned off
+        //select_active = -1; //the active select index is turned off
 
         //UI deactivate because no character selected
         OnCharacterSelected?.Invoke(null);
@@ -453,7 +474,7 @@ public class SquadManager : MonoBehaviour
         {
             if (ch_in_slot_array[select_active] != null)
             {
-                ch_in_slot_array[select_active].GetComponent<Ch_Behavior>().CancelEngage();
+                ch_in_slot_array[select_active].GetComponent<Ch_Behavior>().CancelActions();
                 DeactivateCharacterSelectLines(select_active);
 
 

@@ -10,6 +10,7 @@ public class EntityStats : MonoBehaviour
     public float running_speed = 10.0f;
 
     public float entity_radius = 0.5f;
+    public float entity_reach = 3.0f;
 
     public float strength = 50f;
     public float dexterity = 50f;

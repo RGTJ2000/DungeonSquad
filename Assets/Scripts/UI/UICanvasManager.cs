@@ -48,6 +48,7 @@ public class UICanvasManager : MonoBehaviour
         SquadManager.OnCharacterSelected += UpdateInventoryPanel;
         SquadManager.OnInventorySelected += HandleInventoryUI;
 
+        ItemEvents.OnItemPickedUp += RefreshInventoryUI;
     }
 
     private void OnDisable()
@@ -59,6 +60,7 @@ public class UICanvasManager : MonoBehaviour
         SquadManager.OnCharacterSelected -= UpdateInventoryPanel;
         SquadManager.OnInventorySelected -= HandleInventoryUI;
 
+        ItemEvents.OnItemPickedUp -= RefreshInventoryUI;
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -181,6 +183,17 @@ public class UICanvasManager : MonoBehaviour
         {
             DeactivateInventoryUI();
             inventoryActive = false;
+        }
+
+    }
+
+    public void RefreshInventoryUI()
+    {
+        if (inventoryActive)
+        {
+            ClearInventoryUI();
+            PopulateInventoryPanel();
+
         }
 
     }

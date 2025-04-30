@@ -71,7 +71,7 @@ public enum CoinType
     platinum
 }
 
-public enum EngageMode
+public enum ActionMode
 {
     combat,
     item

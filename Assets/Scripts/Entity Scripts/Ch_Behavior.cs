@@ -4,6 +4,8 @@ using System.Collections;
 using System;
 using UnityEditor.Experimental.GraphView;
 using static UnityEngine.UI.CanvasScaler;
+using Unity.VisualScripting;
+using static UnityEngine.GraphicsBuffer;
 
 public class Ch_Behavior : MonoBehaviour
 {
@@ -24,6 +26,8 @@ public class Ch_Behavior : MonoBehaviour
 
     public bool isInFormation = true;
     public bool isEngaging = false;
+    public bool isPickingUp = false;
+    public bool isPerusing = false;
     private bool isReturning = false;
     public Skill_SO skill_performing;
 
@@ -33,9 +37,22 @@ public class Ch_Behavior : MonoBehaviour
     private bool magicCompleted = false;
 
     private bool isIncanting = false;
+
+    private bool waitingForPickup = false;
+
     private GameObject currentIncantTarget = null;
 
-    private EngageMode engageMode = EngageMode.combat;
+    public ActionMode actionMode = ActionMode.combat;
+
+    private void OnEnable()
+    {
+        ItemEvents.OnItemPickedUp += UpdateWaitingForPickup;
+    }
+
+    private void OnDisable()
+    {
+        ItemEvents.OnItemPickedUp -= UpdateWaitingForPickup;
+    }
 
     void Start()
     {
@@ -84,11 +101,23 @@ public class Ch_Behavior : MonoBehaviour
                 {
                     CancelEngage();
                 }
-                else if (_targetingscan.SetandReturnNearestTargetEntity() == null || !_targetingscan.targeted_entity.CompareTag("Enemy") )
+                else if (_targetingscan.SetandReturnNearestTargetEntity("Enemy") == null)
                 {
                     CancelEngage();
                 }
             }
+        }
+        else if (isPickingUp)
+        {
+           
+                Debug.Log("PICKUP ITEM NOW");
+            //pick up item
+            ActivePickup(_targetingscan.targeted_entity);
+
+        }
+        else if (isPerusing)
+        {
+            ActivePerusing();
         }
 
         if (isInFormation)
@@ -107,50 +136,6 @@ public class Ch_Behavior : MonoBehaviour
         _targetingscan.target_arrow_on = true;
 
         skill_performing.Use(gameObject, obj_to_pursue);
-
-
-        /*
-        //change movement behavior
-        isInFormation = false;
-        _navMeshAgent.enabled = true;
-        _controller.enabled = false;
-        //set target arrow on
-        _targetingscan.target_arrow_on = true;
-
-        //check if near or far from target, attack if target reachable
-        RaycastHit hit;
-        Vector3 direction = (obj_to_pursue.transform.position - transform.position).normalized;
-        float maxDistance = _entityStats.equipped_meleeWeapon.melee_reach + _entityStats.entity_radius;
-
-        if (!Physics.Raycast(transform.position, direction, out hit, maxDistance, ~0, QueryTriggerInteraction.Ignore))
-        {
-            _navMeshAgent.destination = obj_to_pursue.transform.position;
-        }
-        else
-        {
-            if (hit.transform == obj_to_pursue.transform)
-            {
-                _navMeshAgent.destination = transform.position;
-                if (!isMeleeAttacking)
-                {
-                    isMeleeAttacking = true;
-
-                    //Skill_SO skill = _entityStats.selected_skill;
-                    Skill_SO skill = skill_performing;
-                    skill.Use(gameObject, obj_to_pursue);
-
-                    StartCoroutine(MeleeAttackCooldown(_entityStats.equipped_meleeWeapon.attackCooldown));
-                    
-                    if (_skillCooldownTracker != null)
-                    {
-                        _skillCooldownTracker.StartCooldown(skill);
-                    }
-                }
-            }
-        }
-        */
-
-
 
     }
     public void ActiveRanged(GameObject obj_to_ranged)
@@ -286,14 +271,76 @@ public class Ch_Behavior : MonoBehaviour
 
     }
 
+    private void ActivePickup(GameObject obj_to_pickup)
+    {
+        //change movement behavior
+        isInFormation = false;
+        _navMeshAgent.enabled = true;
+        _controller.enabled = false;
+        //set target arrow on
+        _targetingscan.target_arrow_on = true;
 
-    public bool ActivateEngage()
+
+        float distance = Vector3.Distance(obj_to_pickup.transform.position, transform.position);
+        if (distance > (_entityStats.entity_radius + _entityStats.entity_reach))
+        {
+            if (_navMeshAgent.isOnNavMesh)
+            {
+                _navMeshAgent.destination = obj_to_pickup.transform.position;
+
+            }
+
+        }
+        else
+        {
+            if (_navMeshAgent.isOnNavMesh)
+            {
+                _navMeshAgent.destination = transform.position;
+
+            }
+            DroppedItemBehavior _dib = obj_to_pickup.GetComponent<DroppedItemBehavior>();
+            _dib.ActivatePickup(gameObject);
+            waitingForPickup = true;
+            isPickingUp = false;
+            isPerusing = true;
+            Debug.Log("Switching to Perusing. Action mode =" + actionMode);
+        }
+
+    }
+
+    private void ActivePerusing()
+    {
+        Debug.Log("PERUSING. Action mode = "+actionMode);
+        isInFormation = false;
+        _navMeshAgent.enabled = true;
+        _controller.enabled = false;
+        _targetingscan.ActivateTargetingScan();
+
+        if (actionMode == ActionMode.combat && !waitingForPickup)
+        {
+            Debug.Log("Canceling actions. Action mode="+actionMode);
+            CancelActions(); //if no items visible, then return to formation
+        }
+        else if (_navMeshAgent.isOnNavMesh)
+        {
+            _navMeshAgent.destination = transform.position;
+        }
+    }
+
+    private void UpdateWaitingForPickup()
+    {
+        if ( waitingForPickup )
+        {
+            waitingForPickup = false;
+        }
+    }
+
+    public bool ActivateAction()
     {
 
-        if (engageMode == EngageMode.combat)
+        if (actionMode == ActionMode.combat)
         {
             Skill_SO active_skill = _entityStats.selected_skill;
-
 
             if (_skillCooldownTracker == null || !_skillCooldownTracker.IsSkillOnCooldown(active_skill))
             {
@@ -302,11 +349,7 @@ public class Ch_Behavior : MonoBehaviour
 
                 isEngaging = true;  //turn on engage mode
 
-
-
                 return true;
-
-
             }
             else
             {
@@ -314,9 +357,12 @@ public class Ch_Behavior : MonoBehaviour
             }
 
         }
-        else if (engageMode == EngageMode.item)
+        else if (actionMode == ActionMode.item)
         {
             Debug.Log("Going for item.");
+            //CancelActions();
+            _targetingscan.SetTargetedEntity();
+            isPickingUp = true;
             return true;
         }
         else
@@ -330,25 +376,25 @@ public class Ch_Behavior : MonoBehaviour
 
     public void ToggleEngageMode()
     {
-        if (engageMode == EngageMode.combat)
+        if (actionMode == ActionMode.combat)
         {
-            engageMode = EngageMode.item;
+            actionMode = ActionMode.item;
             
         }
-        else if (engageMode == EngageMode.item)
+        else if (actionMode == ActionMode.item)
         {
-            engageMode = EngageMode.combat;
+            actionMode = ActionMode.combat;
         }
 
-        _targetingscan.SetScanMode(engageMode);
+        _targetingscan.SetScanMode(actionMode);
 
 
     }
 
-    public void SetEngageMode(EngageMode mode)
+    public void SetActionMode(ActionMode mode)
     {
-        engageMode = mode;
-        _targetingscan.SetScanMode(engageMode);
+        actionMode = mode;
+        _targetingscan.SetScanMode(actionMode);
     }
 
 
@@ -367,6 +413,27 @@ public class Ch_Behavior : MonoBehaviour
 
 
     }
+
+
+    public void CancelActions()
+    {
+        isEngaging = false;
+        isPickingUp = false;
+        isPerusing = false;
+        isInFormation = true;
+        isReturning = true;
+        isIncanting = false;
+        
+        OnIncantFocusChanged?.Invoke();
+
+        //turn off targettingscan but activate target arrow to core
+        _targetingscan.scanningOn = false;
+        _targetingscan.targeted_entity = core_obj;
+        _targetingscan.ActivateTargetArrow();
+
+
+    }
+
 
     public void SetIsInFormation(bool formationState)
     {

@@ -165,7 +165,10 @@ MonoBehaviour:
   core_obj: {fileID: 0}
   isInFormation: 1
   isEngaging: 0
+  isPickingUp: 0
+  isPerusing: 0
   skill_performing: {fileID: 0}
+  actionMode: 0
 --- !u!195 &6849732769721310676
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -236,6 +239,7 @@ MonoBehaviour:
   lineMaterialArray: []
   mutedLineMaterialArray: []
   target_arrow_on: 0
+  activeTargetTag: 
 --- !u!114 &5109739414080883916
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -280,6 +284,7 @@ MonoBehaviour:
   walking_speed: 5
   running_speed: 10
   entity_radius: 0.5
+  entity_reach: 3
   strength: 50
   dexterity: 50
   intelligence: 50

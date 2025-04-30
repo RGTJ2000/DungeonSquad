@@ -1,9 +1,9 @@
-using Unity.VisualScripting;
+using System.Security.Cryptography.X509Certificates;
+using System.Xml.Serialization;
 using UnityEngine;
 
-public class DroppedItemBehavior : MonoBehaviour
+public class ItemPickupBehavior : MonoBehaviour
 {
-    public RuntimeItem _runtimeItem;
 
     public GameObject targetEntity;
     private Vector3 startPosition;
@@ -12,14 +12,10 @@ public class DroppedItemBehavior : MonoBehaviour
     private bool pickup_active;
     private EntityStats _entityStats;
     private float entityRadius;
-    private float entityReach;
 
     private Rigidbody _rb;
-    private Collider _collider;
 
-    private float item_acc = 40f;
-
-    private float cancelDistanceFactor = 2.0f;
+    private float item_acc = 30f;
 
     private void Awake()
     {
@@ -27,14 +23,12 @@ public class DroppedItemBehavior : MonoBehaviour
         _coreInventory = core_obj.GetComponent<Inventory>();
         pickup_active = false;
         _rb = GetComponent<Rigidbody>();
-        _collider = GetComponent<Collider>();
-
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-
+        
 
 
     }
@@ -46,11 +40,7 @@ public class DroppedItemBehavior : MonoBehaviour
         {
             if (targetEntity != null)
             {
-                if (Vector3.Distance(startPosition, transform.position) > cancelDistanceFactor * entityReach)
-                {
-                    CancelPickup();
-                }
-                else if (Vector3.Distance(transform.position, targetEntity.transform.position) < entityRadius)
+                if (Vector3.Distance(transform.position, targetEntity.transform.position) < entityRadius)
                 {
                     TransferToInventory();
                 }
@@ -65,33 +55,25 @@ public class DroppedItemBehavior : MonoBehaviour
             {
                 CancelPickup();
             }
-
+            
 
         }
-
+        
     }
     private void TransferToInventory()
     {
-        _coreInventory.AddItem(_runtimeItem);
-        ItemEvents.RaiseItemPickedUp();
-        Destroy(gameObject);
+        
 
     }
 
     private void AccelerateToTarget()
     {
-        if (_collider.enabled)
-        {
-            _collider.enabled = false;
-        }
         _rb.linearVelocity = (targetEntity.transform.position - transform.position).normalized * (_rb.linearVelocity.magnitude + item_acc * Time.deltaTime);
 
     }
-
     private void CancelPickup()
     {
         pickup_active = false;
-        _collider.enabled = true;
     }
 
     public void ActivatePickup(GameObject target)
@@ -99,15 +81,10 @@ public class DroppedItemBehavior : MonoBehaviour
         targetEntity = target;
         _entityStats = targetEntity.GetComponent<EntityStats>();
         entityRadius = _entityStats.entity_radius;
-        entityReach = _entityStats.entity_reach;
         startPosition = transform.position;
         pickup_active = true;
 
     }
 
-    public void SetRuntimeItem(RuntimeItem item)
-    {
-        _runtimeItem = item;
-    }
 
 }

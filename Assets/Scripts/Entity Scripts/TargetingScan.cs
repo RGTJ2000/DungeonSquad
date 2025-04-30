@@ -10,7 +10,7 @@ public class TargetingScan : MonoBehaviour
 
 
     public bool scanningOn = false;             //toggles scanning lines
-    private GameObject[] visibleTargets;
+    public GameObject[] visibleTargets;
     public GameObject targeted_entity = null;
     public GameObject highlighted_target = null;
 
@@ -40,12 +40,14 @@ public class TargetingScan : MonoBehaviour
 
     private bool newSelectionMade = false;
 
-    private EngageMode scanMode;
+    private ActionMode scanMode;
+
+    [SerializeField]private string activeTargetTag;
 
     void Start()
     {
 
-        scanMode = EngageMode.combat;
+        scanMode = ActionMode.combat;
 
         _entityStats = GetComponent<EntityStats>();
         visibleDistance = _entityStats.visible_distance;
@@ -54,13 +56,13 @@ public class TargetingScan : MonoBehaviour
 
         lineMaterialArray = new Material[] { red_line_mat, green_line_mat, blue_line_mat, yellow_line_mat };
 
-        mutedLineMaterialArray = new Material[] {red_line_muted_mat, green_line_muted_mat, blue_line_muted_mat, yellow_line_muted_mat };
+        mutedLineMaterialArray = new Material[] { red_line_muted_mat, green_line_muted_mat, blue_line_muted_mat, yellow_line_muted_mat };
 
         character_lineMaterial = lineMaterialArray[_entityStats.character_ID];
         character_mutedLineMaterial = mutedLineMaterialArray[_entityStats.character_ID];
 
         // Add and configure LineRenderer at runtime
-       
+
         GameObject arrowObj = new GameObject("TargetArrowLineRenderer");
         arrowObj.transform.SetParent(transform, false); // Parent to this object, local position zero
         _lineRenderer_targetArrow = arrowObj.AddComponent<LineRenderer>();
@@ -68,6 +70,7 @@ public class TargetingScan : MonoBehaviour
         _lineRenderer_targetArrow.enabled = true;
         _lineRenderer_targetArrow.useWorldSpace = true; // Default for your arrow
         _lineRenderer_targetArrow.positionCount = 0; // Start with no positions
+
 
     }
 
@@ -81,7 +84,7 @@ public class TargetingScan : MonoBehaviour
         {
             bool highlighted_target_match = false;
 
-            visibleTargets = ScanForVisibleTargets();
+            visibleTargets = ScanForVisibleTargets(activeTargetTag);
 
 
             if (visibleTargets.Length > 0)
@@ -102,12 +105,12 @@ public class TargetingScan : MonoBehaviour
                     currentTarget_lineplot.active_line = true;
                     currentTarget_lineplot.target_obj = this.gameObject;
 
-                    if (scanMode == EngageMode.combat)
+                    if (scanMode == ActionMode.combat)
                     {
                         currentTarget_lineplot.SetLineMaterial(character_lineMaterial);
 
                     }
-                    else if (scanMode == EngageMode.item)
+                    else if (scanMode == ActionMode.item)
                     {
                         currentTarget_lineplot.SetLineMaterial(character_mutedLineMaterial);
                     }
@@ -117,13 +120,13 @@ public class TargetingScan : MonoBehaviour
                     if (visibleTargets[i] == highlighted_target) //if the highlighted target, make the return line wider
                     {
                         currentTarget_lineplot.SetReturnLineWidth(0.6f, 0.3f);
-                        
+
                         highlighted_target_match = true; //only set to true if existing highlighted enemy is still visible
                     }
                     else // if not the highlighted target, make the line thinner
                     {
                         currentTarget_lineplot.SetReturnLineWidth(0.1f, 0.1f);
-                       
+
                     }
                     //the return scan will then be active and tracking character, if line of sight breaks, target turns off the return line itself
                 }
@@ -136,17 +139,14 @@ public class TargetingScan : MonoBehaviour
             }
             else //if no target found always default back to combat mode
             {
-                _chBehavior.SetEngageMode(EngageMode.combat);
-                //scanMode = EngageMode.combat;
+                _chBehavior.SetActionMode(ActionMode.combat);
             }
         }
         else //if scanning is off null out targets and default to combat scan
         {
             visibleTargets = null; //no visible targets found
             highlighted_target = null;
-            _chBehavior.SetEngageMode(EngageMode.combat);
-
-            //scanMode = EngageMode.combat;
+            _chBehavior.SetActionMode(ActionMode.combat);
 
         }
 
@@ -154,7 +154,7 @@ public class TargetingScan : MonoBehaviour
         {
             if (targeted_entity != null)
             {
-                
+
                 PlotTargetArrow(targeted_entity);
             }
             else
@@ -168,25 +168,27 @@ public class TargetingScan : MonoBehaviour
 
     }
 
-    public void ActivateTaretingScan()
+    public void ActivateTargetingScan()
     {
+        activeTargetTag = GetActiveTagString();
         scanningOn = true;
     }
 
-    public GameObject[] ScanForVisibleTargets()
-    {
-        if (_entityStats.selected_skill != null)
-        {
-            string targetingTag = "none";
 
-            if (scanMode == EngageMode.combat)
+    private string GetActiveTagString()
+    {
+        string targetingTag;
+
+        if (scanMode == ActionMode.combat)
+        {
+            if (_entityStats.selected_skill != null)
             {
                 Targeting_Type type = _entityStats.selected_skill.skill_targetType;
-
 
                 switch (type)
                 {
                     case Targeting_Type.self:
+                        targetingTag = "undef";
                         break;
                     case Targeting_Type.group:
                         targetingTag = "Character";
@@ -195,55 +197,58 @@ public class TargetingScan : MonoBehaviour
                         targetingTag = "Enemy";
                         break;
                     case Targeting_Type.area:
+                        targetingTag = "undef";
                         break;
                     default:
                         targetingTag = "none";
                         break;
                 }
-
-            }
-            else if (scanMode == EngageMode.item)
-            {
-                targetingTag = "Item";
-            }
-            
-
-
-            GameObject[] allTargets = GameObject.FindGameObjectsWithTag(targetingTag);
-
-            List<GameObject> visibleTargetsList = new List<GameObject>();
-
-            foreach (GameObject target in allTargets)
-            {
-                if (target.CompareTag(targetingTag))
-                {
-                    if (HitTargetBeforeWall(target))
-                    {
-                        visibleTargetsList.Add(target);
-                    }
-
-                }
-            }
-
-            GameObject[] visibleTargetsArray = visibleTargetsList.ToArray();
-
-
-            if (visibleTargetsArray != null)
-            {
-                return visibleTargetsArray;
             }
             else
             {
-                return null;
+                targetingTag= "none";
             }
 
-
-
-
-
         }
-        else { return null; }
-       
+        else if (scanMode == ActionMode.item)
+        {
+            targetingTag = "Item";
+        }
+        else
+        {
+            targetingTag = "none";
+        }
+
+
+        return targetingTag;
+
+
+
+    }
+    public GameObject[] ScanForVisibleTargets(string targetTag)
+    {
+
+        GameObject[] allTargets = GameObject.FindGameObjectsWithTag(targetTag);
+
+        List<GameObject> visibleTargetsList = new List<GameObject>();
+
+        foreach (GameObject target in allTargets)
+        {
+            if (target.CompareTag(targetTag))
+            {
+                if (HitTargetBeforeWall(target))
+                {
+                    visibleTargetsList.Add(target);
+                }
+
+            }
+        }
+
+        GameObject[] visibleTargetsArray = visibleTargetsList.ToArray();
+
+        return visibleTargetsArray;
+
+
     }
 
 
@@ -309,9 +314,9 @@ public class TargetingScan : MonoBehaviour
         return closest_target;
     }
 
-    public GameObject SetandReturnNearestTargetEntity()
+    public GameObject SetandReturnNearestTargetEntity(string tag)
     {
-        GameObject newNearestTargetEntity = FindNearestEntity_withTag();
+        GameObject newNearestTargetEntity = FindNearestEntity_withTag(tag);
         targeted_entity = newNearestTargetEntity;
         return newNearestTargetEntity;
     }
@@ -409,7 +414,7 @@ public class TargetingScan : MonoBehaviour
                 }
 
 
-              
+
             }
         }
     }
@@ -438,7 +443,7 @@ public class TargetingScan : MonoBehaviour
                 }
 
             }
-            
+
 
         }
 
@@ -464,11 +469,11 @@ public class TargetingScan : MonoBehaviour
 
     }
 
-    public GameObject FindNearestEntity_withTag()
+    public GameObject FindNearestEntity_withTag(string tag)
     {
         GameObject[] visible_entity_with_tag_array;
 
-        visible_entity_with_tag_array = ScanForVisibleTargets();
+        visible_entity_with_tag_array = ScanForVisibleTargets(tag);
         if (visible_entity_with_tag_array.Length > 0)
         {
             Array.Sort(visible_entity_with_tag_array, (a, b) =>
@@ -522,24 +527,26 @@ public class TargetingScan : MonoBehaviour
             target_arrow_on = true;
             _lineRenderer_targetArrow.enabled = true;
         }
-        
+
     }
 
     public void ToggleScanMode()
     {
-        if (scanMode == EngageMode.combat)
+        if (scanMode == ActionMode.combat)
         {
-            scanMode = EngageMode.item;
+            scanMode = ActionMode.item;
         }
-        else if (scanMode == EngageMode.item)
+        else if (scanMode == ActionMode.item)
         {
-            scanMode = EngageMode.combat;
+            scanMode = ActionMode.combat;
         }
+        activeTargetTag = GetActiveTagString();
     }
 
-    public void SetScanMode(EngageMode mode)
+    public void SetScanMode(ActionMode mode)
     {
         scanMode = mode;
+        activeTargetTag = GetActiveTagString();
     }
 }
 
