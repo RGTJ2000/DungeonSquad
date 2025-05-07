@@ -36,7 +36,7 @@ MonoBehaviour:
   poison_defenseRating: 10
   sleep_defenseRating: 10
   equipped_meleeWeapon:
-    baseItem: {fileID: 11400000, guid: c11ce7e4b9bf619419957a7f71b013e7, type: 2}
+    baseItem: {fileID: 11400000, guid: 99addd19d2a9ce7448797625b7aa00f3, type: 2}
     stackCount: 1
     attachedCharms: []
   equipped_rangedWeapon:

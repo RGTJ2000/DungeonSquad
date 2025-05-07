@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   item_name: Crude Iron Sword
   description: A simple sword made of crude iron
-  category: 0
+  category: 1
   item_icon: {fileID: 0}
   item_prefab: {fileID: 6711430165638062514, guid: cce6503d62368e5419d2d83504fc8eb5,
     type: 3}

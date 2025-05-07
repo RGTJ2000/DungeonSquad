@@ -175,16 +175,84 @@ public class SquadSpawner : MonoBehaviour
         {
             stats.equipped_meleeWeapon = new RuntimeItem(meleeSO);
         }
+        else
+        {
+            stats.equipped_meleeWeapon = null;
+        }
 
         if (loadout.equipped_rangedWeapon?.baseItem is Ranged_Weapon_SO rangedSO)
         {
             stats.equipped_rangedWeapon = new RuntimeItem(rangedSO);
+        }
+        else
+        {
+            stats.equipped_rangedWeapon = null;
         }
 
         if (loadout.equipped_missile?.baseItem is Missile_SO missileSO)
         {
             stats.equipped_missile = new RuntimeItem(missileSO);
         }
+        else
+        {
+            stats.equipped_missile = null;
+        }
+
+        if (loadout.equipped_ring?.baseItem is Ring_SO ringSO)
+        {
+            stats.equipped_ring = new RuntimeItem(ringSO);
+        }
+        else
+        {
+            stats.equipped_ring = null;
+        }
+
+        if (loadout.equipped_helm?.baseItem is Helm_SO helmSO)
+        {
+            stats.equipped_helm = new RuntimeItem(helmSO);
+        }
+        else
+        {
+            stats.equipped_helm = null;
+        }
+
+        if (loadout.equipped_amulet?.baseItem is Amulet_SO amuletSO)
+        {
+            stats.equipped_amulet = new RuntimeItem(amuletSO);
+        }
+        else
+        {
+            stats.equipped_amulet = null;
+        }
+
+        if (loadout.equipped_armor?.baseItem is Armor_SO armorSO)
+        {
+            stats.equipped_armor = new RuntimeItem(armorSO);
+        }
+        else
+        {
+            stats.equipped_armor = null;
+        }
+
+        if (loadout.equipped_shield?.baseItem is Shield_SO shieldSO)
+        {
+            stats.equipped_shield = new RuntimeItem(shieldSO);
+        }
+        else
+        {
+            stats.equipped_shield = null;
+        }
+
+        if (loadout.equipped_boots?.baseItem is Boots_SO bootsSO)
+        {
+            stats.equipped_boots = new RuntimeItem(bootsSO);
+        }
+        else
+        {
+            stats.equipped_boots = null;
+        }
+
+
         /*
         stats.equipped_meleeWeapon = loadout.equipped_meleeWeapon?.baseItem as Melee_Weapon_SO;
         stats.equipped_rangedWeapon = loadout.equipped_rangedWeapon?.baseItem as Ranged_Weapon_SO;

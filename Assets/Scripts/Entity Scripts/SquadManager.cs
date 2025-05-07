@@ -412,6 +412,7 @@ public class SquadManager : MonoBehaviour
                 {
                     DeactivateCharacterSelectLines(select_active);
                     select_active = -1;
+                    OnCharacterSelected?.Invoke(null);
 
                 }
                 else if (_chB.actionMode == ActionMode.item)
@@ -480,6 +481,9 @@ public class SquadManager : MonoBehaviour
 
             }
             select_active = -1;
+
+            OnCharacterSelected?.Invoke(null);
+
         }
     }
 
@@ -500,6 +504,8 @@ public class SquadManager : MonoBehaviour
             select_active = -1;
 
         }
+        OnCharacterSelected?.Invoke(null);
+
     }
 
     private void OnRotate(InputAction.CallbackContext context)

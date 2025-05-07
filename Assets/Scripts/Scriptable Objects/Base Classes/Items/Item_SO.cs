@@ -6,6 +6,7 @@ using UnityEngine;
 // Inventory categorization
 public enum ItemCategory
 {
+    none,
     melee_weapon,
     ranged_weapon,
     missile,
@@ -15,7 +16,7 @@ public enum ItemCategory
     scroll,
     amulet,
     ring,
-    gem
+    gem,
 
 }
 

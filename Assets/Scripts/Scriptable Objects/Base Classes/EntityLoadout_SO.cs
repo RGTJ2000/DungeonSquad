@@ -42,6 +42,14 @@ public class EntityLoadout_SO : ScriptableObject
     public StartingItemData equipped_rangedWeapon;
     public StartingItemData equipped_missile;
 
+    public StartingItemData equipped_ring;
+    public StartingItemData equipped_helm;
+    public StartingItemData equipped_amulet;
+    public StartingItemData equipped_armor;
+    public StartingItemData equipped_shield;
+    public StartingItemData equipped_boots;
+
+
 
     public int maxSkillSlots = 5;
 

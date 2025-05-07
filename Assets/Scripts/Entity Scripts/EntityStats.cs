@@ -38,6 +38,14 @@ public class EntityStats : MonoBehaviour
     public RuntimeItem equipped_rangedWeapon;
     public RuntimeItem equipped_missile;
 
+    public RuntimeItem equipped_ring;
+    public RuntimeItem equipped_helm;
+    public RuntimeItem equipped_amulet;
+    public RuntimeItem equipped_armor;
+    public RuntimeItem equipped_shield;
+    public RuntimeItem equipped_boots;
+
+
     public string active_targetingTag = "Enemy";
 
     public int maxSkillSlots = 5;

@@ -14,12 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   item_name: Wooden Arrow
   description: An arrow made of wood
-  category: 2
+  category: 3
   item_icon: {fileID: 0}
   item_prefab: {fileID: 6660670465892539401, guid: 896be4032708c2c4eb60af12a71f69e0,
     type: 3}
+  pickupAudio_ID: 
+  dropAudio_ID: 
   isStackable: 1
   maxStack: 10
+  attachedCharms: []
   missile_damageBase: 5
   missile_damageRange: 3
   missile_weight: 0.01

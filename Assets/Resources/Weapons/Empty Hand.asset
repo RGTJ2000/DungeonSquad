@@ -14,11 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   item_name: Empty Hand
   description: Bare hands
-  category: 0
+  category: 1
   item_icon: {fileID: 0}
   item_prefab: {fileID: 0}
+  pickupAudio_ID: 
+  dropAudio_ID: 
   isStackable: 0
   maxStack: 1
+  attachedCharms: []
   attackCooldown: 1
   critChance_base: 0.25
   critChance_weight_str: 0
@@ -29,5 +32,5 @@ MonoBehaviour:
   melee_reach: 0.5
   melee_damageBase: 1
   melee_damageRange: 1
-  hitAudio_variationID: 
-  missAudio_variationID: 
+  hitAudio_ID: 
+  missAudio_ID: 
