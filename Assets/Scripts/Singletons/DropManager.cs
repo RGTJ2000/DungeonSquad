@@ -120,6 +120,7 @@ public class DropManager : MonoBehaviour
 
         if (_prefab != null)
         {
+            Debug.Log("Instatiating drop");
             GameObject thisDrop;
             thisDrop = Instantiate(_prefab, entity.transform.position, Quaternion.identity);
             //set the RuntimeItem reference in prefab

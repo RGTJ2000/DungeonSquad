@@ -16,7 +16,7 @@ public class WeaponEditor : Editor
         weapon.item_prefab = (GameObject)EditorGUILayout.ObjectField("Item Prefab", weapon.item_prefab, typeof(GameObject), false);
         weapon.pickupAudio_ID = EditorGUILayout.TextField("pickupAudio_ID", weapon.pickupAudio_ID);
         weapon.dropAudio_ID = EditorGUILayout.TextField("dropAudio_ID", weapon.dropAudio_ID);
-
+        weapon.isEquippable = EditorGUILayout.Toggle("Is Equippable", weapon.isEquippable);
         weapon.isStackable = EditorGUILayout.Toggle("Is Stackable", weapon.isStackable);
         if (weapon.isStackable)
             weapon.maxStack = EditorGUILayout.IntField("Max Stack", weapon.maxStack);

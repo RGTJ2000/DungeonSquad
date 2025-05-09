@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 833790836917177139}
   - component: {fileID: -4330423556568381192}
   - component: {fileID: 2987117539628264408}
+  - component: {fileID: 628173192207645881}
   m_Layer: 11
   m_Name: Wooden Arrow
   m_TagString: Untagged
@@ -149,3 +150,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 212463e4e7e0d1a4f8d6eac6a06d2723, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &628173192207645881
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6660670465892539401}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 505f6dc116723dd41aa7b1929ad34751, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _runtimeItem:
+    baseItem: {fileID: 0}
+    stackCount: 0
+    attachedCharms: []
+  targetEntity: {fileID: 0}

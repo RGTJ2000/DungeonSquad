@@ -10,13 +10,15 @@ public enum ItemCategory
     melee_weapon,
     ranged_weapon,
     missile,
+    helm,
     armor,
     shield,
+    boots,
     potion,
     scroll,
     amulet,
     ring,
-    gem,
+    gem
 
 }
 
@@ -34,9 +36,10 @@ public abstract class Item_SO : ScriptableObject
     public GameObject item_prefab;
     public string pickupAudio_ID;
     public string dropAudio_ID;
-    
 
-    
+
+    //Equip behavior
+    public bool isEquippable = true;
 
 
     // Stacking behavior

@@ -50,46 +50,64 @@ public class UICanvasManager : MonoBehaviour
     private Transform ring_descript_equipped;
     private Transform ring_icon_default;
     private Transform ring_icon_equipped;
+    private Transform ring_selectAmber;
+    private Transform ring_selectGreen;
 
     private Transform helm_descript_default;
     private Transform helm_descript_equipped;
     private Transform helm_icon_default;
     private Transform helm_icon_equipped;
+    private Transform helm_selectAmber;
+    private Transform helm_selectGreen;
 
     private Transform amulet_descript_default;
     private Transform amulet_descript_equipped;
     private Transform amulet_icon_default;
     private Transform amulet_icon_equipped;
+    private Transform amulet_selectAmber;
+    private Transform amulet_selectGreen;
 
     private Transform melee_descript_default;
     private Transform melee_descript_equipped;
     private Transform melee_icon_default;
     private Transform melee_icon_equipped;
+    private Transform melee_selectAmber;
+    private Transform melee_selectGreen;
 
     private Transform armor_descript_default;
     private Transform armor_descript_equipped;
     private Transform armor_icon_default;
     private Transform armor_icon_equipped;
+    private Transform armor_selectAmber;
+    private Transform armor_selectGreen;
 
     private Transform ranged_descript_default;
     private Transform ranged_descript_equipped;
     private Transform ranged_icon_default;
     private Transform ranged_icon_equipped;
+    private Transform ranged_selectAmber;
+    private Transform ranged_selectGreen;
 
     private Transform shield_descript_default;
     private Transform shield_descript_equipped;
     private Transform shield_icon_default;
     private Transform shield_icon_equipped;
+    private Transform shield_selectAmber;
+    private Transform shield_selectGreen;
 
     private Transform boots_descript_default;
     private Transform boots_descript_equipped;
     private Transform boots_icon_default;
     private Transform boots_icon_equipped;
+    private Transform boots_selectAmber;
+    private Transform boots_selectGreen;
 
     private Transform missile_descript_default;
     private Transform missile_descript_equipped;
     private Transform missile_icon_default;
     private Transform missile_icon_equipped;
+    private Transform missile_selectAmber;
+    private Transform missile_selectGreen;
 
     private TextMeshProUGUI ring_text_equipped;
     private Image ring_iconImg_equipped;
@@ -144,6 +162,43 @@ public class UICanvasManager : MonoBehaviour
 
     private TextMeshProUGUI missile_text_default;
     private Image missile_iconImg_default;
+
+    // Ring
+    private Image ring_selectAmberImg;
+    private Image ring_selectGreenImg;
+
+    // Helm
+    private Image helm_selectAmberImg;
+    private Image helm_selectGreenImg;
+
+    // Amulet
+    private Image amulet_selectAmberImg;
+    private Image amulet_selectGreenImg;
+
+    // Melee
+    private Image melee_selectAmberImg;
+    private Image melee_selectGreenImg;
+
+    // Armor
+    private Image armor_selectAmberImg;
+    private Image armor_selectGreenImg;
+
+    // Ranged
+    private Image ranged_selectAmberImg;
+    private Image ranged_selectGreenImg;
+
+    // Shield
+    private Image shield_selectAmberImg;
+    private Image shield_selectGreenImg;
+
+    // Boots
+    private Image boots_selectAmberImg;
+    private Image boots_selectGreenImg;
+
+    // Missile
+    private Image missile_selectAmberImg;
+    private Image missile_selectGreenImg;
+
 
     #endregion
 
@@ -461,7 +516,14 @@ public class UICanvasManager : MonoBehaviour
                 }
                 else if (input.x > 0f)
                 {
-                    DropItem(inventoryIndex, inventoryItems[inventoryIndex]);
+                    DropItem(inventoryIndex);
+                }
+                else if(input.x <0f)
+                {
+                    if (current_character !=null && inventoryItems[inventoryIndex].IsEquippable)
+                    {
+                        EquipItem(inventoryIndex);
+                    }
                 }
 
 
@@ -472,19 +534,30 @@ public class UICanvasManager : MonoBehaviour
 
     }
 
+    private void EquipItem(int index)
+    {
+        
+        InventoryManager.Instance.EquipItemToCharacter(inventoryItems[index], current_character);
+        
+        RefreshInventoryUI();
+        PopulateEquipPanel(current_character);
 
-    private void DropItem(int index, RuntimeItem item)
+    }
+
+    private void DropItem(int index)
     {
         Debug.Log("Dropping item " + inventoryItems[index].item_name);
         //destroy entry prefab
         Destroy(inventoryEntries[index]);
 
+        //remove item from core inventory and instantiate on ground
+        InventoryManager.Instance.DropItemFromCore(inventoryItems[index]);
+
         //remove from lists
         inventoryEntries.RemoveAt(index);
         inventoryItems.RemoveAt(index);
 
-        //remove item from core inventory and instantiate on ground
-        InventoryManager.Instance.DropItemFromCore(item);
+        
 
         //set inventory index to new location
         inventoryIndex = Mathf.Clamp(index-1, 0, inventoryEntries.Count-1);
@@ -507,10 +580,64 @@ public class UICanvasManager : MonoBehaviour
 
             inventoryIndex = newIndex;
 
-            currentCatSelect = (inventoryItems[inventoryIndex].baseItem.category);
+            UpdateCategorySelection(inventoryItems[inventoryIndex].baseItem.category);
+            //currentCatSelect = (inventoryItems[inventoryIndex].baseItem.category);
 
             ScrollToItem(inventoryEntries[inventoryIndex]);
         }
+    }
+
+
+    private void UpdateCategorySelection(ItemCategory newCategory)
+    {
+        if (current_character != null && currentCatSelect != newCategory)
+        {
+
+            SetAmberSelectState(currentCatSelect, false);
+            SetAmberSelectState(newCategory, true);
+
+        }
+
+        currentCatSelect = newCategory;
+
+    }
+
+    private void SetAmberSelectState(ItemCategory category, bool state)
+    {
+        switch (category)
+        {
+            case ItemCategory.ring:
+                ring_selectAmberImg.enabled = state;
+                break;
+            case ItemCategory.helm:
+                helm_selectAmberImg.enabled = state;
+                break;
+            case ItemCategory.amulet:
+                amulet_selectAmberImg.enabled = state;
+                break;
+            case ItemCategory.melee_weapon:
+                melee_selectAmberImg.enabled = state;
+                break;
+            case ItemCategory.armor:
+                armor_selectAmberImg.enabled = state;
+                break;
+            case ItemCategory.ranged_weapon:
+                ranged_selectAmberImg.enabled = state;
+                break;
+            case ItemCategory.shield:
+                shield_selectAmberImg.enabled = state;
+                break;
+            case ItemCategory.boots:
+                boots_selectAmberImg.enabled = state;
+                break;
+            case ItemCategory.missile:
+                missile_selectAmberImg.enabled = state;
+                break;
+            default:
+                break;
+        }
+
+
     }
 
 
@@ -626,7 +753,7 @@ public class UICanvasManager : MonoBehaviour
         Image background = entry.GetComponentInChildren<Image>();
 
         nameText.fontStyle = FontStyles.Bold;
-        if (_squadManager.select_active == -1 || (_squadManager.select_active != -1 && _squadManager.ch_in_slot_array[_squadManager.select_active] == null))
+        if (!inventoryItems[inventoryIndex].IsEquippable ||  _squadManager.select_active == -1 || (_squadManager.select_active != -1 && _squadManager.ch_in_slot_array[_squadManager.select_active] == null))
         {
             equipText.gameObject.SetActive(false);
         }
@@ -765,7 +892,8 @@ public class UICanvasManager : MonoBehaviour
         if (ch_obj != null)
         {
             EntityStats entityStats = ch_obj.GetComponent<EntityStats>();
-            
+           
+
             if (entityStats.equipped_ring != null)
             {
                 ring_text_equipped.text = entityStats.equipped_ring.item_name;
@@ -782,6 +910,15 @@ public class UICanvasManager : MonoBehaviour
                 ring_text_equipped.enabled = false;
                 ring_iconImg_default.enabled = true;
                 ring_iconImg_equipped.enabled = false;
+            }
+
+            if (currentCatSelect == ItemCategory.ring)
+            {
+                ring_selectAmberImg.enabled = true;
+            }
+            else
+            {
+                ring_selectAmberImg.enabled = false;
             }
 
             if (entityStats.equipped_helm != null)
@@ -802,6 +939,15 @@ public class UICanvasManager : MonoBehaviour
                 helm_iconImg_equipped.enabled = false;
             }
 
+            if (currentCatSelect == ItemCategory.helm)
+            {
+                helm_selectAmberImg.enabled = true;
+            }
+            else
+            {
+                helm_selectAmberImg.enabled = false;
+            }
+
             if (entityStats.equipped_amulet != null)
             {
                 amulet_text_equipped.text = entityStats.equipped_amulet.item_name;
@@ -819,7 +965,16 @@ public class UICanvasManager : MonoBehaviour
                 amulet_iconImg_default.enabled = true;
                 amulet_iconImg_equipped.enabled = false;
             }
-            
+
+            if (currentCatSelect == ItemCategory.amulet)
+            {
+                amulet_selectAmberImg.enabled = true;
+            }
+            else
+            {
+                amulet_selectAmberImg.enabled = false;
+            }
+
 
             if (entityStats.equipped_meleeWeapon != null)
             {
@@ -839,7 +994,16 @@ public class UICanvasManager : MonoBehaviour
                 melee_iconImg_equipped.enabled = false;
             }
 
-            
+            if (currentCatSelect == ItemCategory.melee_weapon)
+            {
+                melee_selectAmberImg.enabled = true;
+            }
+            else
+            {
+                melee_selectAmberImg.enabled = false;
+            }
+
+
             if (entityStats.equipped_armor != null)
             {
                 armor_text_equipped.text = entityStats.equipped_armor.item_name;
@@ -857,7 +1021,16 @@ public class UICanvasManager : MonoBehaviour
                 armor_iconImg_default.enabled = true;
                 armor_iconImg_equipped.enabled = false;
             }
-            
+
+            if (currentCatSelect == ItemCategory.armor)
+            {
+                armor_selectAmberImg.enabled = true;
+            }
+            else
+            {
+                armor_selectAmberImg.enabled = false;
+            }
+
 
             if (entityStats.equipped_rangedWeapon != null)
             {
@@ -877,7 +1050,16 @@ public class UICanvasManager : MonoBehaviour
                 ranged_iconImg_equipped.enabled = false;
             }
 
-            
+            if (currentCatSelect == ItemCategory.ranged_weapon)
+            {
+                ranged_selectAmberImg.enabled = true;
+            }
+            else
+            {
+                ranged_selectAmberImg.enabled = false;
+            }
+
+
             if (entityStats.equipped_shield != null)
             {
                 shield_text_equipped.text = entityStats.equipped_shield.item_name;
@@ -896,6 +1078,16 @@ public class UICanvasManager : MonoBehaviour
                 shield_iconImg_equipped.enabled = false;
             }
 
+            if (currentCatSelect == ItemCategory.shield)
+            {
+                shield_selectAmberImg.enabled = true;
+            }
+            else
+            {
+                shield_selectAmberImg.enabled = false;
+            }
+
+
             if (entityStats.equipped_boots != null)
             {
                 boots_text_equipped.text = entityStats.equipped_boots.item_name;
@@ -913,9 +1105,18 @@ public class UICanvasManager : MonoBehaviour
                 boots_iconImg_default.enabled = true;
                 boots_iconImg_equipped.enabled = false;
             }
-            
 
-            if (entityStats.equipped_missile != null)
+            if (currentCatSelect == ItemCategory.boots)
+            {
+                boots_selectAmberImg.enabled = true;
+            }
+            else
+            {
+                boots_selectAmberImg.enabled = false;
+            }
+
+
+            if (entityStats.equipped_missile  != null)
             {
                 missile_text_equipped.text = entityStats.equipped_missile.item_name;
                 missile_iconImg_equipped.sprite = entityStats.equipped_missile.Icon;
@@ -932,7 +1133,18 @@ public class UICanvasManager : MonoBehaviour
                 missile_iconImg_default.enabled = true;
                 missile_iconImg_equipped.enabled = false;
             }
-            
+
+            if (currentCatSelect == ItemCategory.missile)
+            {
+                missile_selectAmberImg.enabled = true;
+            }
+            else
+            {
+                missile_selectAmberImg.enabled = false;
+            }
+
+
+
 
         }
 
@@ -956,95 +1168,151 @@ public class UICanvasManager : MonoBehaviour
 
     private void GetEquipPanelReferences()
     {
+        // Ring
         ring_descript_default = ring_EPanel.transform.Find("descript_default");
         ring_descript_equipped = ring_EPanel.transform.Find("descript_equipped");
         ring_icon_default = ring_EPanel.transform.Find("icon_default");
         ring_icon_equipped = ring_EPanel.transform.Find("icon_equipped");
+        ring_selectAmber = ring_EPanel.transform.Find("select_amber");
+        ring_selectGreen = ring_EPanel.transform.Find("select_green");
 
+        // Helm
         helm_descript_default = helm_EPanel.transform.Find("descript_default");
         helm_descript_equipped = helm_EPanel.transform.Find("descript_equipped");
         helm_icon_default = helm_EPanel.transform.Find("icon_default");
         helm_icon_equipped = helm_EPanel.transform.Find("icon_equipped");
+        helm_selectAmber = helm_EPanel.transform.Find("select_amber");
+        helm_selectGreen = helm_EPanel.transform.Find("select_green");
 
+        // Amulet
         amulet_descript_default = amulet_EPanel.transform.Find("descript_default");
         amulet_descript_equipped = amulet_EPanel.transform.Find("descript_equipped");
         amulet_icon_default = amulet_EPanel.transform.Find("icon_default");
         amulet_icon_equipped = amulet_EPanel.transform.Find("icon_equipped");
+        amulet_selectAmber = amulet_EPanel.transform.Find("select_amber");
+        amulet_selectGreen = amulet_EPanel.transform.Find("select_green");
 
+        // Melee
         melee_descript_default = melee_EPanel.transform.Find("descript_default");
         melee_descript_equipped = melee_EPanel.transform.Find("descript_equipped");
         melee_icon_default = melee_EPanel.transform.Find("icon_default");
         melee_icon_equipped = melee_EPanel.transform.Find("icon_equipped");
+        melee_selectAmber = melee_EPanel.transform.Find("select_amber");
+        melee_selectGreen = melee_EPanel.transform.Find("select_green");
 
+        // Armor
         armor_descript_default = armor_EPanel.transform.Find("descript_default");
         armor_descript_equipped = armor_EPanel.transform.Find("descript_equipped");
         armor_icon_default = armor_EPanel.transform.Find("icon_default");
         armor_icon_equipped = armor_EPanel.transform.Find("icon_equipped");
+        armor_selectAmber = armor_EPanel.transform.Find("select_amber");
+        armor_selectGreen = armor_EPanel.transform.Find("select_green");
 
+        // Ranged
         ranged_descript_default = ranged_EPanel.transform.Find("descript_default");
         ranged_descript_equipped = ranged_EPanel.transform.Find("descript_equipped");
         ranged_icon_default = ranged_EPanel.transform.Find("icon_default");
         ranged_icon_equipped = ranged_EPanel.transform.Find("icon_equipped");
+        ranged_selectAmber = ranged_EPanel.transform.Find("select_amber");
+        ranged_selectGreen = ranged_EPanel.transform.Find("select_green");
 
+        // Shield
         shield_descript_default = shield_EPanel.transform.Find("descript_default");
         shield_descript_equipped = shield_EPanel.transform.Find("descript_equipped");
         shield_icon_default = shield_EPanel.transform.Find("icon_default");
         shield_icon_equipped = shield_EPanel.transform.Find("icon_equipped");
+        shield_selectAmber = shield_EPanel.transform.Find("select_amber");
+        shield_selectGreen = shield_EPanel.transform.Find("select_green");
 
+        // Boots
         boots_descript_default = boots_EPanel.transform.Find("descript_default");
         boots_descript_equipped = boots_EPanel.transform.Find("descript_equipped");
         boots_icon_default = boots_EPanel.transform.Find("icon_default");
         boots_icon_equipped = boots_EPanel.transform.Find("icon_equipped");
+        boots_selectAmber = boots_EPanel.transform.Find("select_amber");
+        boots_selectGreen = boots_EPanel.transform.Find("select_green");
 
+        // Missile
         missile_descript_default = missile_EPanel.transform.Find("descript_default");
         missile_descript_equipped = missile_EPanel.transform.Find("descript_equipped");
         missile_icon_default = missile_EPanel.transform.Find("icon_default");
         missile_icon_equipped = missile_EPanel.transform.Find("icon_equipped");
+        missile_selectAmber = missile_EPanel.transform.Find("select_amber");
+        missile_selectGreen = missile_EPanel.transform.Find("select_green");
 
+
+        // Ring
         ring_text_default = ring_descript_default.GetComponent<TextMeshProUGUI>();
         ring_text_equipped = ring_descript_equipped.GetComponent<TextMeshProUGUI>();
         ring_iconImg_default = ring_icon_default.GetComponent<Image>();
         ring_iconImg_equipped = ring_icon_equipped.GetComponent<Image>();
+        ring_selectAmberImg = ring_selectAmber.GetComponent<Image>();
+        ring_selectGreenImg = ring_selectGreen.GetComponent<Image>();
 
+        // Helm
         helm_text_default = helm_descript_default.GetComponent<TextMeshProUGUI>();
         helm_text_equipped = helm_descript_equipped.GetComponent<TextMeshProUGUI>();
         helm_iconImg_default = helm_icon_default.GetComponent<Image>();
         helm_iconImg_equipped = helm_icon_equipped.GetComponent<Image>();
+        helm_selectAmberImg = helm_EPanel.transform.Find("select_amber").GetComponent<Image>();
+        helm_selectGreenImg = helm_EPanel.transform.Find("select_green").GetComponent<Image>();
 
+        // Amulet
         amulet_text_default = amulet_descript_default.GetComponent<TextMeshProUGUI>();
         amulet_text_equipped = amulet_descript_equipped.GetComponent<TextMeshProUGUI>();
         amulet_iconImg_default = amulet_icon_default.GetComponent<Image>();
         amulet_iconImg_equipped = amulet_icon_equipped.GetComponent<Image>();
+        amulet_selectAmberImg = amulet_EPanel.transform.Find("select_amber").GetComponent<Image>();
+        amulet_selectGreenImg = amulet_EPanel.transform.Find("select_green").GetComponent<Image>();
 
+        // Melee
         melee_text_default = melee_descript_default.GetComponent<TextMeshProUGUI>();
         melee_text_equipped = melee_descript_equipped.GetComponent<TextMeshProUGUI>();
         melee_iconImg_default = melee_icon_default.GetComponent<Image>();
         melee_iconImg_equipped = melee_icon_equipped.GetComponent<Image>();
+        melee_selectAmberImg = melee_EPanel.transform.Find("select_amber").GetComponent<Image>();
+        melee_selectGreenImg = melee_EPanel.transform.Find("select_green").GetComponent<Image>();
 
+        // Armor
         armor_text_default = armor_descript_default.GetComponent<TextMeshProUGUI>();
         armor_text_equipped = armor_descript_equipped.GetComponent<TextMeshProUGUI>();
         armor_iconImg_default = armor_icon_default.GetComponent<Image>();
         armor_iconImg_equipped = armor_icon_equipped.GetComponent<Image>();
+        armor_selectAmberImg = armor_EPanel.transform.Find("select_amber").GetComponent<Image>();
+        armor_selectGreenImg = armor_EPanel.transform.Find("select_green").GetComponent<Image>();
 
+        // Ranged
         ranged_text_default = ranged_descript_default.GetComponent<TextMeshProUGUI>();
         ranged_text_equipped = ranged_descript_equipped.GetComponent<TextMeshProUGUI>();
         ranged_iconImg_default = ranged_icon_default.GetComponent<Image>();
         ranged_iconImg_equipped = ranged_icon_equipped.GetComponent<Image>();
+        ranged_selectAmberImg = ranged_EPanel.transform.Find("select_amber").GetComponent<Image>();
+        ranged_selectGreenImg = ranged_EPanel.transform.Find("select_green").GetComponent<Image>();
 
+        // Shield
         shield_text_default = shield_descript_default.GetComponent<TextMeshProUGUI>();
         shield_text_equipped = shield_descript_equipped.GetComponent<TextMeshProUGUI>();
         shield_iconImg_default = shield_icon_default.GetComponent<Image>();
         shield_iconImg_equipped = shield_icon_equipped.GetComponent<Image>();
+        shield_selectAmberImg = shield_EPanel.transform.Find("select_amber").GetComponent<Image>();
+        shield_selectGreenImg = shield_EPanel.transform.Find("select_green").GetComponent<Image>();
 
+        // Boots
         boots_text_default = boots_descript_default.GetComponent<TextMeshProUGUI>();
         boots_text_equipped = boots_descript_equipped.GetComponent<TextMeshProUGUI>();
         boots_iconImg_default = boots_icon_default.GetComponent<Image>();
         boots_iconImg_equipped = boots_icon_equipped.GetComponent<Image>();
+        boots_selectAmberImg = boots_EPanel.transform.Find("select_amber").GetComponent<Image>();
+        boots_selectGreenImg = boots_EPanel.transform.Find("select_green").GetComponent<Image>();
 
+        // Missile
         missile_text_default = missile_descript_default.GetComponent<TextMeshProUGUI>();
         missile_text_equipped = missile_descript_equipped.GetComponent<TextMeshProUGUI>();
         missile_iconImg_default = missile_icon_default.GetComponent<Image>();
         missile_iconImg_equipped = missile_icon_equipped.GetComponent<Image>();
+        missile_selectAmberImg = missile_EPanel.transform.Find("select_amber").GetComponent<Image>();
+        missile_selectGreenImg = missile_EPanel.transform.Find("select_green").GetComponent<Image>();
+
 
 
     }

@@ -29,6 +29,7 @@ public class RuntimeItem
     public GameObject item_prefab => baseItem.item_prefab;
 
     public bool IsStackable => baseItem.isStackable;
+    public bool IsEquippable => baseItem.isEquippable;
     public int maxStack => baseItem.maxStack;
 
     public string GetDisplayName()
