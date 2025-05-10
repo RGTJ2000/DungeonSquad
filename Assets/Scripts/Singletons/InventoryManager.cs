@@ -60,7 +60,7 @@ public class InventoryManager : ManagerBase<InventoryManager>
 
    
 
-    public void EquipItemToCharacter(RuntimeItem item, GameObject char_obj)
+    public RuntimeItem EquipItemToCharacter(RuntimeItem item, GameObject char_obj)
     {
         EntityStats _entityStats = char_obj.GetComponent<EntityStats>();
 
@@ -121,6 +121,12 @@ public class InventoryManager : ManagerBase<InventoryManager>
         {
             Debug.Log("Adding to Inventory:" + itemToUnequip.item_name);
             _coreInventory.AddItem(itemToUnequip);
+
+            return itemToUnequip;
+        }
+        else
+        {
+            return null;
         }
 
 
