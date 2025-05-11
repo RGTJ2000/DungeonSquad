@@ -13,12 +13,14 @@ MonoBehaviour:
   m_Name: Simple Bow
   m_EditorClassIdentifier: 
   item_name: Simple bow
-  description: A simple bow made of simple wood
+  description: A simple bow made of simple wood.
   category: 2
-  item_icon: {fileID: 0}
-  item_prefab: {fileID: 0}
+  item_icon: {fileID: 21300000, guid: 7e09a8b1c98a78841a2dd6c071485751, type: 3}
+  item_prefab: {fileID: 5605810284195056893, guid: 4d4167f7f122cbd4b9d01e3685367736,
+    type: 3}
   pickupAudio_ID: 
   dropAudio_ID: 
+  isEquippable: 1
   isStackable: 0
   maxStack: 1
   attachedCharms: []

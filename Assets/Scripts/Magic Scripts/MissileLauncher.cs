@@ -24,8 +24,12 @@ public class MissileLauncher : MonoBehaviour
     {
         GameObject missile; //the missile to be instantiated
         EntityStats _attackerStats = origin_obj.GetComponent<EntityStats>();
+
         RuntimeItem missile_rt_SO = _attackerStats.equipped_missile;
-        GameObject missile_prefab = missile_rt_SO.item_prefab;
+
+        Missile_SO missileSO = _attackerStats.equipped_missile.baseItem as Missile_SO;
+
+        GameObject missile_prefab = missileSO.missileLaunch_prefab;
 
         float missileSpeed = _attackerStats.equipped_rangedWeapon.RangedWeapon.launch_impulse / missile_rt_SO.Missile.missile_weight;
 

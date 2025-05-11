@@ -20,6 +20,8 @@ public class UICanvasManager : MonoBehaviour
 
 
     [SerializeField] private GameObject inventoryPanel;
+    [SerializeField] private GameObject inventoryDescriptPanel;
+
     private ScrollRect _scrollRect;
     private RectTransform _srContent;
     private RectTransform _srViewport;
@@ -34,7 +36,11 @@ public class UICanvasManager : MonoBehaviour
 
     [SerializeField] private GameObject equipPanel;
     [SerializeField] private GameObject bodyPanel;
-    [SerializeField] private GameObject descriptionPanel;
+    [SerializeField] private GameObject descriptionPanel_equip;
+    [SerializeField] private GameObject descriptionPanel_inventory;
+
+    Image inventoryDescript_icon;
+    TextMeshProUGUI inventoryDescript_txt;
 
     #region EquipPanel References
     [SerializeField] private GameObject ring_EPanel;
@@ -213,6 +219,7 @@ public class UICanvasManager : MonoBehaviour
     {
         _playerInputActions = new PlayerInputActions();
 
+        GetInventoryPanelReferences();
         GetEquipPanelReferences();
     }
     private void OnEnable()
@@ -262,7 +269,8 @@ public class UICanvasManager : MonoBehaviour
         //set Panel states
         inventoryPanel.SetActive(false);
         bodyPanel.SetActive(true);
-        descriptionPanel.SetActive(false);
+        descriptionPanel_equip.SetActive(false);
+        descriptionPanel_inventory.SetActive(false);
         equipPanel.SetActive(false);
         
 
@@ -326,8 +334,13 @@ public class UICanvasManager : MonoBehaviour
     {
        if (inventoryActive)
         {
-            SelectInventoryItem(inventoryEntries[inventoryIndex]);
-            
+            if (inventoryEntries.Count > 0)
+            {
+                SelectInventoryItem(inventoryEntries[inventoryIndex]);
+
+
+            }
+
             if (ch_obj != null)
             {
                 PopulateEquipPanel(ch_obj);
@@ -589,6 +602,7 @@ public class UICanvasManager : MonoBehaviour
         InventoryManager.Instance.EquipItemToCharacter(inventoryItems[index], current_character);
         RefreshInventoryUI();
         MoveToInventoryIndex(index);
+        UpdateInventoryDescriptPanel();
         PopulateEquipPanel(current_character);
         
 
@@ -611,42 +625,61 @@ public class UICanvasManager : MonoBehaviour
 
         //set inventory index to new location
         inventoryIndex = Mathf.Clamp(index-1, 0, inventoryEntries.Count-1);
-        SelectInventoryItem(inventoryEntries[inventoryIndex]);
-        ScrollToItem(inventoryEntries[inventoryIndex]);
+        if (inventoryEntries.Count > 0)
+        {
+            SelectInventoryItem(inventoryEntries[inventoryIndex]);
+            ScrollToItem(inventoryEntries[inventoryIndex]);
+
+        }
+        
         
     }
     private void BumpInventorySelectIndex(int indexChange)
     {
-        int newIndex = Mathf.Clamp(inventoryIndex + indexChange, 0, inventoryEntries.Count - 1);
-
-        if (newIndex != inventoryIndex)
+        if (inventoryEntries.Count == 0)
         {
-            //SoundManager.Instance.PlaySoundByKey("single_click", SoundCategory.UI);
-
-            //deselect inventory index
-            DeselectInventoryItem(inventoryEntries[inventoryIndex]);
-            //select new index
-            SelectInventoryItem(inventoryEntries[newIndex]);
-
-            inventoryIndex = newIndex;
-
-            UpdateCategorySelection(inventoryItems[inventoryIndex].baseItem.category);
-            //currentCatSelect = (inventoryItems[inventoryIndex].baseItem.category);
-
-            ScrollToItem(inventoryEntries[inventoryIndex]);
+            return;
         }
+        else
+        {
+            int newIndex = Mathf.Clamp(inventoryIndex + indexChange, 0, inventoryEntries.Count - 1);
+
+            if (newIndex != inventoryIndex)
+            {
+                //SoundManager.Instance.PlaySoundByKey("single_click", SoundCategory.UI);
+
+                //deselect inventory index
+                DeselectInventoryItem(inventoryEntries[inventoryIndex]);
+                //select new index
+                inventoryIndex = newIndex;
+                SelectInventoryItem(inventoryEntries[inventoryIndex]);
+
+
+
+                UpdateCategorySelection(inventoryItems[inventoryIndex].baseItem.category);
+                //currentCatSelect = (inventoryItems[inventoryIndex].baseItem.category);
+                ScrollToItem(inventoryEntries[inventoryIndex]);
+            }
+
+        }
+        
     }
 
     private void MoveToInventoryIndex(int index)
     {
-        index = Mathf.Clamp(index, 0, inventoryEntries.Count - 1);
+        if (inventoryEntries.Count == 0) { return; }
+        else
+        {
+            index = Mathf.Clamp(index, 0, inventoryEntries.Count - 1);
 
-        DeselectInventoryItem(inventoryEntries[inventoryIndex]);
-        SelectInventoryItem(inventoryEntries[index]);
-        inventoryIndex = index;
-        Debug.Log("Moving. Index=" + index + " inventoryIndex=" + inventoryIndex);
-        UpdateCategorySelection(inventoryItems[inventoryIndex].baseItem.category);
-        JumpToItem(inventoryEntries[inventoryIndex]);
+            DeselectInventoryItem(inventoryEntries[inventoryIndex]);
+            SelectInventoryItem(inventoryEntries[index]);
+            inventoryIndex = index;
+            Debug.Log("Moving. Index=" + index + " inventoryIndex=" + inventoryIndex);
+            UpdateCategorySelection(inventoryItems[inventoryIndex].baseItem.category);
+            JumpToItem(inventoryEntries[inventoryIndex]);
+        }
+        
     }
 
 
@@ -825,6 +858,8 @@ public class UICanvasManager : MonoBehaviour
         }
         dropText.gameObject.SetActive(true);
         background.color = new Color32(221, 147, 39, 20);
+
+        UpdateInventoryDescriptPanel();
 
     }
 
@@ -1041,11 +1076,6 @@ public class UICanvasManager : MonoBehaviour
 
 
 
-    private void ClearEquipPanel()
-    {
-
-
-    }
     private void PopulateEquipPanel(GameObject ch_obj)
     {
         if (ch_obj != null)
@@ -1313,10 +1343,28 @@ public class UICanvasManager : MonoBehaviour
     {
         inventoryPanel.SetActive(true);
 
+        if (inventoryEntries.Count > 0)
+        {
+            UpdateInventoryDescriptPanel();
+            inventoryDescriptPanel.SetActive(true);
+        }
+        else 
+        {
+            inventoryDescriptPanel.SetActive(false);
+        }
+
         if (ch_obj != null)
         {
             equipPanel.SetActive(true);
         }
+    }
+
+    private void UpdateInventoryDescriptPanel()
+    {
+        inventoryDescript_icon.sprite = inventoryItems[inventoryIndex].Icon;
+        Debug.Log("baseitem sprite="+ inventoryDescript_icon.sprite.name);
+        inventoryDescript_txt.text = inventoryItems[inventoryIndex].baseItem.description;
+
     }
 
     private void DeactivateInventoryUI()
@@ -1325,6 +1373,16 @@ public class UICanvasManager : MonoBehaviour
         equipPanel.SetActive(false);
     }
 
+    private void GetInventoryPanelReferences()
+    {
+        Transform icon = descriptionPanel_inventory.transform.Find("itemIcon");
+        Transform text = descriptionPanel_inventory.transform.Find("descriptText");
+
+        inventoryDescript_icon = icon.gameObject.GetComponent<Image>();
+        inventoryDescript_txt = text.gameObject.GetComponent<TextMeshProUGUI>();
+
+
+    }
     private void GetEquipPanelReferences()
     {
         // Ring

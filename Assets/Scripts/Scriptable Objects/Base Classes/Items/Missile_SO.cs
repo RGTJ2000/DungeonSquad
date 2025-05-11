@@ -6,6 +6,6 @@ public class Missile_SO : Item_SO
     public float missile_damageBase;
     public float missile_damageRange;
     public float missile_weight;
-
+    public GameObject missileLaunch_prefab;
 
 }
