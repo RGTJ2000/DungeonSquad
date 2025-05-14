@@ -20,7 +20,7 @@ public class UICanvasManager : MonoBehaviour
 
 
     [SerializeField] private GameObject inventoryPanel;
-    [SerializeField] private GameObject inventoryDescriptPanel;
+    //[SerializeField] private GameObject inventoryDescriptPanel;
 
     private ScrollRect _scrollRect;
     private RectTransform _srContent;
@@ -41,6 +41,9 @@ public class UICanvasManager : MonoBehaviour
 
     Image inventoryDescript_icon;
     TextMeshProUGUI inventoryDescript_txt;
+
+    Image equipDescript_icon;
+    TextMeshProUGUI equipDescript_txt;
 
     #region EquipPanel References
     [SerializeField] private GameObject ring_EPanel;
@@ -344,6 +347,7 @@ public class UICanvasManager : MonoBehaviour
             if (ch_obj != null)
             {
                 PopulateEquipPanel(ch_obj);
+                UpdateEquipDescriptPanel(ch_obj);
                 equipPanel.gameObject.SetActive(true);
             }
             else
@@ -368,6 +372,7 @@ public class UICanvasManager : MonoBehaviour
             if (ch_obj != null)
             {
                 PopulateEquipPanel(ch_obj);
+                UpdateEquipDescriptPanel(ch_obj);
             }
             
             ActivateInventoryUI(ch_obj);
@@ -548,6 +553,60 @@ public class UICanvasManager : MonoBehaviour
 
     }
 
+    private void UpdateEquipDescriptPanel(GameObject ch_obj)
+    {
+        EntityStats entityStats = ch_obj.GetComponent<EntityStats>();
+        RuntimeItem equippedItem;
+
+        switch (currentCatSelect)
+        {
+            case ItemCategory.ring:
+                equippedItem = entityStats.equipped_ring;
+                break;
+            case ItemCategory.helm:
+                equippedItem = entityStats.equipped_helm;
+                break;
+            case ItemCategory.amulet:
+                equippedItem = entityStats.equipped_amulet;
+                break;
+            case ItemCategory.melee_weapon:
+                equippedItem = entityStats.equipped_meleeWeapon;
+                break;
+            case ItemCategory.armor:
+                equippedItem= entityStats.equipped_armor;
+                break;
+            case ItemCategory.ranged_weapon:
+                equippedItem = entityStats.equipped_rangedWeapon;
+                break;
+            case ItemCategory.shield:
+                equippedItem = entityStats.equipped_shield;
+                break;
+            case ItemCategory.boots:
+                equippedItem = entityStats.equipped_boots;
+                break;
+            case ItemCategory.missile:
+                equippedItem = entityStats.equipped_missile;
+                break;
+            default:
+                equippedItem = null;
+                break;
+
+        }
+
+        if (equippedItem != null)
+        {
+            descriptionPanel_equip.SetActive(true);
+            equipDescript_icon.sprite = equippedItem.Icon;
+            equipDescript_txt.text = equippedItem.description;
+        }
+        else
+        {
+            descriptionPanel_equip.SetActive(false);
+        }
+
+
+    }
+
     private void EquipItem(int index)
     {
         /*
@@ -604,6 +663,7 @@ public class UICanvasManager : MonoBehaviour
         MoveToInventoryIndex(index);
         UpdateInventoryDescriptPanel();
         PopulateEquipPanel(current_character);
+        UpdateEquipDescriptPanel(current_character);
         
 
     }
@@ -685,15 +745,24 @@ public class UICanvasManager : MonoBehaviour
 
     private void UpdateCategorySelection(ItemCategory newCategory)
     {
-        if (current_character != null && currentCatSelect != newCategory)
-        {
 
+        if (current_character != null && newCategory != currentCatSelect)
+        {
+            //switch highlighted equip slot
             SetAmberSelectState(currentCatSelect, false);
             SetAmberSelectState(newCategory, true);
 
+            //switch the current category
+            currentCatSelect = newCategory;
+
+            //update the EquipDescript
+            UpdateEquipDescriptPanel(current_character);
+
+
         }
 
-        currentCatSelect = newCategory;
+        currentCatSelect = newCategory; //even if the new cat is the same as currentCat still set it to the newCat
+
 
     }
 
@@ -762,9 +831,9 @@ public class UICanvasManager : MonoBehaviour
 
     public void ClearInventoryUI()
     {
-        ClearPanel(meleePanel);
-        ClearPanel(rangedPanel);
-        ClearPanel(missilePanel);
+        ClearInventoryListPanel(meleePanel);
+        ClearInventoryListPanel(rangedPanel);
+        ClearInventoryListPanel(missilePanel);
         //clear main lists
         inventoryEntries.Clear();
         inventoryItems.Clear();
@@ -778,7 +847,7 @@ public class UICanvasManager : MonoBehaviour
 
     }
 
-    void ClearPanel(Transform panel)
+    void ClearInventoryListPanel(Transform panel)
     {
         // Skip the first child (the heading)
         for (int i = panel.childCount - 1; i > 0; i--)
@@ -884,42 +953,45 @@ public class UICanvasManager : MonoBehaviour
             return;
         }
 
-        // Calculate target position
-        Vector2 entryPosition = entryRect.anchoredPosition;
+        float localY = _srContent.InverseTransformPoint(entryRect.position).y;
+        Debug.Log("localY=" + localY);
         float itemHeight = entryRect.rect.height;
         float contentHeight = _srContent.rect.height;
         float viewportHeight = _srViewport.rect.height;
 
+        // Flip Y because UI scroll direction is inverted
+        float flippedY = -localY;
+        Debug.Log("flippedY=" + flippedY);
+
         float targetPosition;
 
-        if (entryBounds.min.y > viewportBounds.max.y)
+        // Determine target scroll position
+        if (entryBounds.min.y > viewportBounds.max.y) // above
         {
-            // Item is above viewport
-            targetPosition = -entryPosition.y;
+            targetPosition = flippedY - itemHeight;
         }
-        else if (entryBounds.max.y < viewportBounds.min.y)
+        else if (entryBounds.max.y < viewportBounds.min.y) // below
         {
-            // Item is below viewport
-            targetPosition = -entryPosition.y - itemHeight + viewportHeight;
+            targetPosition = flippedY + itemHeight - viewportHeight;
         }
-        else if (entryBounds.min.y < viewportBounds.min.y)
+        else if (entryBounds.min.y < viewportBounds.min.y) // bottom clipped
         {
-            // Bottom of item is outside viewport
-            targetPosition = -entryPosition.y - itemHeight + viewportHeight;
+            targetPosition = flippedY + itemHeight - viewportHeight;
         }
-        else
+        else // top clipped
         {
-            // Top of item is outside viewport
-            targetPosition = -entryPosition.y;
+            targetPosition = flippedY - itemHeight;
         }
 
-        // Convert to normalized scroll position
+        // Convert to normalized position
         float targetScrollPosition = 1 - (targetPosition / (contentHeight - viewportHeight));
         targetScrollPosition = Mathf.Clamp01(targetScrollPosition);
 
-        // Instantly jump to the position
+        Debug.Log($"tpos={targetPosition}  tscrolpos={targetScrollPosition}  contentheight={contentHeight}  viewportheight={viewportHeight}");
+        // Start smooth scrolling
         if (_scrollCoroutine != null)
             StopCoroutine(_scrollCoroutine);
+
 
         _scrollRect.verticalNormalizedPosition = targetScrollPosition;
     }
@@ -1346,11 +1418,11 @@ public class UICanvasManager : MonoBehaviour
         if (inventoryEntries.Count > 0)
         {
             UpdateInventoryDescriptPanel();
-            inventoryDescriptPanel.SetActive(true);
+            descriptionPanel_inventory.SetActive(true);
         }
         else 
         {
-            inventoryDescriptPanel.SetActive(false);
+            descriptionPanel_inventory.SetActive(false);
         }
 
         if (ch_obj != null)
@@ -1385,6 +1457,12 @@ public class UICanvasManager : MonoBehaviour
     }
     private void GetEquipPanelReferences()
     {
+        Transform icon = descriptionPanel_equip.transform.Find("itemIcon");
+        Transform text = descriptionPanel_equip.transform.Find("descriptText");
+
+        equipDescript_icon = icon.gameObject.GetComponent<Image>();
+        equipDescript_txt = text.gameObject.GetComponent<TextMeshProUGUI>();
+
         // Ring
         ring_descript_default = ring_EPanel.transform.Find("descript_default");
         ring_descript_equipped = ring_EPanel.transform.Find("descript_equipped");
