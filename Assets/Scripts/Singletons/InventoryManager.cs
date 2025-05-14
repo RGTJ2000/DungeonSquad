@@ -111,7 +111,7 @@ public class InventoryManager : ManagerBase<InventoryManager>
                 break;
         }
 
-        Debug.Log("adding to Char, removing from core: " + item.item_name + "category:"+item.category);
+       
 
         _coreInventory.RemoveItem(item);
 
@@ -119,7 +119,6 @@ public class InventoryManager : ManagerBase<InventoryManager>
 
         if (itemToUnequip != null)
         {
-            Debug.Log("Adding to Inventory:" + itemToUnequip.item_name);
             _coreInventory.AddItem(itemToUnequip);
 
             return itemToUnequip;

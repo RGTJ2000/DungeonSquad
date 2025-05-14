@@ -228,26 +228,26 @@ public class UICanvasManager : MonoBehaviour
     private void OnEnable()
     {
         _playerInputActions.Player.Enable();
-        _playerInputActions.Player.UI_navigate.performed += OnUINavigate;
+        _playerInputActions.Player.UI_navigate.performed += OnInventoryUINavigate;
 
         SquadManager.OnCharacterSelected += HandleSkillsUI;
         SquadManager.OnCharacterSelected += UpdateInventoryPanelToCharacter;
 
-        SquadManager.OnInventorySelected += HandleInventoryUI;
+        SquadManager.OnInventorySelected += ToggleInventoryAndEquipUI;
 
-        ItemEvents.OnItemPickedUp += RefreshInventoryUI;
+        ItemEvents.OnItemPickedUp += RefreshInventoryListsAndObjects;
     }
 
     private void OnDisable()
     {
         _playerInputActions.Player.Disable();
-        _playerInputActions.Player.UI_navigate.performed -= OnUINavigate;
+        _playerInputActions.Player.UI_navigate.performed -= OnInventoryUINavigate;
 
         SquadManager.OnCharacterSelected -= HandleSkillsUI;
         SquadManager.OnCharacterSelected -= UpdateInventoryPanelToCharacter;
-        SquadManager.OnInventorySelected -= HandleInventoryUI;
+        SquadManager.OnInventorySelected -= ToggleInventoryAndEquipUI;
 
-        ItemEvents.OnItemPickedUp -= RefreshInventoryUI;
+        ItemEvents.OnItemPickedUp -= RefreshInventoryListsAndObjects;
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -301,7 +301,7 @@ public class UICanvasManager : MonoBehaviour
                             if (skill.cooldown != 0f)
                             {
                                 float remainingCooldown = cooldownTracker.GetRemainingCooldown(skill);
-                                UpdateOverlay(slots_array[i], remainingCooldown, skill.cooldown);
+                                UpdateSkillCooldownOverlay(slots_array[i], remainingCooldown, skill.cooldown);
                             }
 
                         }
@@ -311,73 +311,27 @@ public class UICanvasManager : MonoBehaviour
         }
     }
 
-    private void UpdateOverlay(GameObject slot, float remainingCooldown, float cooldownDuration)
-    {
-        Image overlayImage = slot.transform.Find("OverlayImage")?.GetComponent<Image>();
-        if (overlayImage != null)
-        {
-            overlayImage.fillAmount = Mathf.Clamp01(remainingCooldown / cooldownDuration);
-        }
-    }
 
-    public GameObject GetSlot(int index)
-    {
-        if (index >= 0 && index < slots_array.Length)
-        {
-            return slots_array[index];
-        }
-        else
-        {
-            Debug.LogWarning("Slot index out of range: " + index);
-            return null;
-        }
-    }
-
-    private void UpdateInventoryPanelToCharacter(GameObject ch_obj)
-    {
-       if (inventoryActive)
-        {
-            if (inventoryEntries.Count > 0)
-            {
-                SelectInventoryItem(inventoryEntries[inventoryIndex]);
-
-
-            }
-
-            if (ch_obj != null)
-            {
-                PopulateEquipPanel(ch_obj);
-                UpdateEquipDescriptPanel(ch_obj);
-                equipPanel.gameObject.SetActive(true);
-            }
-            else
-            {
-                equipPanel.gameObject.SetActive(false);
-            }
-
-        }
-
-    }
-
-
-    private void HandleInventoryUI(GameObject ch_obj)
+    #region ***** Inventory and Equip Panel Methods
+    private void ToggleInventoryAndEquipUI(GameObject ch_obj)
     {
         current_character = ch_obj;
 
-        if (!inventoryActive)
+        if (!inventoryActive) //turn on the inventory and equip panels
         {
-            ClearInventoryUI();
-            PopulateInventoryPanel();
+            ClearInventoryListsAndObjects();
+            PopulateInventoryListsAndObjects();
+            ResetInventoryScrollRect();
+            UpdateInventoryDescriptPanel();
 
             if (ch_obj != null)
             {
                 PopulateEquipPanel(ch_obj);
                 UpdateEquipDescriptPanel(ch_obj);
             }
+
+            ActivateInventoryAndEquipUI(ch_obj);
             
-            ActivateInventoryUI(ch_obj);
-            //set scrollview to top
-            _scrollRect.verticalNormalizedPosition = 1;
             inventoryActive = true;
 
         }
@@ -389,424 +343,41 @@ public class UICanvasManager : MonoBehaviour
 
     }
 
-    public void RefreshInventoryUI()
+    public void ClearInventoryListsAndObjects()
     {
-        if (inventoryActive)
-        {
-            ClearInventoryUI();
-            PopulateInventoryPanel();
-
-        }
+        //Clear all the lists for each category
+        ClearInventoryListPanel(meleePanel);
+        ClearInventoryListPanel(rangedPanel);
+        ClearInventoryListPanel(missilePanel);
+        //clear main lists
+        inventoryEntries.Clear();
+        inventoryItems.Clear();
+        //reset index
+        inventoryIndex = 0;
+        //reset currentCat
+        currentCatSelect = ItemCategory.none;
 
     }
-    private void HandleSkillsUI(GameObject ch_obj)
+
+    void ClearInventoryListPanel(Transform panel)
     {
-        current_character = ch_obj;
-
-        if (ch_obj != null)
+        // Skip the first child (the heading)
+        for (int i = panel.childCount - 1; i > 0; i--)
         {
-
-            ActivateSkillsUI(ch_obj);
-        }
-        else
-        {
-            DeactivateSkillsUI();
-        }
-    }
-
-    private void ActivateSkillsUI(GameObject ch_obj)
-    {
-        grid.gameObject.SetActive(true); //activate grid
-
-
-
-        //Activate the slots according to ch_obj's entityStats skill_slot array
-        EntityStats _entityStats = ch_obj.GetComponent<EntityStats>();
-
-        SkillCooldownTracker _cooldownTracker = _entityStats.GetComponent<SkillCooldownTracker>();
-
-        int ch_slottedSkillsLength = _entityStats.skill_slot.Length;
-
-        for (int i = 0; i < slots_array.Length; i++)
-        {
-
-            Image _image = slots_array[i].GetComponent<Image>();
-
-
-            Transform slot_text = slots_array[i].transform.Find("SkillText");
-            TextMeshProUGUI _textComponent = slot_text.gameObject.GetComponent<TextMeshProUGUI>();
-
-            Image overlayImage = slots_array[i].transform.Find("OverlayImage")?.GetComponent<Image>();
-
-
-            if (i < ch_slottedSkillsLength && _entityStats.skill_slot[i] != null)
+            if (panel.GetChild(i).name != "Header")
             {
-                slots_array[i].SetActive(true);
-                _image.sprite = _entityStats.skill_slot[i].skill_icon;
-
-                if (_entityStats.selected_skill.skill_name == _entityStats.skill_slot[i].skill_name)
-
-                {
-                    //activate slot text
-                    slot_text.gameObject.SetActive(true);
-
-                    //set text to the skillname in the skill slot
-                    _textComponent.text = _entityStats.skill_slot[i].skill_name;
-
-                    slots_array[i].transform.localScale = new Vector3(1.2f, 1.2f, 0f);
-                    //overlayImage.transform.localScale = new Vector3(1.2f, 1.2f, 0f);
-
-                    Color color = _image.color;
-                    color.a = 1.0f;
-                    _image.color = color;
-                }
-                else
-                {
-                    slot_text.gameObject.SetActive(false);
-
-                    slots_array[i].transform.localScale = new Vector3(1.0f, 1.0f, 0f);
-                    //overlayImage.transform.localScale = new Vector3(1.0f, 1.0f, 0f);
-
-                    Color color = _image.color;
-                    color.a = 0.8f;
-                    _image.color = color;
-                }
-
-                //set the cooldown overlay
-                if (_cooldownTracker == null)
-                {
-                    overlayImage.fillAmount = 0f;
-
-                }
-                else
-                {
-                    Skill_SO skill = _entityStats.skill_slot[i];
-                    float remainingCooldown = _cooldownTracker.GetRemainingCooldown(skill);
-                    //Debug.Log($"Slot {i}: remaining cooldown={remainingCooldown} | cooldown total: {skill.cooldown}");
-                    if (skill.cooldown == 0.0f)
-                    {
-                        //Debug.Log($"{ch_obj.name}: Setting slot {i} to overlayImage.fillAmount =0f");
-                        overlayImage.fillAmount = 0.0f;
-                        //Debug.Log($"Post-set: fillAmount = {overlayImage.fillAmount}");
-                    }
-                    else
-                    {
-                        //Debug.Log($"{ch_obj.name}: Setting slot {i} to fraction {remainingCooldown}/{skill.cooldown}");
-                        overlayImage.fillAmount = Mathf.Clamp01(remainingCooldown / skill.cooldown);
-                    }
-
-                }
+                Destroy(panel.GetChild(i).gameObject);
             }
-            else
-            {
-                slots_array[i].SetActive(false); //deactivate the image slot
-            }
-
-
-
-
-
-
-
         }
     }
 
-    private void OnUINavigate(InputAction.CallbackContext context)
+    private void ResetInventoryScrollRect()
     {
-        if (!inventoryActive)
-        {
-            return;
-        }
-        else
-        {
-
-
-            if (inventoryEntries.Count > 0)
-            {
-                Vector2 input = context.ReadValue<Vector2>();
-
-                if (input.y > 0f)
-                {
-                    BumpInventorySelectIndex(-1);
-                }
-                else if (input.y < 0f)
-                {
-                    BumpInventorySelectIndex(1);
-                }
-                else if (input.x > 0f)
-                {
-                    DropItem(inventoryIndex);
-                }
-                else if(input.x <0f)
-                {
-                    if (current_character !=null && inventoryItems[inventoryIndex].IsEquippable)
-                    {
-                        EquipItem(inventoryIndex);
-                    }
-                }
-
-
-            }
-
-        }
-       
-
+        //reset scroll view to top
+        _scrollRect.verticalNormalizedPosition = 1f;
     }
 
-    private void UpdateEquipDescriptPanel(GameObject ch_obj)
-    {
-        EntityStats entityStats = ch_obj.GetComponent<EntityStats>();
-        RuntimeItem equippedItem;
-
-        switch (currentCatSelect)
-        {
-            case ItemCategory.ring:
-                equippedItem = entityStats.equipped_ring;
-                break;
-            case ItemCategory.helm:
-                equippedItem = entityStats.equipped_helm;
-                break;
-            case ItemCategory.amulet:
-                equippedItem = entityStats.equipped_amulet;
-                break;
-            case ItemCategory.melee_weapon:
-                equippedItem = entityStats.equipped_meleeWeapon;
-                break;
-            case ItemCategory.armor:
-                equippedItem= entityStats.equipped_armor;
-                break;
-            case ItemCategory.ranged_weapon:
-                equippedItem = entityStats.equipped_rangedWeapon;
-                break;
-            case ItemCategory.shield:
-                equippedItem = entityStats.equipped_shield;
-                break;
-            case ItemCategory.boots:
-                equippedItem = entityStats.equipped_boots;
-                break;
-            case ItemCategory.missile:
-                equippedItem = entityStats.equipped_missile;
-                break;
-            default:
-                equippedItem = null;
-                break;
-
-        }
-
-        if (equippedItem != null)
-        {
-            descriptionPanel_equip.SetActive(true);
-            equipDescript_icon.sprite = equippedItem.Icon;
-            equipDescript_txt.text = equippedItem.description;
-        }
-        else
-        {
-            descriptionPanel_equip.SetActive(false);
-        }
-
-
-    }
-
-    private void EquipItem(int index)
-    {
-        /*
-        RuntimeItem addedItem = InventoryManager.Instance.EquipItemToCharacter(inventoryItems[index], current_character);
-
-        //destroy inventoryEntry object
-        Destroy(inventoryEntries[index]);
-        //remove inventoryEntry from list
-        inventoryEntries.RemoveAt(index);
-        //remove inventoryItem from list
-        inventoryItems.RemoveAt(index);
-
-        if (addedItem != null)
-        {
-            Transform catPanel;
-
-            switch (addedItem.category)
-            {
-                case ItemCategory.melee_weapon:
-                    catPanel = meleePanel;
-                    break;
-                case ItemCategory.ranged_weapon:
-                    catPanel = rangedPanel;
-                    break;
-                case ItemCategory.missile:
-                    catPanel = missilePanel;
-                    break;
-                default:
-                    catPanel = null;
-                    break;
-            
-            }
-
-            GameObject newObj = Instantiate(itemEntry_prefab, catPanel);
-
-            Transform itemName = newObj.transform.Find("ItemName");
-            TextMeshProUGUI nameText = itemName.GetComponent<TextMeshProUGUI>();
-
-            nameText.text = addedItem.item_name;
-
-            inventoryEntries.Add(newObj);
-            inventoryItems.Add(addedItem);
-
-            //add item to lists
-        }
-
-        BumpInventorySelectIndex(-1);
-        PopulateEquipPanel(current_character);
-        */
-
-        // this code works
-        InventoryManager.Instance.EquipItemToCharacter(inventoryItems[index], current_character);
-        RefreshInventoryUI();
-        MoveToInventoryIndex(index);
-        UpdateInventoryDescriptPanel();
-        PopulateEquipPanel(current_character);
-        UpdateEquipDescriptPanel(current_character);
-        
-
-    }
-
-    private void DropItem(int index)
-    {
-        Debug.Log("Dropping item " + inventoryItems[index].item_name);
-        //destroy entry prefab
-        Destroy(inventoryEntries[index]);
-
-        //remove item from core inventory and instantiate on ground
-        InventoryManager.Instance.DropItemFromCore(inventoryItems[index]);
-
-        //remove from lists
-        inventoryEntries.RemoveAt(index);
-        inventoryItems.RemoveAt(index);
-
-        
-
-        //set inventory index to new location
-        inventoryIndex = Mathf.Clamp(index-1, 0, inventoryEntries.Count-1);
-        if (inventoryEntries.Count > 0)
-        {
-            SelectInventoryItem(inventoryEntries[inventoryIndex]);
-            ScrollToItem(inventoryEntries[inventoryIndex]);
-
-        }
-        
-        
-    }
-    private void BumpInventorySelectIndex(int indexChange)
-    {
-        if (inventoryEntries.Count == 0)
-        {
-            return;
-        }
-        else
-        {
-            int newIndex = Mathf.Clamp(inventoryIndex + indexChange, 0, inventoryEntries.Count - 1);
-
-            if (newIndex != inventoryIndex)
-            {
-                //SoundManager.Instance.PlaySoundByKey("single_click", SoundCategory.UI);
-
-                //deselect inventory index
-                DeselectInventoryItem(inventoryEntries[inventoryIndex]);
-                //select new index
-                inventoryIndex = newIndex;
-                SelectInventoryItem(inventoryEntries[inventoryIndex]);
-
-
-
-                UpdateCategorySelection(inventoryItems[inventoryIndex].baseItem.category);
-                //currentCatSelect = (inventoryItems[inventoryIndex].baseItem.category);
-                ScrollToItem(inventoryEntries[inventoryIndex]);
-            }
-
-        }
-        
-    }
-
-    private void MoveToInventoryIndex(int index)
-    {
-        if (inventoryEntries.Count == 0) { return; }
-        else
-        {
-            index = Mathf.Clamp(index, 0, inventoryEntries.Count - 1);
-
-            DeselectInventoryItem(inventoryEntries[inventoryIndex]);
-            SelectInventoryItem(inventoryEntries[index]);
-            inventoryIndex = index;
-            Debug.Log("Moving. Index=" + index + " inventoryIndex=" + inventoryIndex);
-            UpdateCategorySelection(inventoryItems[inventoryIndex].baseItem.category);
-            JumpToItem(inventoryEntries[inventoryIndex]);
-        }
-        
-    }
-
-
-    private void UpdateCategorySelection(ItemCategory newCategory)
-    {
-
-        if (current_character != null && newCategory != currentCatSelect)
-        {
-            //switch highlighted equip slot
-            SetAmberSelectState(currentCatSelect, false);
-            SetAmberSelectState(newCategory, true);
-
-            //switch the current category
-            currentCatSelect = newCategory;
-
-            //update the EquipDescript
-            UpdateEquipDescriptPanel(current_character);
-
-
-        }
-
-        currentCatSelect = newCategory; //even if the new cat is the same as currentCat still set it to the newCat
-
-
-    }
-
-    private void SetAmberSelectState(ItemCategory category, bool state)
-    {
-        switch (category)
-        {
-            case ItemCategory.ring:
-                ring_selectAmberImg.enabled = state;
-                break;
-            case ItemCategory.helm:
-                helm_selectAmberImg.enabled = state;
-                break;
-            case ItemCategory.amulet:
-                amulet_selectAmberImg.enabled = state;
-                break;
-            case ItemCategory.melee_weapon:
-                melee_selectAmberImg.enabled = state;
-                break;
-            case ItemCategory.armor:
-                armor_selectAmberImg.enabled = state;
-                break;
-            case ItemCategory.ranged_weapon:
-                ranged_selectAmberImg.enabled = state;
-                break;
-            case ItemCategory.shield:
-                shield_selectAmberImg.enabled = state;
-                break;
-            case ItemCategory.boots:
-                boots_selectAmberImg.enabled = state;
-                break;
-            case ItemCategory.missile:
-                missile_selectAmberImg.enabled = state;
-                break;
-            default:
-                break;
-        }
-
-
-    }
-
-
-
-    private void PopulateInventoryPanel()
+    private void PopulateInventoryListsAndObjects()
     {
 
         //ClearInventoryPanel();
@@ -829,38 +400,6 @@ public class UICanvasManager : MonoBehaviour
 
     }
 
-    public void ClearInventoryUI()
-    {
-        ClearInventoryListPanel(meleePanel);
-        ClearInventoryListPanel(rangedPanel);
-        ClearInventoryListPanel(missilePanel);
-        //clear main lists
-        inventoryEntries.Clear();
-        inventoryItems.Clear();
-        //reset index
-        inventoryIndex = 0;
-        //reset scroll view
-        _scrollRect.verticalNormalizedPosition = 1;
-
-        //reset currentCat
-        currentCatSelect = ItemCategory.none;
-
-    }
-
-    void ClearInventoryListPanel(Transform panel)
-    {
-        // Skip the first child (the heading)
-        for (int i = panel.childCount - 1; i > 0; i--)
-        {
-            if (panel.GetChild(i).name != "Header")
-            {
-                Destroy(panel.GetChild(i).gameObject);
-            }
-        }
-
-        
-    }
-
     private void AddItemToCategoryPanel(RuntimeItem item, Transform categoryPanel)
     {
         GameObject newObj = Instantiate(itemEntry_prefab, categoryPanel);
@@ -874,11 +413,11 @@ public class UICanvasManager : MonoBehaviour
         inventoryItems.Add(item);
 
         //activate/deactivate selection options
-        if (inventoryEntries.Count == inventoryIndex+1) //select the current index
+        if (inventoryEntries.Count == inventoryIndex + 1) //select the current index
         {
             SelectInventoryItem(newObj);
 
-            
+
             currentCatSelect = item.category; //initialize the currentCatSelect
             //ScrollToItem(newObj);
         }
@@ -891,269 +430,29 @@ public class UICanvasManager : MonoBehaviour
 
     }
 
-    private void DeselectInventoryItem(GameObject entry)
+    private void UpdateInventoryDescriptPanel()
     {
-        Transform itemName = entry.transform.Find("ItemName");
-        TextMeshProUGUI nameText = itemName.GetComponent<TextMeshProUGUI>();
-
-        Transform equipText = entry.transform.Find("Equip");
-        Transform dropText = entry.transform.Find("Drop");
-        Image background = entry.GetComponentInChildren<Image>();
-
-        nameText.fontStyle = FontStyles.Normal;
-        equipText.gameObject.SetActive(false);
-        dropText.gameObject.SetActive(false);
-        background.color = new Color32(152, 152, 152, 22);
-    }
-
-    private void SelectInventoryItem(GameObject entry)
-    {
-        Transform itemName = entry.transform.Find("ItemName");
-        TextMeshProUGUI nameText = itemName.GetComponent<TextMeshProUGUI>();
-
-
-        Transform equipText = entry.transform.Find("Equip");
-        Transform dropText = entry.transform.Find("Drop");
-        Image background = entry.GetComponentInChildren<Image>();
-
-        nameText.fontStyle = FontStyles.Bold;
-        if (!inventoryItems[inventoryIndex].IsEquippable ||  _squadManager.select_active == -1 || (_squadManager.select_active != -1 && _squadManager.ch_in_slot_array[_squadManager.select_active] == null))
+        if (inventoryEntries.Count > 0)
         {
-            equipText.gameObject.SetActive(false);
+            descriptionPanel_inventory.SetActive(true);
+            inventoryDescript_icon.sprite = inventoryItems[inventoryIndex].Icon;
+            inventoryDescript_txt.text = inventoryItems[inventoryIndex].baseItem.description;
+
         }
         else
         {
-            equipText.gameObject.SetActive(true);
+            descriptionPanel_inventory.SetActive(false);
         }
-        dropText.gameObject.SetActive(true);
-        background.color = new Color32(221, 147, 39, 20);
-
-        UpdateInventoryDescriptPanel();
-
-    }
-
-    private void JumpToItem(GameObject entry)
-    {
-        RectTransform entryRect = entry.GetComponent<RectTransform>();
-
-        // Calculate the world space bounds
-        Bounds entryBounds = GetWorldSpaceBounds(entryRect);
-        Bounds viewportBounds = GetWorldSpaceBounds(_srViewport);
-
-        // Find the index of this entry in our list
-        int entryIndex = inventoryEntries.IndexOf(entry);
-
-        // Special handling for top items (first 2 items)
-        if (entryIndex <= 2)
-        {
-            if (_scrollCoroutine != null)
-                StopCoroutine(_scrollCoroutine);
-
-            _scrollRect.verticalNormalizedPosition = 1.0f; // Top of the scroll view
-            return;
-        }
-
-        float localY = _srContent.InverseTransformPoint(entryRect.position).y;
-        Debug.Log("localY=" + localY);
-        float itemHeight = entryRect.rect.height;
-        float contentHeight = _srContent.rect.height;
-        float viewportHeight = _srViewport.rect.height;
-
-        // Flip Y because UI scroll direction is inverted
-        float flippedY = -localY;
-        Debug.Log("flippedY=" + flippedY);
-
-        float targetPosition;
-
-        // Determine target scroll position
-        if (entryBounds.min.y > viewportBounds.max.y) // above
-        {
-            targetPosition = flippedY - itemHeight;
-        }
-        else if (entryBounds.max.y < viewportBounds.min.y) // below
-        {
-            targetPosition = flippedY + itemHeight - viewportHeight;
-        }
-        else if (entryBounds.min.y < viewportBounds.min.y) // bottom clipped
-        {
-            targetPosition = flippedY + itemHeight - viewportHeight;
-        }
-        else // top clipped
-        {
-            targetPosition = flippedY - itemHeight;
-        }
-
-        // Convert to normalized position
-        float targetScrollPosition = 1 - (targetPosition / (contentHeight - viewportHeight));
-        targetScrollPosition = Mathf.Clamp01(targetScrollPosition);
-
-        Debug.Log($"tpos={targetPosition}  tscrolpos={targetScrollPosition}  contentheight={contentHeight}  viewportheight={viewportHeight}");
-        // Start smooth scrolling
-        if (_scrollCoroutine != null)
-            StopCoroutine(_scrollCoroutine);
-
-
-        _scrollRect.verticalNormalizedPosition = targetScrollPosition;
-    }
-
-    
-    
-    private void ScrollToItem(GameObject entry)
-    {
-        RectTransform entryRect = entry.GetComponent<RectTransform>();
-
-        // Calculate the world space bounds
-        Bounds entryBounds = GetWorldSpaceBounds(entryRect);
-        Bounds viewportBounds = GetWorldSpaceBounds(_srViewport);
-
-        // Find the index of this entry in our list
-        int entryIndex = inventoryEntries.IndexOf(entry);
-
-        // Special handling for top items (first 2 items)
-        if (entryIndex <= 2)
-        {
-            // For the first few items, just scroll all the way to the top
-            if (_scrollCoroutine != null)
-                StopCoroutine(_scrollCoroutine);
-
-            _scrollCoroutine = StartCoroutine(SmoothScrollTo(1.0f)); // 1.0 = top position
-            return;
-        }
-
-        // Standard visibility check
-        if (viewportBounds.Contains(entryBounds.min) && viewportBounds.Contains(entryBounds.max))
-        {
-            // Item is fully visible, no need to scroll
-            return;
-        }
-
-        /*
-        // Calculate target position for other items
-        Vector2 entryPosition = entryRect.anchoredPosition;
-        float itemHeight = entryRect.rect.height;
-        float contentHeight = _srContent.rect.height;
-        float viewportHeight = _srViewport.rect.height;
-
         
 
-        float targetPosition;
-
-        // Determine target scroll position based on item visibility
-        if (entryBounds.min.y > viewportBounds.max.y)
-        {
-            // Item is above viewport
-            targetPosition = -entryPosition.y;
-        }
-        else if (entryBounds.max.y < viewportBounds.min.y)
-        {
-            // Item is below viewport
-            targetPosition = -entryPosition.y - itemHeight + viewportHeight;
-        }
-        else if (entryBounds.min.y < viewportBounds.min.y)
-        {
-            // Bottom of item is outside viewport
-            targetPosition = -entryPosition.y - itemHeight + viewportHeight;
-        }
-        else
-        {
-            // Top of item is outside viewport
-            targetPosition = -entryPosition.y;
-        }
-
-        */
-        // Get item's position in content's local space
-        float localY = _srContent.InverseTransformPoint(entryRect.position).y;
-        Debug.Log("localY=" + localY);
-        float itemHeight = entryRect.rect.height;
-        float contentHeight = _srContent.rect.height;
-        float viewportHeight = _srViewport.rect.height;
-
-        // Flip Y because UI scroll direction is inverted
-        float flippedY = - localY;
-        Debug.Log("flippedY=" + flippedY);
-
-        float targetPosition;
-
-        // Determine target scroll position
-        if (entryBounds.min.y > viewportBounds.max.y) // above
-        {
-            targetPosition = flippedY - itemHeight;
-        }
-        else if (entryBounds.max.y < viewportBounds.min.y) // below
-        {
-            targetPosition = flippedY +itemHeight - viewportHeight;
-        }
-        else if (entryBounds.min.y < viewportBounds.min.y) // bottom clipped
-        {
-            targetPosition = flippedY +itemHeight - viewportHeight;
-        }
-        else // top clipped
-        {
-            targetPosition = flippedY - itemHeight;
-        }
-
-        // Convert to normalized position
-        float targetScrollPosition = 1 - (targetPosition / (contentHeight - viewportHeight));
-        targetScrollPosition = Mathf.Clamp01(targetScrollPosition);
-
-        Debug.Log($"tpos={targetPosition}  tscrolpos={targetScrollPosition}  contentheight={contentHeight}  viewportheight={viewportHeight}");
-        // Start smooth scrolling
-        if (_scrollCoroutine != null)
-            StopCoroutine(_scrollCoroutine);
-
-        _scrollCoroutine = StartCoroutine(SmoothScrollTo(targetScrollPosition));
     }
-    
-
-    // Helper method to get world space bounds of a RectTransform
-    private Bounds GetWorldSpaceBounds(RectTransform rectTransform)
-    {
-        Vector3[] corners = new Vector3[4];
-        rectTransform.GetWorldCorners(corners);
-
-        Bounds bounds = new Bounds(corners[0], Vector3.zero);
-        for (int i = 1; i < 4; i++)
-        {
-            bounds.Encapsulate(corners[i]);
-        }
-
-        return bounds;
-    }
-
-    private IEnumerator SmoothScrollTo(float targetScrollPosition)
-    {
-        float startPosition = _scrollRect.verticalNormalizedPosition;
-        float time = 0;
-        float duration = 0.2f; // Adjust time as needed
-
-        while (time < duration)
-        {
-            time += Time.deltaTime;
-            float t = time / duration;
-            // Ease in-out for smoother feel
-            t = t < 0.5f ? 2 * t * t : 1 - Mathf.Pow(-2 * t + 2, 2) / 2;
-
-            _scrollRect.verticalNormalizedPosition = Mathf.Lerp(startPosition, targetScrollPosition, t);
-            yield return null;
-        }
-
-        _scrollRect.verticalNormalizedPosition = targetScrollPosition;
-        _scrollCoroutine = null;
-    }
-
-    private void DeactivateSkillsUI()
-    {
-        grid.gameObject.SetActive(false);
-    }
-
-
 
     private void PopulateEquipPanel(GameObject ch_obj)
     {
         if (ch_obj != null)
         {
             EntityStats entityStats = ch_obj.GetComponent<EntityStats>();
-           
+
 
             if (entityStats.equipped_ring != null)
             {
@@ -1377,7 +676,7 @@ public class UICanvasManager : MonoBehaviour
             }
 
 
-            if (entityStats.equipped_missile  != null)
+            if (entityStats.equipped_missile != null)
             {
                 missile_text_equipped.text = entityStats.equipped_missile.item_name;
                 missile_iconImg_equipped.sprite = entityStats.equipped_missile.Icon;
@@ -1411,32 +710,69 @@ public class UICanvasManager : MonoBehaviour
 
 
     }
-    private void ActivateInventoryUI(GameObject ch_obj)
+
+    private void UpdateEquipDescriptPanel(GameObject ch_obj)
+    {
+        EntityStats entityStats = ch_obj.GetComponent<EntityStats>();
+        RuntimeItem equippedItem;
+
+        switch (currentCatSelect)
+        {
+            case ItemCategory.ring:
+                equippedItem = entityStats.equipped_ring;
+                break;
+            case ItemCategory.helm:
+                equippedItem = entityStats.equipped_helm;
+                break;
+            case ItemCategory.amulet:
+                equippedItem = entityStats.equipped_amulet;
+                break;
+            case ItemCategory.melee_weapon:
+                equippedItem = entityStats.equipped_meleeWeapon;
+                break;
+            case ItemCategory.armor:
+                equippedItem = entityStats.equipped_armor;
+                break;
+            case ItemCategory.ranged_weapon:
+                equippedItem = entityStats.equipped_rangedWeapon;
+                break;
+            case ItemCategory.shield:
+                equippedItem = entityStats.equipped_shield;
+                break;
+            case ItemCategory.boots:
+                equippedItem = entityStats.equipped_boots;
+                break;
+            case ItemCategory.missile:
+                equippedItem = entityStats.equipped_missile;
+                break;
+            default:
+                equippedItem = null;
+                break;
+
+        }
+
+        if (equippedItem != null)
+        {
+            descriptionPanel_equip.SetActive(true);
+            equipDescript_icon.sprite = equippedItem.Icon;
+            equipDescript_txt.text = equippedItem.description;
+        }
+        else
+        {
+            descriptionPanel_equip.SetActive(false);
+        }
+
+
+    }
+
+    private void ActivateInventoryAndEquipUI(GameObject ch_obj)
     {
         inventoryPanel.SetActive(true);
-
-        if (inventoryEntries.Count > 0)
-        {
-            UpdateInventoryDescriptPanel();
-            descriptionPanel_inventory.SetActive(true);
-        }
-        else 
-        {
-            descriptionPanel_inventory.SetActive(false);
-        }
 
         if (ch_obj != null)
         {
             equipPanel.SetActive(true);
         }
-    }
-
-    private void UpdateInventoryDescriptPanel()
-    {
-        inventoryDescript_icon.sprite = inventoryItems[inventoryIndex].Icon;
-        Debug.Log("baseitem sprite="+ inventoryDescript_icon.sprite.name);
-        inventoryDescript_txt.text = inventoryItems[inventoryIndex].baseItem.description;
-
     }
 
     private void DeactivateInventoryUI()
@@ -1445,6 +781,540 @@ public class UICanvasManager : MonoBehaviour
         equipPanel.SetActive(false);
     }
 
+    //this is called when squadmanager selects or deselects a character
+    private void UpdateInventoryPanelToCharacter(GameObject ch_obj)
+    {
+        if (!inventoryActive)
+        {
+            return;
+        }
+        else
+        {
+            current_character = ch_obj;
+
+            //update the equip option of the item entry
+            if (inventoryEntries.Count > 0)
+            {
+                SelectInventoryItem(inventoryEntries[inventoryIndex]);
+
+            }
+            
+
+            if (ch_obj != null)
+            {
+                equipPanel.gameObject.SetActive(true);
+                PopulateEquipPanel(ch_obj);
+                UpdateEquipDescriptPanel(ch_obj);
+            }
+            else
+            {
+               
+                equipPanel.gameObject.SetActive(false);
+            }
+
+        }
+       
+    }
+   
+    //this updates the inventory list to show new items picked up or unequipped
+    public void RefreshInventoryListsAndObjects()
+    {
+        if (!inventoryActive)
+        {
+            return;
+        }
+        else
+        {
+            ClearInventoryListsAndObjects();
+            PopulateInventoryListsAndObjects();
+        }
+        
+
+    }
+
+    private void OnInventoryUINavigate(InputAction.CallbackContext context)
+    {
+        if (!inventoryActive)
+        {
+            return;
+        }
+        else
+        {
+            if (inventoryEntries.Count > 0)
+            {
+                Vector2 input = context.ReadValue<Vector2>();
+
+                if (input.y > 0f)
+                {
+                    BumpInventorySelectIndex(-1);
+                }
+                else if (input.y < 0f)
+                {
+                    BumpInventorySelectIndex(1);
+                }
+                else if (input.x > 0f)
+                {
+                    DropItem(inventoryIndex);
+                }
+                else if (input.x < 0f)
+                {
+                    if (current_character != null && inventoryItems[inventoryIndex].IsEquippable)
+                    {
+                        EquipItem(inventoryIndex);
+                    }
+                }
+            }
+        }
+    }
+
+    private void EquipItem(int index)
+    {
+        InventoryManager.Instance.EquipItemToCharacter(inventoryItems[index], current_character);
+        Debug.Log("Initial scrolrect position=" + _scrollRect.verticalNormalizedPosition);
+        RefreshInventoryListsAndObjects();
+        MoveToInventoryIndex(index);
+        Debug.Log("New scrollrect="+_scrollRect.verticalNormalizedPosition);
+
+        UpdateInventoryDescriptPanel();
+        PopulateEquipPanel(current_character);
+        UpdateEquipDescriptPanel(current_character);
+    }
+
+    private void DropItem(int index)
+    {
+        Debug.Log("Dropping item " + inventoryItems[index].item_name);
+        //destroy entry prefab
+        Destroy(inventoryEntries[index]);
+
+        //remove item from core inventory and instantiate on ground
+        InventoryManager.Instance.DropItemFromCore(inventoryItems[index]);
+
+        //remove from lists
+        inventoryEntries.RemoveAt(index);
+        inventoryItems.RemoveAt(index);
+
+        //move index to next item down
+
+        //keep inventory index the same (will highlight next item after the dropped one)
+        inventoryIndex = Mathf.Clamp(index, 0, inventoryEntries.Count - 1);
+        if (inventoryEntries.Count > 0)
+        {
+            SelectInventoryItem(inventoryEntries[inventoryIndex]);
+            ScrollToItem(inventoryEntries[inventoryIndex]);
+
+        }
+
+
+    }
+
+    private void MoveToInventoryIndex(int index)
+    {
+        if (inventoryEntries.Count == 0)
+        {
+            return;
+        }
+        else
+        {
+            index = Mathf.Clamp(index, 0, inventoryEntries.Count - 1);
+
+            DeselectInventoryItem(inventoryEntries[inventoryIndex]);
+            SelectInventoryItem(inventoryEntries[index]);
+            inventoryIndex = index;
+            UpdateCategorySelection(inventoryItems[inventoryIndex].baseItem.category);
+            //JumpToItem(inventoryEntries[inventoryIndex]);
+            //ScrollToItem(inventoryEntries[inventoryIndex]);
+        }
+
+    }
+    private void ScrollToItem(GameObject entry)
+    {
+        RectTransform entryRect = entry.GetComponent<RectTransform>();
+
+        // Calculate the world space bounds
+        Bounds entryBounds = GetWorldSpaceBounds(entryRect);
+        Bounds viewportBounds = GetWorldSpaceBounds(_srViewport);
+
+        // Find the index of this entry in our list
+        int entryIndex = inventoryEntries.IndexOf(entry);
+
+        // Special handling for top items (first 2 items)
+        if (entryIndex <= 2)
+        {
+            // For the first few items, just scroll all the way to the top
+            if (_scrollCoroutine != null)
+                StopCoroutine(_scrollCoroutine);
+
+            _scrollCoroutine = StartCoroutine(SmoothScrollTo(1.0f)); // 1.0 = top position
+            return;
+        }
+
+        // Standard visibility check
+        if (viewportBounds.Contains(entryBounds.min) && viewportBounds.Contains(entryBounds.max))
+        {
+            // Item is fully visible, no need to scroll
+            return;
+        }
+
+
+        // Get item's position in content's local space
+        float localY = _srContent.InverseTransformPoint(entryRect.position).y;
+        float itemHeight = entryRect.rect.height;
+        float contentHeight = _srContent.rect.height;
+        float viewportHeight = _srViewport.rect.height;
+
+        // Flip Y because UI scroll direction is inverted
+        float flippedY = -localY;
+       
+
+        float targetPosition;
+
+        // Determine target scroll position
+        if (entryBounds.min.y > viewportBounds.max.y) // above
+        {
+            targetPosition = flippedY - itemHeight;
+        }
+        else if (entryBounds.max.y < viewportBounds.min.y) // below
+        {
+            targetPosition = flippedY + itemHeight - viewportHeight;
+        }
+        else if (entryBounds.min.y < viewportBounds.min.y) // bottom clipped
+        {
+            targetPosition = flippedY + itemHeight - viewportHeight;
+        }
+        else // top clipped
+        {
+            targetPosition = flippedY - itemHeight;
+        }
+
+        // Convert to normalized position
+        float targetScrollPosition = 1 - (targetPosition / (contentHeight - viewportHeight));
+        targetScrollPosition = Mathf.Clamp01(targetScrollPosition);
+
+        
+        // Start smooth scrolling
+        if (_scrollCoroutine != null)
+            StopCoroutine(_scrollCoroutine);
+
+        _scrollCoroutine = StartCoroutine(SmoothScrollTo(targetScrollPosition));
+    }
+
+    private void BumpInventorySelectIndex(int indexChange)
+    {
+        if (inventoryEntries.Count == 0)
+        {
+            return;
+        }
+        else
+        {
+            int newIndex = Mathf.Clamp(inventoryIndex + indexChange, 0, inventoryEntries.Count - 1);
+
+            if (newIndex != inventoryIndex)
+            {
+                //SoundManager.Instance.PlaySoundByKey("single_click", SoundCategory.UI);
+
+                //deselect inventory index
+                DeselectInventoryItem(inventoryEntries[inventoryIndex]);
+                //select new index
+                inventoryIndex = newIndex;
+                SelectInventoryItem(inventoryEntries[inventoryIndex]);
+
+
+
+                UpdateCategorySelection(inventoryItems[inventoryIndex].baseItem.category);
+                //currentCatSelect = (inventoryItems[inventoryIndex].baseItem.category);
+                ScrollToItem(inventoryEntries[inventoryIndex]);
+            }
+
+        }
+
+    }
+
+    private void UpdateCategorySelection(ItemCategory newCategory)
+    {
+
+        if (current_character != null && newCategory != currentCatSelect)
+        {
+            //switch highlighted equip slot
+            SetAmberSelectState(currentCatSelect, false);
+            SetAmberSelectState(newCategory, true);
+
+            //switch the current category
+            currentCatSelect = newCategory;
+
+            //update the EquipDescript
+            UpdateEquipDescriptPanel(current_character);
+
+
+        }
+
+        currentCatSelect = newCategory; //even if the new cat is the same as currentCat still set it to the newCat
+
+
+    }
+
+    private void SetAmberSelectState(ItemCategory category, bool state)
+    {
+        switch (category)
+        {
+            case ItemCategory.ring:
+                ring_selectAmberImg.enabled = state;
+                break;
+            case ItemCategory.helm:
+                helm_selectAmberImg.enabled = state;
+                break;
+            case ItemCategory.amulet:
+                amulet_selectAmberImg.enabled = state;
+                break;
+            case ItemCategory.melee_weapon:
+                melee_selectAmberImg.enabled = state;
+                break;
+            case ItemCategory.armor:
+                armor_selectAmberImg.enabled = state;
+                break;
+            case ItemCategory.ranged_weapon:
+                ranged_selectAmberImg.enabled = state;
+                break;
+            case ItemCategory.shield:
+                shield_selectAmberImg.enabled = state;
+                break;
+            case ItemCategory.boots:
+                boots_selectAmberImg.enabled = state;
+                break;
+            case ItemCategory.missile:
+                missile_selectAmberImg.enabled = state;
+                break;
+            default:
+                break;
+        }
+
+
+    }
+
+    private void SelectInventoryItem(GameObject entry)
+    {
+        Transform itemName = entry.transform.Find("ItemName");
+        TextMeshProUGUI nameText = itemName.GetComponent<TextMeshProUGUI>();
+
+
+        Transform equipText = entry.transform.Find("Equip");
+        Transform dropText = entry.transform.Find("Drop");
+        Image background = entry.GetComponentInChildren<Image>();
+
+        nameText.fontStyle = FontStyles.Bold;
+        if (!inventoryItems[inventoryIndex].IsEquippable || current_character == null || (_squadManager.select_active != -1 && _squadManager.ch_in_slot_array[_squadManager.select_active] == null))
+        {
+            equipText.gameObject.SetActive(false);
+        }
+        else
+        {
+            equipText.gameObject.SetActive(true);
+        }
+        dropText.gameObject.SetActive(true);
+        background.color = new Color32(221, 147, 39, 20);
+
+        UpdateInventoryDescriptPanel();
+
+    }
+
+    private void DeselectInventoryItem(GameObject entry)
+    {
+        Transform itemName = entry.transform.Find("ItemName");
+        TextMeshProUGUI nameText = itemName.GetComponent<TextMeshProUGUI>();
+
+        Transform equipText = entry.transform.Find("Equip");
+        Transform dropText = entry.transform.Find("Drop");
+        Image background = entry.GetComponentInChildren<Image>();
+
+        nameText.fontStyle = FontStyles.Normal;
+        equipText.gameObject.SetActive(false);
+        dropText.gameObject.SetActive(false);
+        background.color = new Color32(152, 152, 152, 22);
+    }
+
+    // Helper method to get world space bounds of a RectTransform
+    private Bounds GetWorldSpaceBounds(RectTransform rectTransform)
+    {
+        Vector3[] corners = new Vector3[4];
+        rectTransform.GetWorldCorners(corners);
+
+        Bounds bounds = new Bounds(corners[0], Vector3.zero);
+        for (int i = 1; i < 4; i++)
+        {
+            bounds.Encapsulate(corners[i]);
+        }
+
+        return bounds;
+    }
+
+    private IEnumerator SmoothScrollTo(float targetScrollPosition)
+    {
+        float startPosition = _scrollRect.verticalNormalizedPosition;
+        float time = 0;
+        float duration = 0.2f; // Adjust time as needed
+
+        while (time < duration)
+        {
+            time += Time.deltaTime;
+            float t = time / duration;
+            // Ease in-out for smoother feel
+            t = t < 0.5f ? 2 * t * t : 1 - Mathf.Pow(-2 * t + 2, 2) / 2;
+
+            _scrollRect.verticalNormalizedPosition = Mathf.Lerp(startPosition, targetScrollPosition, t);
+            yield return null;
+        }
+
+        _scrollRect.verticalNormalizedPosition = targetScrollPosition;
+        _scrollCoroutine = null;
+    }
+
+    #endregion
+
+
+    #region ******** Skills Selection UI
+    private void HandleSkillsUI(GameObject ch_obj)
+    {
+        current_character = ch_obj;
+
+        if (ch_obj != null)
+        {
+
+            ActivateSkillsUI(ch_obj);
+        }
+        else
+        {
+            DeactivateSkillsUI();
+        }
+    }
+
+    private void ActivateSkillsUI(GameObject ch_obj)
+    {
+        grid.gameObject.SetActive(true); //activate grid
+
+
+
+        //Activate the slots according to ch_obj's entityStats skill_slot array
+        EntityStats _entityStats = ch_obj.GetComponent<EntityStats>();
+
+        SkillCooldownTracker _cooldownTracker = _entityStats.GetComponent<SkillCooldownTracker>();
+
+        int ch_slottedSkillsLength = _entityStats.skill_slot.Length;
+
+        for (int i = 0; i < slots_array.Length; i++)
+        {
+
+            Image _image = slots_array[i].GetComponent<Image>();
+
+
+            Transform slot_text = slots_array[i].transform.Find("SkillText");
+            TextMeshProUGUI _textComponent = slot_text.gameObject.GetComponent<TextMeshProUGUI>();
+
+            Image overlayImage = slots_array[i].transform.Find("OverlayImage")?.GetComponent<Image>();
+
+
+            if (i < ch_slottedSkillsLength && _entityStats.skill_slot[i] != null)
+            {
+                slots_array[i].SetActive(true);
+                _image.sprite = _entityStats.skill_slot[i].skill_icon;
+
+                if (_entityStats.selected_skill.skill_name == _entityStats.skill_slot[i].skill_name)
+
+                {
+                    //activate slot text
+                    slot_text.gameObject.SetActive(true);
+
+                    //set text to the skillname in the skill slot
+                    _textComponent.text = _entityStats.skill_slot[i].skill_name;
+
+                    slots_array[i].transform.localScale = new Vector3(1.2f, 1.2f, 0f);
+                    //overlayImage.transform.localScale = new Vector3(1.2f, 1.2f, 0f);
+
+                    Color color = _image.color;
+                    color.a = 1.0f;
+                    _image.color = color;
+                }
+                else
+                {
+                    slot_text.gameObject.SetActive(false);
+
+                    slots_array[i].transform.localScale = new Vector3(1.0f, 1.0f, 0f);
+                    //overlayImage.transform.localScale = new Vector3(1.0f, 1.0f, 0f);
+
+                    Color color = _image.color;
+                    color.a = 0.8f;
+                    _image.color = color;
+                }
+
+                //set the cooldown overlay
+                if (_cooldownTracker == null)
+                {
+                    overlayImage.fillAmount = 0f;
+
+                }
+                else
+                {
+                    Skill_SO skill = _entityStats.skill_slot[i];
+                    float remainingCooldown = _cooldownTracker.GetRemainingCooldown(skill);
+                    //Debug.Log($"Slot {i}: remaining cooldown={remainingCooldown} | cooldown total: {skill.cooldown}");
+                    if (skill.cooldown == 0.0f)
+                    {
+                        //Debug.Log($"{ch_obj.name}: Setting slot {i} to overlayImage.fillAmount =0f");
+                        overlayImage.fillAmount = 0.0f;
+                        //Debug.Log($"Post-set: fillAmount = {overlayImage.fillAmount}");
+                    }
+                    else
+                    {
+                        //Debug.Log($"{ch_obj.name}: Setting slot {i} to fraction {remainingCooldown}/{skill.cooldown}");
+                        overlayImage.fillAmount = Mathf.Clamp01(remainingCooldown / skill.cooldown);
+                    }
+
+                }
+            }
+            else
+            {
+                slots_array[i].SetActive(false); //deactivate the image slot
+            }
+
+
+
+
+
+
+
+        }
+    }
+
+    private void UpdateSkillCooldownOverlay(GameObject slot, float remainingCooldown, float cooldownDuration)
+    {
+        Image overlayImage = slot.transform.Find("OverlayImage")?.GetComponent<Image>();
+        if (overlayImage != null)
+        {
+            overlayImage.fillAmount = Mathf.Clamp01(remainingCooldown / cooldownDuration);
+        }
+    }
+
+    public GameObject GetSkillSlot(int index)
+    {
+        if (index >= 0 && index < slots_array.Length)
+        {
+            return slots_array[index];
+        }
+        else
+        {
+            Debug.LogWarning("Slot index out of range: " + index);
+            return null;
+        }
+    }
+
+    private void DeactivateSkillsUI()
+    {
+        grid.gameObject.SetActive(false);
+    }
+
+    #endregion
+
+
+
+    #region ****** PanelReferences Getters
     private void GetInventoryPanelReferences()
     {
         Transform icon = descriptionPanel_inventory.transform.Find("itemIcon");
@@ -1611,7 +1481,7 @@ public class UICanvasManager : MonoBehaviour
 
 
     }
-
+    #endregion
 }
 
 
