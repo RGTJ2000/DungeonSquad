@@ -32,6 +32,13 @@ public class RuntimeItem
     public bool IsEquippable => baseItem.isEquippable;
     public int maxStack => baseItem.maxStack;
 
+    public StatAdjustment strModifier => baseItem.strModifier;
+    public StatAdjustment dexModifier => baseItem.dexModifier;
+    public StatAdjustment intModifier => baseItem.intModifier;
+    public StatAdjustment willModifier => baseItem.willModifier;
+    public StatAdjustment soulModifier => baseItem.soulModifier;
+
+
     public string GetDisplayName()
     {
         // Could combine charm names, rarity colors, etc.
@@ -43,6 +50,8 @@ public class RuntimeItem
     public Melee_Weapon_SO MeleeWeapon => baseItem as Melee_Weapon_SO;
     public Ranged_Weapon_SO RangedWeapon => baseItem as Ranged_Weapon_SO;
     public Missile_SO Missile => baseItem as Missile_SO;
+
+    public Shield_SO Shield => baseItem as Shield_SO;
 
     /*
     public Armor_SO Armor => baseItem as Armor_SO;

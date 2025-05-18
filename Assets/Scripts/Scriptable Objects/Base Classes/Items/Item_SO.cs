@@ -22,6 +22,19 @@ public enum ItemCategory
 
 }
 
+public enum OperatorType
+{
+    percent,
+    additive
+}
+
+[System.Serializable]
+public struct StatAdjustment
+{
+    public OperatorType operatorType;
+    public float amount;
+}
+
 //[CreateAssetMenu(fileName = "Item_SO", menuName = "Item/Item_SO")]
 public abstract class Item_SO : ScriptableObject
 {
@@ -49,5 +62,13 @@ public abstract class Item_SO : ScriptableObject
     //Charms
     public List<Charm_SO> attachedCharms;
 
+    //Stat Modifiers
+    public StatAdjustment strModifier;
+    public StatAdjustment dexModifier;
+    public StatAdjustment intModifier;
+    public StatAdjustment willModifier;
+    public StatAdjustment soulModifier;
+
+   
 
 }

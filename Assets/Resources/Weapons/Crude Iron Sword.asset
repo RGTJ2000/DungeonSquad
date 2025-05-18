@@ -24,6 +24,21 @@ MonoBehaviour:
   isStackable: 0
   maxStack: 1
   attachedCharms: []
+  strModifier:
+    operatorType: 0
+    amount: 0.5
+  dexModifier:
+    operatorType: 0
+    amount: 0
+  intModifier:
+    operatorType: 0
+    amount: 0
+  willModifier:
+    operatorType: 0
+    amount: 0
+  soulModifier:
+    operatorType: 0
+    amount: 0
   attackCooldown: 1
   critChance_base: 1
   critChance_weight_str: 1
@@ -34,5 +49,8 @@ MonoBehaviour:
   melee_reach: 1
   melee_damageBase: 10
   melee_damageRange: 5
+  defense_dexModifier: 0.5
+  attack_strModifier: 0.25
+  attack_dexModifier: 0
   hitAudio_ID: swordHit
   missAudio_ID: swordMiss

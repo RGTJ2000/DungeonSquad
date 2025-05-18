@@ -14,6 +14,7 @@ public class UICanvasManager : MonoBehaviour
     private GameObject current_character;
     [SerializeField] private Transform grid;
     [SerializeField] private Transform meleePanel;
+    [SerializeField] private Transform shieldPanel;
     [SerializeField] private Transform rangedPanel;
     [SerializeField] private Transform missilePanel;
     [SerializeField] private GameObject itemEntry_prefab;
@@ -222,7 +223,7 @@ public class UICanvasManager : MonoBehaviour
     {
         _playerInputActions = new PlayerInputActions();
 
-        GetInventoryPanelReferences();
+        GetInventoryDescriptPanelReferences();
         GetEquipPanelReferences();
     }
     private void OnEnable()
@@ -347,6 +348,7 @@ public class UICanvasManager : MonoBehaviour
     {
         //Clear all the lists for each category
         ClearInventoryListPanel(meleePanel);
+        ClearInventoryListPanel(shieldPanel);
         ClearInventoryListPanel(rangedPanel);
         ClearInventoryListPanel(missilePanel);
         //clear main lists
@@ -384,6 +386,11 @@ public class UICanvasManager : MonoBehaviour
         foreach (var meleeItem in InventoryManager.Instance.GetCoreMeleeWeaponsList())
         {
             AddItemToCategoryPanel(meleeItem, meleePanel); // prefab instantiation + text set
+        }
+
+        foreach (var shieldItem in InventoryManager.Instance.GetCoreShieldsList())
+        {
+            AddItemToCategoryPanel(shieldItem, shieldPanel); // prefab instantiation + text set
         }
 
         foreach (var rangedItem in InventoryManager.Instance.GetCoreRangedWeaponsList())
@@ -456,6 +463,7 @@ public class UICanvasManager : MonoBehaviour
 
             if (entityStats.equipped_ring != null)
             {
+                Debug.Log("equipped ring=" + entityStats.equipped_ring);
                 ring_text_equipped.text = entityStats.equipped_ring.item_name;
                 ring_iconImg_equipped.sprite = entityStats.equipped_ring.Icon;
 
@@ -921,8 +929,7 @@ public class UICanvasManager : MonoBehaviour
             SelectInventoryItem(inventoryEntries[index]);
             inventoryIndex = index;
             UpdateCategorySelection(inventoryItems[inventoryIndex].baseItem.category);
-            //JumpToItem(inventoryEntries[inventoryIndex]);
-            //ScrollToItem(inventoryEntries[inventoryIndex]);
+            ScrollToItem(inventoryEntries[inventoryIndex]);
         }
 
     }
@@ -975,6 +982,8 @@ public class UICanvasManager : MonoBehaviour
         }
         else if (entryBounds.max.y < viewportBounds.min.y) // below
         {
+            //Debug.Log("entryBound.max.y="+entryBounds.max.y + "viewportbounds.min.y="+viewportBounds.min.y);
+           
             targetPosition = flippedY + itemHeight - viewportHeight;
         }
         else if (entryBounds.min.y < viewportBounds.min.y) // bottom clipped
@@ -1315,7 +1324,7 @@ public class UICanvasManager : MonoBehaviour
 
 
     #region ****** PanelReferences Getters
-    private void GetInventoryPanelReferences()
+    private void GetInventoryDescriptPanelReferences()
     {
         Transform icon = descriptionPanel_inventory.transform.Find("itemIcon");
         Transform text = descriptionPanel_inventory.transform.Find("descriptText");

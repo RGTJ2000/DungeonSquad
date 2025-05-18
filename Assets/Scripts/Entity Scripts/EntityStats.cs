@@ -1,5 +1,14 @@
 using UnityEngine;
 
+public enum StatCategory
+{
+    strength,
+    dexterity,
+    intelligence,
+    will,
+    soul
+}
+
 public class EntityStats : MonoBehaviour
 {
     public int character_ID = 0;
@@ -18,8 +27,18 @@ public class EntityStats : MonoBehaviour
     public float will = 50f;
     public float soul = 50f;
 
+    public float str_adjusted;
+    public float dex_adjusted;
+    public float int_adjusted;
+    public float will_adjusted;
+    public float soul_adjusted;
+
     public float melee_attackRating = 15f;
     public float melee_defenseRating = 10f;
+
+    public float dodgeChance;
+    public float blockChance;
+    public float parryChance;
 
     public float ranged_attackRating = 15f;
     public float ranged_defenseRating = 10f;
@@ -34,16 +53,16 @@ public class EntityStats : MonoBehaviour
     public float sleep_defenseRating = 10f;
 
 
-    public RuntimeItem equipped_meleeWeapon;
-    public RuntimeItem equipped_rangedWeapon;
-    public RuntimeItem equipped_missile;
+    public RuntimeItem equipped_meleeWeapon = null;
+    public RuntimeItem equipped_rangedWeapon = null;
+    public RuntimeItem equipped_missile = null;
 
-    public RuntimeItem equipped_ring;
-    public RuntimeItem equipped_helm;
-    public RuntimeItem equipped_amulet;
-    public RuntimeItem equipped_armor;
-    public RuntimeItem equipped_shield;
-    public RuntimeItem equipped_boots;
+    public RuntimeItem equipped_ring= null;
+    public RuntimeItem equipped_helm = null;
+    public RuntimeItem equipped_amulet = null;
+    public RuntimeItem equipped_armor = null;
+    public RuntimeItem equipped_shield = null;
+    public RuntimeItem equipped_boots = null;
 
 
     public string active_targetingTag = "Enemy";
@@ -77,12 +96,194 @@ public class EntityStats : MonoBehaviour
     public float poison_damageMultiplier = 1f;
     public float sleep_damageMultiplier = 1f;
 
+    private void Awake()
+    {
+       
+
+        str_adjusted = strength;
+        dex_adjusted = dexterity;
+        int_adjusted = intelligence;
+        will_adjusted = will;
+        soul_adjusted = soul;
+    }
+
     private void Start()
     {
         if (skill_slot.Length > 0)
         {
             selected_skill = skill_slot[0]; //set active skill to first slot by default 
         }
+
+       
+
+    }
+
+    public void UpdateAdjustedStats()
+    {
+        
+        str_adjusted = AdjustStatToEquipment(strength, StatCategory.strength);
+        
+        dex_adjusted = AdjustStatToEquipment(dexterity, StatCategory.dexterity);
+        int_adjusted = AdjustStatToEquipment(intelligence, StatCategory.intelligence);
+        will_adjusted = AdjustStatToEquipment(will, StatCategory.will);
+        soul_adjusted = AdjustStatToEquipment(soul, StatCategory.soul);
+
+        UpdateAttackDefenseRatings();
+    }
+
+    private float AdjustStatToEquipment(float stat, StatCategory category)
+    {
+        float adjustedStat;
+        float totalAdjustment = 0f;
+
+        if (equipped_ring != null)
+        {
+            Debug.Log("Stats checking ring on: " + gameObject.name);
+
+            totalAdjustment += ReturnAdjustmentToCategory(equipped_ring, category);
+        }
+
+        if (equipped_helm != null)
+        {
+            Debug.Log("Stats checking helm on: " + gameObject.name);
+            totalAdjustment += ReturnAdjustmentToCategory(equipped_helm, category);
+        }
+        
+        if (equipped_amulet != null)
+        {
+            Debug.Log("Stats checking amulet on: " + gameObject.name);
+            totalAdjustment += ReturnAdjustmentToCategory(equipped_amulet, category);
+
+        }
+
+        if (equipped_meleeWeapon != null)
+        {
+            Debug.Log("Stats checking melee weapon on: " + gameObject.name);
+            totalAdjustment += ReturnAdjustmentToCategory(equipped_meleeWeapon, category);
+            
+        }
+
+        if (equipped_armor != null)
+        {
+            Debug.Log("Stats checking armor on: " + gameObject.name);
+            totalAdjustment += ReturnAdjustmentToCategory(equipped_armor, category);
+        }
+
+        if (equipped_rangedWeapon != null)
+        {
+            Debug.Log("Stats checking ranged weapon on: " + gameObject.name);
+            totalAdjustment += ReturnAdjustmentToCategory(equipped_rangedWeapon, category);
+        }
+
+        if (equipped_shield != null)
+        {
+            Debug.Log("Stats checking shield on: " + gameObject.name);
+            totalAdjustment += ReturnAdjustmentToCategory(equipped_shield, category);
+        }
+
+        if (equipped_boots != null)
+        {
+            Debug.Log("Stats checking boots on: " + gameObject.name);
+            totalAdjustment += ReturnAdjustmentToCategory(equipped_boots, category);
+        }
+
+
+        adjustedStat = stat + totalAdjustment;
+        
+        return adjustedStat;
+    }
+
+    private float ReturnAdjustmentToCategory(RuntimeItem item, StatCategory category)
+    {
+        float adjustment = 0f;
+
+        switch (category)
+        {
+            case StatCategory.strength:
+                adjustment = CalculateAdjustment(strength, item.strModifier);
+                break;
+            case StatCategory.dexterity:
+                adjustment = CalculateAdjustment(dexterity, item.dexModifier);
+                break;
+            case StatCategory.intelligence:
+                adjustment = CalculateAdjustment(intelligence, item.intModifier);
+                break;
+            case StatCategory.will:
+                adjustment = CalculateAdjustment(will, item.willModifier);
+                break;
+            case StatCategory.soul:
+                adjustment = CalculateAdjustment(soul, item.soulModifier);
+                break;
+            default:
+                adjustment = 0f;
+                break;
+
+        }
+
+        return adjustment;
+    }
+
+    private float CalculateAdjustment(float stat, StatAdjustment statadjustment)
+    {
+        float value;
+
+        switch (statadjustment.operatorType)
+        {
+            case (OperatorType.percent):
+                value = stat * statadjustment.amount;
+                break;
+            case (OperatorType.additive):
+                value = statadjustment.amount;
+                break;
+            default:
+                value = 0f;
+                break;
+        }
+
+        return value;
+    }
+
+
+    public void UpdateAttackDefenseRatings()
+    {
+        //calculate melee_DR and dodge-block-parry chances
+        float DR_str = strength;
+        if (equipped_shield != null)
+        {
+            DR_str += strength * equipped_shield.Shield.defense_strModifier;
+        }
+
+        float DR_dex = dexterity;
+        if (equipped_meleeWeapon != null)
+        {
+            DR_dex += dexterity * equipped_meleeWeapon.MeleeWeapon.defense_dexModifier;
+        }
+
+        float DR_totalSum = DR_str + DR_dex;
+
+        melee_defenseRating = DR_totalSum / 2;
+
+        float dexSum = dexterity + DR_dex;
+
+        blockChance = Mathf.Clamp(DR_str / DR_totalSum,0,1);
+        dodgeChance = Mathf.Clamp( (1 - blockChance) * (dexterity/dexSum), 0,1 );
+        parryChance = Mathf.Clamp(1 - (blockChance+dodgeChance),0,1);
+
+        
+
+
+        //calculate melee_AR
+        float AR_str = strength;
+        float AR_dex = dexterity;
+        if (equipped_meleeWeapon != null)
+        {
+            AR_str += strength * equipped_meleeWeapon.MeleeWeapon.attack_strModifier;
+            AR_dex += dexterity * equipped_meleeWeapon.MeleeWeapon.attack_dexModifier;
+        }
+
+        melee_attackRating = (AR_str + AR_dex) / 2;
+
+        Debug.Log($"{gameObject.name}: melee_DR {melee_defenseRating}, blockChance={blockChance}, dodgeChance={dodgeChance}, parryChance={parryChance}, melee_AR: {melee_attackRating}");
     }
 }
 

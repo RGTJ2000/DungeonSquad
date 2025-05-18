@@ -38,6 +38,10 @@ public class InventoryManager : ManagerBase<InventoryManager>
         return _coreInventory.meleeWeapons;
     }
 
+    public List<RuntimeItem> GetCoreShieldsList()
+    {
+        return _coreInventory.shields;
+    }
     public List<RuntimeItem> GetCoreRangedWeaponsList()
     {
         return _coreInventory.rangedWeapons;
@@ -115,7 +119,8 @@ public class InventoryManager : ManagerBase<InventoryManager>
 
         _coreInventory.RemoveItem(item);
 
-       
+        //Update character adjusted stats
+        _entityStats.UpdateAdjustedStats();
 
         if (itemToUnequip != null)
         {

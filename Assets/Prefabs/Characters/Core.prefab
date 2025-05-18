@@ -232,7 +232,10 @@ MonoBehaviour:
   - baseItem: {fileID: 11400000, guid: fff9698c686307a4698f242a7e669550, type: 2}
     stackCount: 1
     attachedCharms: []
-  shields: []
+  shields:
+  - baseItem: {fileID: 11400000, guid: 7ff8911cb21ad004d9bd86a4213f4016, type: 2}
+    stackCount: 1
+    attachedCharms: []
   boots: []
   missiles:
   - baseItem: {fileID: 11400000, guid: 3ca1cf42af935e7439c3954489a8786e, type: 2}

@@ -104,8 +104,10 @@ public class SquadSpawner : MonoBehaviour
                 {
                     LoadStatsAndInventory(characterLoadout, _chStats, _chInventory);
                 }
-                
 
+                //update adjusted stats with new loadout
+                _chStats.UpdateAdjustedStats();
+                
             }
             else
             {
@@ -200,10 +202,12 @@ public class SquadSpawner : MonoBehaviour
 
         if (loadout.equipped_ring?.baseItem is Ring_SO ringSO)
         {
+            Debug.Log("setting ring to ringSO");
             stats.equipped_ring = new RuntimeItem(ringSO);
         }
         else
         {
+            Debug.Log("Setting ring to null");
             stats.equipped_ring = null;
         }
 
@@ -253,11 +257,7 @@ public class SquadSpawner : MonoBehaviour
         }
 
 
-        /*
-        stats.equipped_meleeWeapon = loadout.equipped_meleeWeapon?.baseItem as Melee_Weapon_SO;
-        stats.equipped_rangedWeapon = loadout.equipped_rangedWeapon?.baseItem as Ranged_Weapon_SO;
-        stats.equipped_missile = loadout.equipped_missile?.baseItem as Missile_SO;
-        */
+      
 
         // --- STATUS LIMITS / DISSIPATION ---
         stats.confusion_AL = loadout.confusion_AL;

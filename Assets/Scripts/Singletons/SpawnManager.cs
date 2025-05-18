@@ -50,7 +50,6 @@ public class SpawnManager : MonoBehaviour
         _enemySpawner = GetComponent<EnemySpawner>();
         if (_enemySpawner != null )
         {
-            Debug.Log("Calling SpawnEnemies");
             _enemySpawner.SpawnEnemies();
         }
     }

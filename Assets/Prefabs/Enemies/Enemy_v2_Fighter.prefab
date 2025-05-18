@@ -202,11 +202,17 @@ MonoBehaviour:
   walking_speed: 2
   running_speed: 3
   entity_radius: 0.5
+  entity_reach: 3
   strength: 50
   dexterity: 50
   intelligence: 50
   will: 50
   soul: 50
+  str_adjusted: 0
+  dex_adjusted: 0
+  int_adjusted: 0
+  will_adjusted: 0
+  soul_adjusted: 0
   melee_attackRating: 15
   melee_defenseRating: 10
   ranged_attackRating: 15
@@ -227,6 +233,30 @@ MonoBehaviour:
     stackCount: 0
     attachedCharms: []
   equipped_missile:
+    baseItem: {fileID: 0}
+    stackCount: 0
+    attachedCharms: []
+  equipped_ring:
+    baseItem: {fileID: 0}
+    stackCount: 0
+    attachedCharms: []
+  equipped_helm:
+    baseItem: {fileID: 0}
+    stackCount: 0
+    attachedCharms: []
+  equipped_amulet:
+    baseItem: {fileID: 0}
+    stackCount: 0
+    attachedCharms: []
+  equipped_armor:
+    baseItem: {fileID: 0}
+    stackCount: 0
+    attachedCharms: []
+  equipped_shield:
+    baseItem: {fileID: 0}
+    stackCount: 0
+    attachedCharms: []
+  equipped_boots:
     baseItem: {fileID: 0}
     stackCount: 0
     attachedCharms: []
@@ -351,13 +381,15 @@ MonoBehaviour:
   silver_count: 2
   gold_count: 2
   platinum_count: 3
+  rings: []
+  helms: []
+  amulets: []
   meleeWeapons: []
-  rangedWeapons: []
-  missiles: []
   armors: []
+  rangedWeapons: []
   shields: []
+  boots: []
+  missiles: []
   potions: []
   scrolls: []
-  amulets: []
-  rings: []
   gems: []
