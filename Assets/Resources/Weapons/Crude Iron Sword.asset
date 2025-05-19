@@ -26,7 +26,7 @@ MonoBehaviour:
   attachedCharms: []
   strModifier:
     operatorType: 0
-    amount: 0.5
+    amount: 0
   dexModifier:
     operatorType: 0
     amount: 0
@@ -51,6 +51,6 @@ MonoBehaviour:
   melee_damageRange: 5
   defense_dexModifier: 0.5
   attack_strModifier: 0.25
-  attack_dexModifier: 0
+  attack_dexModifier: 0.25
   hitAudio_ID: swordHit
   missAudio_ID: swordMiss

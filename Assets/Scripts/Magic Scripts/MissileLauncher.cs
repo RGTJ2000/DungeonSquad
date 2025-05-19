@@ -6,12 +6,14 @@ using static SoundManager;
 public class MissileLauncher : MonoBehaviour
 {
 
-    public float degrees_of_accuracy = 5f;
+    
+
+    private EntityStats _entityStats;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-
+        _entityStats = GetComponent<EntityStats>();
     }
 
     // Update is called once per frame
@@ -112,8 +114,8 @@ public class MissileLauncher : MonoBehaviour
     {
         Vector3 randomized_vector;
 
-        float degrees_offtarget = (degrees_of_accuracy / 2) * Random.Range(-1.0f, 1.0f); //degrees missile can be offtarget
-        //Debug.Log($"DEGREES OFF TARGET = {degrees_offtarget}");
+        float degrees_offtarget = (_entityStats.degrees_of_accuracy / 2) * Random.Range(-1.0f, 1.0f); //degrees missile can be offtarget
+        Debug.Log($"DEGREES OFF TARGET = {degrees_offtarget}");
 
         Vector3 random_rotation_axis = Vector3.Cross(original_vector, Vector3.up).normalized;
         random_rotation_axis = Quaternion.AngleAxis(Random.Range(360f, 0f), original_vector.normalized) * random_rotation_axis;

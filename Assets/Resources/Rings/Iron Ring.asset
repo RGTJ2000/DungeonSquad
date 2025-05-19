@@ -9,13 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3fc6109586b26fd4484f0b576149dab4, type: 3}
-  m_Name: LightLeatherArmor_SO
+  m_Script: {fileID: 11500000, guid: 9dec7188d79578d4d8119f330917a2d0, type: 3}
+  m_Name: Iron Ring
   m_EditorClassIdentifier: 
-  item_name: Light Leather Armor
-  description: Light armor made from the hide of an animal.
-  category: 5
-  item_icon: {fileID: 0}
+  item_name: Iron Ring
+  description: A simple ring wrought from iron.
+  category: 11
+  item_icon: {fileID: 21300000, guid: fb6cf1d80194f1e44b2e4cb5af9d6e83, type: 3}
   item_prefab: {fileID: 0}
   pickupAudio_ID: 
   dropAudio_ID: 
@@ -25,24 +25,16 @@ MonoBehaviour:
   attachedCharms: []
   strModifier:
     operatorType: 0
-    amount: 0
+    amount: 0.1
   dexModifier:
-    operatorType: 1
-    amount: -2
+    operatorType: 0
+    amount: 0
   intModifier:
     operatorType: 0
     amount: 0
   willModifier:
     operatorType: 0
-    amount: 0
+    amount: 0.1
   soulModifier:
     operatorType: 0
     amount: 0
-  parryModifier:
-    operatorType: 0
-    amount: 0
-  blockModifier:
-    operatorType: 0
-    amount: 0
-  damageNegation_base: 2
-  damageNegation_range: 2

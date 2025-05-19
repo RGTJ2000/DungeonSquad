@@ -11,4 +11,6 @@ public class Ranged_Weapon_SO : Weapon_SO
     //Audio
     public string launchAudio_ID;
 
+    public float attack_dexModifier;
+
 }

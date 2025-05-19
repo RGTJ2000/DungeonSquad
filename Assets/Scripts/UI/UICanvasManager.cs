@@ -13,10 +13,18 @@ public class UICanvasManager : MonoBehaviour
     private GameObject[] slots_array;
     private GameObject current_character;
     [SerializeField] private Transform grid;
+    [SerializeField] private Transform ringPanel;
+    [SerializeField] private Transform helmPanel;
+    [SerializeField] private Transform amuletPanel;
+   
     [SerializeField] private Transform meleePanel;
-    [SerializeField] private Transform shieldPanel;
+    [SerializeField] private Transform armorPanel;
     [SerializeField] private Transform rangedPanel;
+
+    [SerializeField] private Transform shieldPanel;
+    [SerializeField] private Transform bootsPanel;
     [SerializeField] private Transform missilePanel;
+
     [SerializeField] private GameObject itemEntry_prefab;
 
 
@@ -347,9 +355,16 @@ public class UICanvasManager : MonoBehaviour
     public void ClearInventoryListsAndObjects()
     {
         //Clear all the lists for each category
+        ClearInventoryListPanel(ringPanel);
+        ClearInventoryListPanel(helmPanel);
+        ClearInventoryListPanel(amuletPanel)
+            ;
         ClearInventoryListPanel(meleePanel);
-        ClearInventoryListPanel(shieldPanel);
+        ClearInventoryListPanel(armorPanel);
         ClearInventoryListPanel(rangedPanel);
+
+        ClearInventoryListPanel(shieldPanel);
+        ClearInventoryListPanel(bootsPanel);
         ClearInventoryListPanel(missilePanel);
         //clear main lists
         inventoryEntries.Clear();
@@ -383,14 +398,27 @@ public class UICanvasManager : MonoBehaviour
     {
 
         //ClearInventoryPanel();
+
+        foreach (var ringItem in InventoryManager.Instance.GetCoreRingsList())
+        {
+            AddItemToCategoryPanel(ringItem, ringPanel); // prefab instantiation + text set
+        }
+        foreach (var helmItem in InventoryManager.Instance.GetCoreHelmsList())
+        {
+            AddItemToCategoryPanel(helmItem, helmPanel); // prefab instantiation + text set
+        }
+        foreach (var amuletItem in InventoryManager.Instance.GetCoreAmuletsList())
+        {
+            AddItemToCategoryPanel(amuletItem, amuletPanel); // prefab instantiation + text set
+        }
+
         foreach (var meleeItem in InventoryManager.Instance.GetCoreMeleeWeaponsList())
         {
             AddItemToCategoryPanel(meleeItem, meleePanel); // prefab instantiation + text set
         }
-
-        foreach (var shieldItem in InventoryManager.Instance.GetCoreShieldsList())
+        foreach (var armorItem in InventoryManager.Instance.GetCoreArmorsList())
         {
-            AddItemToCategoryPanel(shieldItem, shieldPanel); // prefab instantiation + text set
+            AddItemToCategoryPanel(armorItem, armorPanel); // prefab instantiation + text set
         }
 
         foreach (var rangedItem in InventoryManager.Instance.GetCoreRangedWeaponsList())
@@ -399,10 +427,18 @@ public class UICanvasManager : MonoBehaviour
         }
 
 
-        foreach (var missiles in InventoryManager.Instance.GetCoreMissilesList())
+        foreach (var shieldItem in InventoryManager.Instance.GetCoreShieldsList())
         {
-            AddItemToCategoryPanel(missiles, missilePanel);
+            AddItemToCategoryPanel(shieldItem, shieldPanel); // prefab instantiation + text set
+        }
+        foreach (var bootItem in InventoryManager.Instance.GetCoreBootsList())
+        {
+            AddItemToCategoryPanel(bootItem, bootsPanel); // prefab instantiation + text set
+        }
 
+        foreach (var missileItem in InventoryManager.Instance.GetCoreMissilesList())
+        {
+            AddItemToCategoryPanel(missileItem, missilePanel);
         }
 
     }
@@ -463,7 +499,7 @@ public class UICanvasManager : MonoBehaviour
 
             if (entityStats.equipped_ring != null)
             {
-                Debug.Log("equipped ring=" + entityStats.equipped_ring);
+                //Debug.Log("equipped ring=" + entityStats.equipped_ring);
                 ring_text_equipped.text = entityStats.equipped_ring.item_name;
                 ring_iconImg_equipped.sprite = entityStats.equipped_ring.Icon;
 
@@ -878,10 +914,10 @@ public class UICanvasManager : MonoBehaviour
     private void EquipItem(int index)
     {
         InventoryManager.Instance.EquipItemToCharacter(inventoryItems[index], current_character);
-        Debug.Log("Initial scrolrect position=" + _scrollRect.verticalNormalizedPosition);
+        //Debug.Log("Initial scrolrect position=" + _scrollRect.verticalNormalizedPosition);
         RefreshInventoryListsAndObjects();
         MoveToInventoryIndex(index);
-        Debug.Log("New scrollrect="+_scrollRect.verticalNormalizedPosition);
+        //Debug.Log("New scrollrect="+_scrollRect.verticalNormalizedPosition);
 
         UpdateInventoryDescriptPanel();
         PopulateEquipPanel(current_character);

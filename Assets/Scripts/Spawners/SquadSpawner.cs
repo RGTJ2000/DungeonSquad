@@ -202,12 +202,12 @@ public class SquadSpawner : MonoBehaviour
 
         if (loadout.equipped_ring?.baseItem is Ring_SO ringSO)
         {
-            Debug.Log("setting ring to ringSO");
+            //Debug.Log("setting ring to ringSO");
             stats.equipped_ring = new RuntimeItem(ringSO);
         }
         else
         {
-            Debug.Log("Setting ring to null");
+            //Debug.Log("Setting ring to null");
             stats.equipped_ring = null;
         }
 

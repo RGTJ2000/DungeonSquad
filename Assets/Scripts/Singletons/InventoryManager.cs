@@ -33,20 +33,40 @@ public class InventoryManager : ManagerBase<InventoryManager>
         _coreInventory = _core.GetComponent<Inventory>();
     }
 
+    public List<RuntimeItem> GetCoreRingsList()
+    {
+        return _coreInventory.rings;
+    }
+    public List<RuntimeItem> GetCoreHelmsList()
+    {
+        return _coreInventory.helms;
+    }
+    public List<RuntimeItem> GetCoreAmuletsList()
+    {
+        return _coreInventory.amulets;
+    }
+
     public List<RuntimeItem> GetCoreMeleeWeaponsList()
     {
         return _coreInventory.meleeWeapons;
     }
-
-    public List<RuntimeItem> GetCoreShieldsList()
+    public List<RuntimeItem> GetCoreArmorsList()
     {
-        return _coreInventory.shields;
+        return _coreInventory.armors;
     }
     public List<RuntimeItem> GetCoreRangedWeaponsList()
     {
         return _coreInventory.rangedWeapons;
     }
 
+    public List<RuntimeItem> GetCoreShieldsList()
+    {
+        return _coreInventory.shields;
+    }
+    public List<RuntimeItem> GetCoreBootsList()
+    {
+        return _coreInventory.boots;
+    }
     public List<RuntimeItem> GetCoreMissilesList()
     {
         return _coreInventory.missiles;

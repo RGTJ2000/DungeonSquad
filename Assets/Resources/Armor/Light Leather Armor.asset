@@ -9,13 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1543d9dd4414dd6419c46e68a0acbd92, type: 3}
-  m_Name: Wooden Half Shield
+  m_Script: {fileID: 11500000, guid: 3fc6109586b26fd4484f0b576149dab4, type: 3}
+  m_Name: Light Leather Armor
   m_EditorClassIdentifier: 
-  item_name: Wooden Half Shield
-  description: A medium size shield made of wood.
-  category: 6
-  item_icon: {fileID: 21300000, guid: 72d134462b5b25b439f738db99365662, type: 3}
+  item_name: Light Leather Armor
+  description: Light armor made from the hide of an animal.
+  category: 5
+  item_icon: {fileID: 21300000, guid: 61126902b9741a94ba6cac1ca1cd283d, type: 3}
   item_prefab: {fileID: 0}
   pickupAudio_ID: 
   dropAudio_ID: 
@@ -28,7 +28,7 @@ MonoBehaviour:
     amount: 0
   dexModifier:
     operatorType: 1
-    amount: -3
+    amount: -10
   intModifier:
     operatorType: 0
     amount: 0
@@ -38,5 +38,5 @@ MonoBehaviour:
   soulModifier:
     operatorType: 0
     amount: 0
-  defense_strModifier: 0.5
-  defense_dexModifier: 0.5
+  damageNegation_base: 2
+  damageNegation_range: 3

@@ -42,6 +42,7 @@ public class EntityStats : MonoBehaviour
 
     public float ranged_attackRating = 15f;
     public float ranged_defenseRating = 10f;
+    public float degrees_of_accuracy = 0f;
 
     public float magic_attackRating = 15f;
     //public float magic_defenseRating = 10f;
@@ -122,12 +123,12 @@ public class EntityStats : MonoBehaviour
     {
         
         str_adjusted = AdjustStatToEquipment(strength, StatCategory.strength);
-        
         dex_adjusted = AdjustStatToEquipment(dexterity, StatCategory.dexterity);
         int_adjusted = AdjustStatToEquipment(intelligence, StatCategory.intelligence);
         will_adjusted = AdjustStatToEquipment(will, StatCategory.will);
         soul_adjusted = AdjustStatToEquipment(soul, StatCategory.soul);
 
+        Debug.Log($"{gameObject.name} AdjStats: str:{str_adjusted}, dex:{dex_adjusted}, int:{int_adjusted}, will:{will_adjusted}, soul:{soul_adjusted}");
         UpdateAttackDefenseRatings();
     }
 
@@ -138,52 +139,52 @@ public class EntityStats : MonoBehaviour
 
         if (equipped_ring != null)
         {
-            Debug.Log("Stats checking ring on: " + gameObject.name);
+            //Debug.Log("Stats checking ring on: " + gameObject.name);
 
             totalAdjustment += ReturnAdjustmentToCategory(equipped_ring, category);
         }
 
         if (equipped_helm != null)
         {
-            Debug.Log("Stats checking helm on: " + gameObject.name);
+            //Debug.Log("Stats checking helm on: " + gameObject.name);
             totalAdjustment += ReturnAdjustmentToCategory(equipped_helm, category);
         }
         
         if (equipped_amulet != null)
         {
-            Debug.Log("Stats checking amulet on: " + gameObject.name);
+            //Debug.Log("Stats checking amulet on: " + gameObject.name);
             totalAdjustment += ReturnAdjustmentToCategory(equipped_amulet, category);
 
         }
 
         if (equipped_meleeWeapon != null)
         {
-            Debug.Log("Stats checking melee weapon on: " + gameObject.name);
+           // Debug.Log("Stats checking melee weapon on: " + gameObject.name);
             totalAdjustment += ReturnAdjustmentToCategory(equipped_meleeWeapon, category);
             
         }
 
         if (equipped_armor != null)
         {
-            Debug.Log("Stats checking armor on: " + gameObject.name);
+            //Debug.Log("Stats checking armor on: " + gameObject.name);
             totalAdjustment += ReturnAdjustmentToCategory(equipped_armor, category);
         }
 
         if (equipped_rangedWeapon != null)
         {
-            Debug.Log("Stats checking ranged weapon on: " + gameObject.name);
+            //Debug.Log("Stats checking ranged weapon on: " + gameObject.name);
             totalAdjustment += ReturnAdjustmentToCategory(equipped_rangedWeapon, category);
         }
 
         if (equipped_shield != null)
         {
-            Debug.Log("Stats checking shield on: " + gameObject.name);
+            //Debug.Log("Stats checking shield on: " + gameObject.name);
             totalAdjustment += ReturnAdjustmentToCategory(equipped_shield, category);
         }
 
         if (equipped_boots != null)
         {
-            Debug.Log("Stats checking boots on: " + gameObject.name);
+            //Debug.Log("Stats checking boots on: " + gameObject.name);
             totalAdjustment += ReturnAdjustmentToCategory(equipped_boots, category);
         }
 
@@ -247,43 +248,68 @@ public class EntityStats : MonoBehaviour
     public void UpdateAttackDefenseRatings()
     {
         //calculate melee_DR and dodge-block-parry chances
-        float DR_str = strength;
+        float DR_str = str_adjusted;
         if (equipped_shield != null)
         {
-            DR_str += strength * equipped_shield.Shield.defense_strModifier;
+            DR_str += str_adjusted * equipped_shield.Shield.defense_strModifier;
         }
 
-        float DR_dex = dexterity;
+        float DR_dex = dex_adjusted;
         if (equipped_meleeWeapon != null)
         {
-            DR_dex += dexterity * equipped_meleeWeapon.MeleeWeapon.defense_dexModifier;
+            DR_dex += dex_adjusted * equipped_meleeWeapon.MeleeWeapon.defense_dexModifier;
         }
 
         float DR_totalSum = DR_str + DR_dex;
 
         melee_defenseRating = DR_totalSum / 2;
 
-        float dexSum = dexterity + DR_dex;
+        float dexSum = dex_adjusted + DR_dex;
 
         blockChance = Mathf.Clamp(DR_str / DR_totalSum,0,1);
-        dodgeChance = Mathf.Clamp( (1 - blockChance) * (dexterity/dexSum), 0,1 );
+        dodgeChance = Mathf.Clamp( (1 - blockChance) * (dex_adjusted /dexSum), 0,1 );
         parryChance = Mathf.Clamp(1 - (blockChance+dodgeChance),0,1);
-
-        
 
 
         //calculate melee_AR
         float AR_str = strength;
-        float AR_dex = dexterity;
+        float AR_dex = dex_adjusted;
         if (equipped_meleeWeapon != null)
         {
-            AR_str += strength * equipped_meleeWeapon.MeleeWeapon.attack_strModifier;
-            AR_dex += dexterity * equipped_meleeWeapon.MeleeWeapon.attack_dexModifier;
+            AR_str += str_adjusted * equipped_meleeWeapon.MeleeWeapon.attack_strModifier;
+            AR_dex += dex_adjusted * equipped_meleeWeapon.MeleeWeapon.attack_dexModifier;
         }
 
         melee_attackRating = (AR_str + AR_dex) / 2;
 
-        Debug.Log($"{gameObject.name}: melee_DR {melee_defenseRating}, blockChance={blockChance}, dodgeChance={dodgeChance}, parryChance={parryChance}, melee_AR: {melee_attackRating}");
+        
+
+        //calculate ranged_DR
+        float ranged_DR_dex = dex_adjusted;
+        if (equipped_shield != null)
+        {
+            ranged_DR_dex += dex_adjusted * equipped_shield.Shield.defense_dexModifier;
+        }
+
+        ranged_defenseRating = ranged_DR_dex;
+
+        //calculate ranged_AR
+        float ranged_AR_dex = dex_adjusted;
+        if (equipped_rangedWeapon != null)
+        {
+            ranged_AR_dex += dex_adjusted * equipped_rangedWeapon.RangedWeapon.attack_dexModifier;
+        }
+
+        if (equipped_missile != null)
+        {
+            ranged_AR_dex += dex_adjusted * equipped_missile.Missile.attack_dexModifier;
+        }
+
+        ranged_attackRating = (ranged_AR_dex + int_adjusted) / 2;
+
+        degrees_of_accuracy = 1f / ((0.0015f * ranged_attackRating) + (1f / 180f));
+
+        Debug.Log($"{gameObject.name}: melee_DR {melee_defenseRating}, blockChance={blockChance}, dodgeChance={dodgeChance}, parryChance={parryChance}, melee_AR: {melee_attackRating}, ranged_AR={ranged_attackRating}");
     }
 }
 

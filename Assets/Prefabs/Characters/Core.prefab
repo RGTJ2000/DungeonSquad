@@ -184,7 +184,10 @@ MonoBehaviour:
   silver_count: 0
   gold_count: 0
   platinum_count: 0
-  rings: []
+  rings:
+  - baseItem: {fileID: 11400000, guid: 2e38c38e3853b4a47b05dbd75a893b22, type: 2}
+    stackCount: 1
+    attachedCharms: []
   helms: []
   amulets: []
   meleeWeapons:
@@ -212,7 +215,10 @@ MonoBehaviour:
   - baseItem: {fileID: 11400000, guid: 99addd19d2a9ce7448797625b7aa00f3, type: 2}
     stackCount: 0
     attachedCharms: []
-  armors: []
+  armors:
+  - baseItem: {fileID: 11400000, guid: 7e64edeff4ed8c940aa72edea799aa81, type: 2}
+    stackCount: 1
+    attachedCharms: []
   rangedWeapons:
   - baseItem: {fileID: 11400000, guid: fff9698c686307a4698f242a7e669550, type: 2}
     stackCount: 1

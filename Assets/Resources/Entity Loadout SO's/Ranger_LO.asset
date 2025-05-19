@@ -20,7 +20,7 @@ MonoBehaviour:
   running_speed: 10
   entity_radius: 0.5
   strength: 50
-  dexterity: 50
+  dexterity: 100
   intelligence: 50
   will: 50
   soul: 50
@@ -45,6 +45,30 @@ MonoBehaviour:
     attachedCharms: []
   equipped_missile:
     baseItem: {fileID: 11400000, guid: 3ca1cf42af935e7439c3954489a8786e, type: 2}
+    stackCount: 1
+    attachedCharms: []
+  equipped_ring:
+    baseItem: {fileID: 0}
+    stackCount: 1
+    attachedCharms: []
+  equipped_helm:
+    baseItem: {fileID: 0}
+    stackCount: 1
+    attachedCharms: []
+  equipped_amulet:
+    baseItem: {fileID: 0}
+    stackCount: 1
+    attachedCharms: []
+  equipped_armor:
+    baseItem: {fileID: 0}
+    stackCount: 1
+    attachedCharms: []
+  equipped_shield:
+    baseItem: {fileID: 0}
+    stackCount: 1
+    attachedCharms: []
+  equipped_boots:
+    baseItem: {fileID: 0}
     stackCount: 1
     attachedCharms: []
   maxSkillSlots: 5

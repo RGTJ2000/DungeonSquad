@@ -24,6 +24,21 @@ MonoBehaviour:
   isStackable: 0
   maxStack: 1
   attachedCharms: []
+  strModifier:
+    operatorType: 0
+    amount: 0
+  dexModifier:
+    operatorType: 0
+    amount: 0
+  intModifier:
+    operatorType: 0
+    amount: 0
+  willModifier:
+    operatorType: 0
+    amount: 0
+  soulModifier:
+    operatorType: 0
+    amount: 0
   attackCooldown: 1
   critChance_base: 0.5
   critChance_weight_str: 0.25
@@ -34,3 +49,4 @@ MonoBehaviour:
   launch_impulse: 0.3
   accuracy_factor: 1
   launchAudio_ID: bowLaunch
+  attack_dexModifier: 0
