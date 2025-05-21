@@ -466,7 +466,7 @@ GameObject:
   - component: {fileID: 9114975733010302056}
   - component: {fileID: 2011281983993333396}
   m_Layer: 5
-  m_Name: MainHeading(TMP)
+  m_Name: InventoryHeader
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

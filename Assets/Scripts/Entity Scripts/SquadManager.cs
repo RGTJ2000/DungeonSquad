@@ -92,7 +92,7 @@ public class SquadManager : MonoBehaviour
         AllReturnToFormation.Enable();
         AllReturnToFormation.performed += OnAllReturnToFormation;
 
-      
+
 
         Rotate = playerControls.Player.Rotate;
         Rotate.Enable();
@@ -137,7 +137,7 @@ public class SquadManager : MonoBehaviour
         AllReturnToFormation.performed -= OnAllReturnToFormation;
         AllReturnToFormation.Disable();
 
-      
+
 
         Rotate.performed -= OnRotate;
         Rotate.canceled -= OnRotate;
@@ -159,10 +159,10 @@ public class SquadManager : MonoBehaviour
      * 
      */
 
-   
 
 
- 
+
+
 
     private void OnSelectRed(InputAction.CallbackContext context)
     {
@@ -309,7 +309,11 @@ public class SquadManager : MonoBehaviour
 
     private void OnUISelect(InputAction.CallbackContext context)
     {
-        if (context.performed && select_active != -1)
+        if (UICanvasManager.Instance.inventoryActive)
+        {
+            return;
+        }
+        else if (context.performed && select_active != -1)
         {
             float inputValue = context.ReadValue<float>();
 
@@ -356,19 +360,8 @@ public class SquadManager : MonoBehaviour
                 //DeactivateCharacterSelectLines(select_active);
                 ActivateCharacterSelectLines(select_active);
 
-
                 OnCharacterSelected?.Invoke(ch_in_slot_array[select_active]); //trigger update to UI
-
-
-
-                //Debug.Log("SquadManager:" + gameObject.name + "changed active skill to" + _entityStats.active_skill.skill_name);
-
-
             }
-
-
-
-
         }
     }
 
@@ -394,8 +387,8 @@ public class SquadManager : MonoBehaviour
         {
             Ch_Behavior _chBehave = ch_in_slot_array[select_active].GetComponent<Ch_Behavior>();
 
-           _chBehave.ToggleEngageMode();
-           DisableActiveReturnLines();
+            _chBehave.ToggleEngageMode();
+            DisableActiveReturnLines();
 
         }
     }
@@ -420,8 +413,8 @@ public class SquadManager : MonoBehaviour
                     //leave CharacterSelectLines active
                     //leave select active
                 }
-               
-                
+
+
             }
 
         }
@@ -437,9 +430,9 @@ public class SquadManager : MonoBehaviour
             selectring_obj = Instantiate(selectring_prefab, ch_in_slot_array[select_index].transform); //create selectingring on character
 
         }
-       
 
-        
+
+
 
         ch_in_slot_array[select_index].GetComponent<TargetingScan>().ActivateTargetingScan();
 
@@ -471,20 +464,24 @@ public class SquadManager : MonoBehaviour
 
     private void OnReturnToFormation(InputAction.CallbackContext context)
     {
-        if (select_active >= 0)
-        {
-            if (ch_in_slot_array[select_active] != null)
+       
+            if (select_active >= 0)
             {
-                ch_in_slot_array[select_active].GetComponent<Ch_Behavior>().CancelActions();
-                DeactivateCharacterSelectLines(select_active);
+                if (ch_in_slot_array[select_active] != null)
+                {
+                    ch_in_slot_array[select_active].GetComponent<Ch_Behavior>().CancelActions();
+                    DeactivateCharacterSelectLines(select_active);
 
+
+                }
+                select_active = -1;
+
+                OnCharacterSelected?.Invoke(null);
 
             }
-            select_active = -1;
 
-            OnCharacterSelected?.Invoke(null);
-
-        }
+        
+      
     }
 
     private void OnAllReturnToFormation(InputAction.CallbackContext context)
@@ -525,7 +522,7 @@ public class SquadManager : MonoBehaviour
 
     private void DisableActiveReturnLines()
     {
-        
+
         List<GameObject> entities = new List<GameObject>(GameObject.FindGameObjectsWithTag("Enemy"));
 
         entities.AddRange(new List<GameObject>(GameObject.FindGameObjectsWithTag("Character")));

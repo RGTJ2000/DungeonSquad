@@ -303,7 +303,7 @@ public class SquadSpawner : MonoBehaviour
             }
         }
 
-        Debug.Log($"Loaded stats and inventory for character: {loadout.character_name}");
+        //Debug.Log($"Loaded stats and inventory for character: {loadout.character_name}");
     }
 
     public void FillSquadManagerWithSquad()

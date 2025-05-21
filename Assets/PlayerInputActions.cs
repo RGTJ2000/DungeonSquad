@@ -134,6 +134,24 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""UIPanelSelect"",
+                    ""type"": ""Value"",
+                    ""id"": ""702c36a9-3ccf-4d73-82dd-86512f652e95"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""UnequipItem"",
+                    ""type"": ""Button"",
+                    ""id"": ""38071781-8971-4051-9c2b-89e01e1e47cf"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -587,6 +605,50 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""ToggleScanMode"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""b369a7c7-4191-4ccf-89c9-a3be14ce649e"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""UIPanelSelect"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""f8bd3385-19dd-4cbd-adf7-2bf26a7e76b8"",
+                    ""path"": ""<Keyboard>/minus"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""UIPanelSelect"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""c1381cb3-2872-406f-ba0a-ad568158ee22"",
+                    ""path"": ""<Keyboard>/equals"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""UIPanelSelect"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""48d748e9-8ba6-487e-a74b-f2cc58cd85ee"",
+                    ""path"": ""<Keyboard>/u"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""UnequipItem"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -904,6 +966,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Player_InventorySelect = m_Player.FindAction("InventorySelect", throwIfNotFound: true);
         m_Player_UI_navigate = m_Player.FindAction("UI_navigate", throwIfNotFound: true);
         m_Player_ToggleScanMode = m_Player.FindAction("ToggleScanMode", throwIfNotFound: true);
+        m_Player_UIPanelSelect = m_Player.FindAction("UIPanelSelect", throwIfNotFound: true);
+        m_Player_UnequipItem = m_Player.FindAction("UnequipItem", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -992,6 +1056,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_InventorySelect;
     private readonly InputAction m_Player_UI_navigate;
     private readonly InputAction m_Player_ToggleScanMode;
+    private readonly InputAction m_Player_UIPanelSelect;
+    private readonly InputAction m_Player_UnequipItem;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -1008,6 +1074,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @InventorySelect => m_Wrapper.m_Player_InventorySelect;
         public InputAction @UI_navigate => m_Wrapper.m_Player_UI_navigate;
         public InputAction @ToggleScanMode => m_Wrapper.m_Player_ToggleScanMode;
+        public InputAction @UIPanelSelect => m_Wrapper.m_Player_UIPanelSelect;
+        public InputAction @UnequipItem => m_Wrapper.m_Player_UnequipItem;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1053,6 +1121,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @ToggleScanMode.started += instance.OnToggleScanMode;
             @ToggleScanMode.performed += instance.OnToggleScanMode;
             @ToggleScanMode.canceled += instance.OnToggleScanMode;
+            @UIPanelSelect.started += instance.OnUIPanelSelect;
+            @UIPanelSelect.performed += instance.OnUIPanelSelect;
+            @UIPanelSelect.canceled += instance.OnUIPanelSelect;
+            @UnequipItem.started += instance.OnUnequipItem;
+            @UnequipItem.performed += instance.OnUnequipItem;
+            @UnequipItem.canceled += instance.OnUnequipItem;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -1093,6 +1167,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @ToggleScanMode.started -= instance.OnToggleScanMode;
             @ToggleScanMode.performed -= instance.OnToggleScanMode;
             @ToggleScanMode.canceled -= instance.OnToggleScanMode;
+            @UIPanelSelect.started -= instance.OnUIPanelSelect;
+            @UIPanelSelect.performed -= instance.OnUIPanelSelect;
+            @UIPanelSelect.canceled -= instance.OnUIPanelSelect;
+            @UnequipItem.started -= instance.OnUnequipItem;
+            @UnequipItem.performed -= instance.OnUnequipItem;
+            @UnequipItem.canceled -= instance.OnUnequipItem;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -1263,6 +1343,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnInventorySelect(InputAction.CallbackContext context);
         void OnUI_navigate(InputAction.CallbackContext context);
         void OnToggleScanMode(InputAction.CallbackContext context);
+        void OnUIPanelSelect(InputAction.CallbackContext context);
+        void OnUnequipItem(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

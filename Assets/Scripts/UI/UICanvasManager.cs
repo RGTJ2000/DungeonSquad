@@ -1,3 +1,5 @@
+using NUnit.Framework;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -6,7 +8,15 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using static UnityEditor.Progress;
 
-public class UICanvasManager : MonoBehaviour
+public enum SelectDirection
+{
+    up,
+    down,
+    left,
+    right
+}
+
+public class UICanvasManager : ManagerBase<UICanvasManager>
 {
 
     private SquadManager _squadManager;
@@ -16,7 +26,7 @@ public class UICanvasManager : MonoBehaviour
     [SerializeField] private Transform ringPanel;
     [SerializeField] private Transform helmPanel;
     [SerializeField] private Transform amuletPanel;
-   
+
     [SerializeField] private Transform meleePanel;
     [SerializeField] private Transform armorPanel;
     [SerializeField] private Transform rangedPanel;
@@ -26,6 +36,7 @@ public class UICanvasManager : MonoBehaviour
     [SerializeField] private Transform missilePanel;
 
     [SerializeField] private GameObject itemEntry_prefab;
+    [SerializeField] private GameObject unequipItem_prefab;
 
 
     [SerializeField] private GameObject inventoryPanel;
@@ -35,7 +46,9 @@ public class UICanvasManager : MonoBehaviour
     private RectTransform _srContent;
     private RectTransform _srViewport;
 
-    private bool inventoryActive = false;
+    public bool inventoryActive = false;
+    public bool equipPanelActive = false;
+    public bool equipPanelFocus = false;
 
     List<GameObject> inventoryEntries = new List<GameObject>();
     List<RuntimeItem> inventoryItems = new List<RuntimeItem>();
@@ -44,9 +57,17 @@ public class UICanvasManager : MonoBehaviour
     private Coroutine _scrollCoroutine;
 
     [SerializeField] private GameObject equipPanel;
+    [SerializeField] private TextMeshProUGUI equipHeaderTMP;
+    [SerializeField] private TextMeshProUGUI inventoryHeaderTMP;
     [SerializeField] private GameObject bodyPanel;
     [SerializeField] private GameObject descriptionPanel_equip;
     [SerializeField] private GameObject descriptionPanel_inventory;
+
+    [SerializeField] private Image equipPanelBackground;
+    [SerializeField] private Image equipDescriptBackground;
+    [SerializeField] private Image inventoryPanelBackground;
+    [SerializeField] private Image inventoryDescriptBackground;
+
 
     Image inventoryDescript_icon;
     TextMeshProUGUI inventoryDescript_txt;
@@ -227,8 +248,10 @@ public class UICanvasManager : MonoBehaviour
 
     private PlayerInputActions _playerInputActions;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         _playerInputActions = new PlayerInputActions();
 
         GetInventoryDescriptPanelReferences();
@@ -238,6 +261,8 @@ public class UICanvasManager : MonoBehaviour
     {
         _playerInputActions.Player.Enable();
         _playerInputActions.Player.UI_navigate.performed += OnInventoryUINavigate;
+        _playerInputActions.Player.UIPanelSelect.performed += OnPanelSelect;
+        _playerInputActions.Player.UnequipItem.performed += OnUnequipItem;
 
         SquadManager.OnCharacterSelected += HandleSkillsUI;
         SquadManager.OnCharacterSelected += UpdateInventoryPanelToCharacter;
@@ -251,6 +276,9 @@ public class UICanvasManager : MonoBehaviour
     {
         _playerInputActions.Player.Disable();
         _playerInputActions.Player.UI_navigate.performed -= OnInventoryUINavigate;
+        _playerInputActions.Player.UIPanelSelect.performed -= OnPanelSelect;
+        _playerInputActions.Player.UnequipItem.performed -= OnUnequipItem;
+
 
         SquadManager.OnCharacterSelected -= HandleSkillsUI;
         SquadManager.OnCharacterSelected -= UpdateInventoryPanelToCharacter;
@@ -284,7 +312,7 @@ public class UICanvasManager : MonoBehaviour
         descriptionPanel_equip.SetActive(false);
         descriptionPanel_inventory.SetActive(false);
         equipPanel.SetActive(false);
-        
+
 
         //clear inventory lists to ensure clean slate
         inventoryEntries.Clear();
@@ -340,14 +368,12 @@ public class UICanvasManager : MonoBehaviour
             }
 
             ActivateInventoryAndEquipUI(ch_obj);
-            
-            inventoryActive = true;
+
 
         }
         else
         {
             DeactivateInventoryUI();
-            inventoryActive = false;
         }
 
     }
@@ -357,8 +383,8 @@ public class UICanvasManager : MonoBehaviour
         //Clear all the lists for each category
         ClearInventoryListPanel(ringPanel);
         ClearInventoryListPanel(helmPanel);
-        ClearInventoryListPanel(amuletPanel)
-            ;
+        ClearInventoryListPanel(amuletPanel);
+
         ClearInventoryListPanel(meleePanel);
         ClearInventoryListPanel(armorPanel);
         ClearInventoryListPanel(rangedPanel);
@@ -397,12 +423,13 @@ public class UICanvasManager : MonoBehaviour
     private void PopulateInventoryListsAndObjects()
     {
 
-        //ClearInventoryPanel();
 
         foreach (var ringItem in InventoryManager.Instance.GetCoreRingsList())
         {
             AddItemToCategoryPanel(ringItem, ringPanel); // prefab instantiation + text set
         }
+
+
         foreach (var helmItem in InventoryManager.Instance.GetCoreHelmsList())
         {
             AddItemToCategoryPanel(helmItem, helmPanel); // prefab instantiation + text set
@@ -416,6 +443,14 @@ public class UICanvasManager : MonoBehaviour
         {
             AddItemToCategoryPanel(meleeItem, meleePanel); // prefab instantiation + text set
         }
+
+        /*
+        if (current_character != null && _currentChStats.equipped_meleeWeapon != null)
+        {
+            AddUnequipToCategoryPanel(_currentChStats.equipped_meleeWeapon.item_name, meleePanel, ItemCategory.melee_weapon);
+        }
+        */
+
         foreach (var armorItem in InventoryManager.Instance.GetCoreArmorsList())
         {
             AddItemToCategoryPanel(armorItem, armorPanel); // prefab instantiation + text set
@@ -458,7 +493,15 @@ public class UICanvasManager : MonoBehaviour
         //activate/deactivate selection options
         if (inventoryEntries.Count == inventoryIndex + 1) //select the current index
         {
-            SelectInventoryItem(newObj);
+            if (!equipPanelFocus)
+            {
+                SelectInventoryEntry(newObj);
+
+            }
+            else
+            {
+                DeselectInventoryItem(newObj);
+            }
 
 
             currentCatSelect = item.category; //initialize the currentCatSelect
@@ -473,9 +516,34 @@ public class UICanvasManager : MonoBehaviour
 
     }
 
+    private void AddUnequipToCategoryPanel(string itemName, Transform categoryPanel, ItemCategory category)
+    {
+        GameObject newObj = Instantiate(unequipItem_prefab, categoryPanel);
+        Transform unequipText = newObj.transform.Find("UnequipText");
+        TextMeshProUGUI tmpText = unequipText.GetComponent<TextMeshProUGUI>();
+
+        tmpText.text = $"<Unequip: {itemName}"; ;
+
+        inventoryEntries.Add(newObj);
+        inventoryItems.Add(null);
+
+        //activate/deactivate selection options
+        if (inventoryEntries.Count == inventoryIndex + 1) //select the current index
+        {
+            SelectInventoryEntry(newObj);
+            currentCatSelect = category; //initialize the currentCatSelect
+            //ScrollToItem(newObj);
+        }
+        else if (inventoryEntries.Count > 1)
+        {
+            DeselectInventoryItem(newObj);
+
+        }
+    }
+
     private void UpdateInventoryDescriptPanel()
     {
-        if (inventoryEntries.Count > 0)
+        if (inventoryEntries.Count > 0 && inventoryItems[inventoryIndex] != null)
         {
             descriptionPanel_inventory.SetActive(true);
             inventoryDescript_icon.sprite = inventoryItems[inventoryIndex].Icon;
@@ -486,7 +554,7 @@ public class UICanvasManager : MonoBehaviour
         {
             descriptionPanel_inventory.SetActive(false);
         }
-        
+
 
     }
 
@@ -811,18 +879,24 @@ public class UICanvasManager : MonoBehaviour
 
     private void ActivateInventoryAndEquipUI(GameObject ch_obj)
     {
+        SetEquipPanelFocus(false);
         inventoryPanel.SetActive(true);
 
         if (ch_obj != null)
         {
             equipPanel.SetActive(true);
         }
+        inventoryActive = true;
     }
 
     private void DeactivateInventoryUI()
     {
         inventoryPanel.SetActive(false);
         equipPanel.SetActive(false);
+
+        SetEquipPanelFocus(false);
+
+        inventoryActive = false;
     }
 
     //this is called when squadmanager selects or deselects a character
@@ -836,30 +910,42 @@ public class UICanvasManager : MonoBehaviour
         {
             current_character = ch_obj;
 
+            //ClearInventoryListsAndObjects();
+            //PopulateInventoryListsAndObjects();
+            //ResetInventoryScrollRect();
+
+            /*
             //update the equip option of the item entry
             if (inventoryEntries.Count > 0)
             {
                 SelectInventoryItem(inventoryEntries[inventoryIndex]);
 
             }
-            
+            */
 
             if (ch_obj != null)
             {
                 equipPanel.gameObject.SetActive(true);
                 PopulateEquipPanel(ch_obj);
                 UpdateEquipDescriptPanel(ch_obj);
+
+                equipPanelActive = true;
+                SelectInventoryEntry(inventoryEntries[inventoryIndex]);
+
             }
             else
             {
-               
+
                 equipPanel.gameObject.SetActive(false);
+                equipPanelActive = false;
+                equipPanelFocus = false;
+                SelectInventoryEntry(inventoryEntries[inventoryIndex]);
             }
 
         }
-       
+
     }
-   
+
     //this updates the inventory list to show new items picked up or unequipped
     public void RefreshInventoryListsAndObjects()
     {
@@ -871,8 +957,10 @@ public class UICanvasManager : MonoBehaviour
         {
             ClearInventoryListsAndObjects();
             PopulateInventoryListsAndObjects();
+            LayoutRebuilder.ForceRebuildLayoutImmediate(_srContent);
+
         }
-        
+
 
     }
 
@@ -890,27 +978,331 @@ public class UICanvasManager : MonoBehaviour
 
                 if (input.y > 0f)
                 {
-                    BumpInventorySelectIndex(-1);
+                    if (!equipPanelFocus)
+                    {
+                        BumpInventorySelectIndex(-1);
+                    }
+                    else if (equipPanelFocus)
+                    {
+                        //move equip category select
+                        MoveEquipCategorySelect(SelectDirection.up);
+                    }
+
                 }
                 else if (input.y < 0f)
                 {
-                    BumpInventorySelectIndex(1);
+                    if (!equipPanelFocus)
+                    {
+                        BumpInventorySelectIndex(1);
+
+                    }
+                    else if (equipPanelFocus)
+                    {
+                        //move equip category select
+                        MoveEquipCategorySelect(SelectDirection.down);
+
+                    }
                 }
                 else if (input.x > 0f)
                 {
-                    DropItem(inventoryIndex);
+                    if (!equipPanelFocus)
+                    {
+                        DropItem(inventoryIndex);
+
+                    }
+                    else if (equipPanelFocus)
+                    {
+                        //move equip category select
+                        MoveEquipCategorySelect(SelectDirection.right);
+
+                    }
                 }
                 else if (input.x < 0f)
                 {
-                    if (current_character != null && inventoryItems[inventoryIndex].IsEquippable)
+                    if (!equipPanelFocus)
                     {
-                        EquipItem(inventoryIndex);
+                        if (current_character != null && inventoryItems[inventoryIndex].IsEquippable)
+                        {
+                            EquipItem(inventoryIndex);
+                        }
+
                     }
+                    else if (equipPanelFocus)
+                    {
+                        //move equip category select
+                        MoveEquipCategorySelect(SelectDirection.left);
+
+
+                    }
+
                 }
             }
         }
     }
 
+    private void MoveEquipCategorySelect(SelectDirection select)
+    {
+        switch (currentCatSelect)
+        {
+            case ItemCategory.ring:
+                switch (select)
+                {
+                    case SelectDirection.up:
+                        break;
+                    case SelectDirection.down:
+                        UpdateCategorySelection(ItemCategory.melee_weapon);
+                        break;
+                    case SelectDirection.left:
+                        break;
+                    case SelectDirection.right:
+                        UpdateCategorySelection(ItemCategory.helm);
+                        break;
+                    default:
+                        break;
+                }
+                break;
+
+            case ItemCategory.helm:
+                switch (select)
+                {
+                    case SelectDirection.up:
+                        break;
+                    case SelectDirection.down:
+                        UpdateCategorySelection(ItemCategory.armor);
+                        break;
+                    case SelectDirection.left:
+                        UpdateCategorySelection(ItemCategory.ring);
+                        break;
+                    case SelectDirection.right:
+                        UpdateCategorySelection(ItemCategory.amulet);
+                        break;
+                    default:
+                        break;
+                }
+                break;
+
+            case ItemCategory.amulet:
+                switch (select)
+                {
+                    case SelectDirection.up:
+                        break;
+                    case SelectDirection.down:
+                        UpdateCategorySelection(ItemCategory.ranged_weapon);
+                        break;
+                    case SelectDirection.left:
+                        UpdateCategorySelection(ItemCategory.ring);
+                        break;
+                    case SelectDirection.right:
+                        break;
+                    default:
+                        break;
+                }
+                break;
+
+            case ItemCategory.melee_weapon:
+                switch (select)
+                {
+                    case SelectDirection.up:
+                        UpdateCategorySelection(ItemCategory.ring);
+                        break;
+                    case SelectDirection.down:
+                        UpdateCategorySelection(ItemCategory.shield);
+                        break;
+                    case SelectDirection.left:
+                        break;
+                    case SelectDirection.right:
+                        UpdateCategorySelection(ItemCategory.armor);
+                        break;
+                    default:
+                        break;
+                }
+                break;
+
+            case ItemCategory.armor:
+                switch (select)
+                {
+                    case SelectDirection.up:
+                        UpdateCategorySelection(ItemCategory.helm);
+                        break;
+                    case SelectDirection.down:
+                        UpdateCategorySelection(ItemCategory.boots);
+                        break;
+                    case SelectDirection.left:
+                        UpdateCategorySelection(ItemCategory.melee_weapon);
+                        break;
+                    case SelectDirection.right:
+                        UpdateCategorySelection(ItemCategory.ranged_weapon);
+                        break;
+                    default:
+                        break;
+                }
+                break;
+
+            case ItemCategory.ranged_weapon:
+                switch (select)
+                {
+                    case SelectDirection.up:
+                        UpdateCategorySelection(ItemCategory.amulet);
+                        break;
+                    case SelectDirection.down:
+                        UpdateCategorySelection(ItemCategory.missile);
+                        break;
+                    case SelectDirection.left:
+                        UpdateCategorySelection(ItemCategory.armor);
+                        break;
+                    case SelectDirection.right:
+                        break;
+                    default:
+                        break;
+                }
+                break;
+
+            case ItemCategory.shield:
+                switch (select)
+                {
+                    case SelectDirection.up:
+                        UpdateCategorySelection(ItemCategory.melee_weapon);
+                        break;
+                    case SelectDirection.down:
+                        break;
+                    case SelectDirection.left:
+                        break;
+                    case SelectDirection.right:
+                        UpdateCategorySelection(ItemCategory.boots);
+                        break;
+                    default:
+                        break;
+                }
+                break;
+
+            case ItemCategory.boots:
+                switch (select)
+                {
+                    case SelectDirection.up:
+                        UpdateCategorySelection(ItemCategory.armor);
+                        break;
+                    case SelectDirection.down:
+                        break;
+                    case SelectDirection.left:
+                        UpdateCategorySelection(ItemCategory.shield);
+                        break;
+                    case SelectDirection.right:
+                        UpdateCategorySelection(ItemCategory.missile);
+                        break;
+                    default:
+                        break;
+                }
+                break;
+
+            case ItemCategory.missile:
+                switch (select)
+                {
+                    case SelectDirection.up:
+                        UpdateCategorySelection(ItemCategory.ranged_weapon);
+                        break;
+                    case SelectDirection.down:
+                        break;
+                    case SelectDirection.left:
+                        UpdateCategorySelection(ItemCategory.boots);
+                        break;
+                    case SelectDirection.right:
+                        break;
+                    default:
+                        break;
+                }
+                break;
+
+            default:
+                Debug.LogWarning("Unhandled item category: " + currentCatSelect);
+                break;
+        }
+
+
+
+    }
+
+    private void OnPanelSelect(InputAction.CallbackContext context)
+    {
+        if (!inventoryActive || !equipPanelActive)
+        {
+            return;
+        }
+        else
+        {
+            float inputValue = context.ReadValue<float>();
+
+            if (inputValue > 0 && equipPanelFocus)
+            {
+                SetEquipPanelFocus(false);
+
+            }
+            else if (inputValue < 0 && !equipPanelFocus)
+            {
+                SetEquipPanelFocus(true);
+
+            }
+
+        }
+
+
+    }
+
+    private void SetEquipPanelFocus(bool state)
+    {
+        if (state)
+        {
+            equipHeaderTMP.fontStyle = FontStyles.Bold;
+            inventoryHeaderTMP.fontStyle = FontStyles.Normal;
+
+            Color32 color;
+            color = equipPanelBackground.color;
+            color.a = 240;
+            equipPanelBackground.color = color;
+
+            color = equipDescriptBackground.color;
+            color.a = 240;
+            equipDescriptBackground.color = color;
+
+            color = inventoryPanelBackground.color;
+            color.a = 200;
+            inventoryPanelBackground.color = color;
+            color = inventoryDescriptBackground.color;
+            color.a = 200;
+            inventoryDescriptBackground.color = color;
+
+            DeselectInventoryItem(inventoryEntries[inventoryIndex]);
+
+            equipPanelFocus = true;
+        }
+        else if (!state)
+        {
+            equipHeaderTMP.fontStyle = FontStyles.Normal;
+            inventoryHeaderTMP.fontStyle = FontStyles.Bold;
+
+            Color32 color;
+            color = equipPanelBackground.color;
+            color.a = 200;
+            equipPanelBackground.color = color;
+
+            color = equipDescriptBackground.color;
+            color.a = 200;
+            equipDescriptBackground.color = color;
+
+            color = inventoryPanelBackground.color;
+            color.a = 240;
+            inventoryPanelBackground.color = color;
+            color = inventoryDescriptBackground.color;
+            color.a = 240;
+            inventoryDescriptBackground.color = color;
+
+            SelectInventoryEntry(inventoryEntries[inventoryIndex]);
+
+            UpdateCategorySelection(inventoryItems[inventoryIndex].category);
+
+            equipPanelFocus = false;
+
+        }
+    }
     private void EquipItem(int index)
     {
         InventoryManager.Instance.EquipItemToCharacter(inventoryItems[index], current_character);
@@ -922,6 +1314,87 @@ public class UICanvasManager : MonoBehaviour
         UpdateInventoryDescriptPanel();
         PopulateEquipPanel(current_character);
         UpdateEquipDescriptPanel(current_character);
+    }
+
+    private void OnUnequipItem(InputAction.CallbackContext context)
+    {
+        if (!equipPanelFocus)
+        {
+            return;
+        }
+        else
+        {
+            if (current_character != null)
+            {
+                EntityStats _chStats = current_character.GetComponent<EntityStats>();
+
+                RuntimeItem itemToUnequip = null;
+
+                switch (currentCatSelect)
+                {
+                    case ItemCategory.ring:
+                        itemToUnequip = _chStats.equipped_ring != null ? _chStats.equipped_ring : null;
+                        break;
+
+                    case ItemCategory.helm:
+                        itemToUnequip = _chStats.equipped_helm != null ? _chStats.equipped_helm : null;
+                        break;
+
+                    case ItemCategory.amulet:
+                        itemToUnequip = _chStats.equipped_amulet != null ? _chStats.equipped_amulet : null;
+                        break;
+
+                    case ItemCategory.melee_weapon:
+                        itemToUnequip = _chStats.equipped_meleeWeapon != null ? _chStats.equipped_meleeWeapon : null;
+                        break;
+
+                    case ItemCategory.armor:
+                        itemToUnequip = _chStats.equipped_armor != null ? _chStats.equipped_armor : null;
+                        break;
+
+                    case ItemCategory.ranged_weapon:
+                        itemToUnequip = _chStats.equipped_rangedWeapon != null ? _chStats.equipped_rangedWeapon : null;
+                        break;
+
+                    case ItemCategory.shield:
+                        itemToUnequip = _chStats.equipped_shield != null ? _chStats.equipped_shield : null;
+                        break;
+
+                    case ItemCategory.boots:
+                        itemToUnequip = _chStats.equipped_boots != null ? _chStats.equipped_boots : null;
+                        break;
+
+                    case ItemCategory.missile:
+                        itemToUnequip = _chStats.equipped_missile != null ? _chStats.equipped_missile : null;
+                        break;
+
+                    default:
+                        itemToUnequip = null;
+                        break;
+                }
+
+                if (itemToUnequip == null)
+                {
+                    return;
+                }
+                else if (itemToUnequip != null)
+                {
+
+                    InventoryManager.Instance.UnequipItemfromCharacter(itemToUnequip, current_character);
+
+                    RefreshInventoryListsAndObjects();
+                    int unequippedItemIndex = inventoryItems.IndexOf(itemToUnequip);
+                    MoveToInventoryIndex(unequippedItemIndex);
+                    //Debug.Log("New scrollrect="+_scrollRect.verticalNormalizedPosition);
+
+                    UpdateInventoryDescriptPanel();
+                    PopulateEquipPanel(current_character);
+                    UpdateEquipDescriptPanel(current_character);
+
+
+                }
+            }
+        }
     }
 
     private void DropItem(int index)
@@ -943,7 +1416,7 @@ public class UICanvasManager : MonoBehaviour
         inventoryIndex = Mathf.Clamp(index, 0, inventoryEntries.Count - 1);
         if (inventoryEntries.Count > 0)
         {
-            SelectInventoryItem(inventoryEntries[inventoryIndex]);
+            SelectInventoryEntry(inventoryEntries[inventoryIndex]);
             ScrollToItem(inventoryEntries[inventoryIndex]);
 
         }
@@ -961,10 +1434,15 @@ public class UICanvasManager : MonoBehaviour
         {
             index = Mathf.Clamp(index, 0, inventoryEntries.Count - 1);
 
+
             DeselectInventoryItem(inventoryEntries[inventoryIndex]);
-            SelectInventoryItem(inventoryEntries[index]);
+            SelectInventoryEntry(inventoryEntries[index]);
+
+
+
             inventoryIndex = index;
             UpdateCategorySelection(inventoryItems[inventoryIndex].baseItem.category);
+            Debug.Log("Scrolling to index: " + inventoryIndex);
             ScrollToItem(inventoryEntries[inventoryIndex]);
         }
 
@@ -977,9 +1455,13 @@ public class UICanvasManager : MonoBehaviour
         Bounds entryBounds = GetWorldSpaceBounds(entryRect);
         Bounds viewportBounds = GetWorldSpaceBounds(_srViewport);
 
+       
+
         // Find the index of this entry in our list
         int entryIndex = inventoryEntries.IndexOf(entry);
 
+        //Debug.Log($"******ENTRY: {entryIndex} Entry: Min = {entryBounds.min.y}, Max = {entryBounds.max.y}");
+        //Debug.Log($"Viewport Bounds: Min = {viewportBounds.min.y}, Max = {viewportBounds.max.y}");
         // Special handling for top items (first 2 items)
         if (entryIndex <= 2)
         {
@@ -990,6 +1472,18 @@ public class UICanvasManager : MonoBehaviour
             _scrollCoroutine = StartCoroutine(SmoothScrollTo(1.0f)); // 1.0 = top position
             return;
         }
+
+
+        // Special handling for bottom items
+        if (entryIndex >= inventoryEntries.Count - 3)
+        {
+            // For the last few items, scroll all the way to the bottom
+            if (_scrollCoroutine != null)
+                StopCoroutine(_scrollCoroutine);
+            _scrollCoroutine = StartCoroutine(SmoothScrollTo(0.0f)); // 0.0 = bottom position
+            return;
+        }
+
 
         // Standard visibility check
         if (viewportBounds.Contains(entryBounds.min) && viewportBounds.Contains(entryBounds.max))
@@ -1007,35 +1501,55 @@ public class UICanvasManager : MonoBehaviour
 
         // Flip Y because UI scroll direction is inverted
         float flippedY = -localY;
-       
+        Debug.Log("VH="+viewportHeight+" CH="+contentHeight+" flipped localY=" + flippedY);
 
         float targetPosition;
 
         // Determine target scroll position
         if (entryBounds.min.y > viewportBounds.max.y) // above
         {
+            //Debug.Log($"Entry is above viewport");
+
             targetPosition = flippedY - itemHeight;
         }
         else if (entryBounds.max.y < viewportBounds.min.y) // below
         {
-            //Debug.Log("entryBound.max.y="+entryBounds.max.y + "viewportbounds.min.y="+viewportBounds.min.y);
-           
+            // Item is below viewport - ensure we get enough scroll
+            //Debug.Log($"Entry is below viewport");
+            targetPosition = flippedY + itemHeight - viewportHeight;
+
+            /*
+            // Add more scroll room for lower items in the list
+            float listProgress = (float)entryIndex / inventoryEntries.Count;
+            if (listProgress > 0.5f) // If item is in the bottom half of the list
+            {
+                // Apply a progressive adjustment based on position in list
+                float adjustment = Mathf.Lerp(0, itemHeight * 0.5f, listProgress - 0.5f) * 2;
+                targetPosition += adjustment;
+                Debug.Log($"Applied additional scroll adjustment of {adjustment} for lower item");
+            }
+            */
             targetPosition = flippedY + itemHeight - viewportHeight;
         }
         else if (entryBounds.min.y < viewportBounds.min.y) // bottom clipped
         {
+            //Debug.Log($"Entry is bottom is clipped.");
+
             targetPosition = flippedY + itemHeight - viewportHeight;
         }
         else // top clipped
         {
+            //Debug.Log($"Entry is top is clipped ");
+
             targetPosition = flippedY - itemHeight;
         }
 
         // Convert to normalized position
         float targetScrollPosition = 1 - (targetPosition / (contentHeight - viewportHeight));
         targetScrollPosition = Mathf.Clamp01(targetScrollPosition);
+        Debug.Log("Target Position=" + targetPosition + " targetScrollPosition="+targetScrollPosition);
 
-        
+
         // Start smooth scrolling
         if (_scrollCoroutine != null)
             StopCoroutine(_scrollCoroutine);
@@ -1061,7 +1575,7 @@ public class UICanvasManager : MonoBehaviour
                 DeselectInventoryItem(inventoryEntries[inventoryIndex]);
                 //select new index
                 inventoryIndex = newIndex;
-                SelectInventoryItem(inventoryEntries[inventoryIndex]);
+                SelectInventoryEntry(inventoryEntries[inventoryIndex]);
 
 
 
@@ -1077,7 +1591,9 @@ public class UICanvasManager : MonoBehaviour
     private void UpdateCategorySelection(ItemCategory newCategory)
     {
 
-        if (current_character != null && newCategory != currentCatSelect)
+        //if (current_character != null && newCategory != currentCatSelect)
+        if (current_character != null)
+
         {
             //switch highlighted equip slot
             SetAmberSelectState(currentCatSelect, false);
@@ -1091,8 +1607,13 @@ public class UICanvasManager : MonoBehaviour
 
 
         }
+        else
+        {
 
-        currentCatSelect = newCategory; //even if the new cat is the same as currentCat still set it to the newCat
+            currentCatSelect = newCategory; //even if the new cat is the same as currentCat still set it to the newCat
+
+
+        }
 
 
     }
@@ -1135,27 +1656,49 @@ public class UICanvasManager : MonoBehaviour
 
     }
 
-    private void SelectInventoryItem(GameObject entry)
+    private void SelectInventoryEntry(GameObject entry)
     {
-        Transform itemName = entry.transform.Find("ItemName");
-        TextMeshProUGUI nameText = itemName.GetComponent<TextMeshProUGUI>();
-
-
-        Transform equipText = entry.transform.Find("Equip");
-        Transform dropText = entry.transform.Find("Drop");
-        Image background = entry.GetComponentInChildren<Image>();
-
-        nameText.fontStyle = FontStyles.Bold;
-        if (!inventoryItems[inventoryIndex].IsEquippable || current_character == null || (_squadManager.select_active != -1 && _squadManager.ch_in_slot_array[_squadManager.select_active] == null))
+        if (entry.tag == "EquipItem")
         {
-            equipText.gameObject.SetActive(false);
+            Transform itemName = entry.transform.Find("ItemName");
+            TextMeshProUGUI nameText = itemName.GetComponent<TextMeshProUGUI>();
+
+            Transform equipText = entry.transform.Find("Equip");
+            Transform dropText = entry.transform.Find("Drop");
+            Image background = entry.GetComponentInChildren<Image>();
+
+            nameText.fontStyle = FontStyles.Bold;
+            if (!inventoryItems[inventoryIndex].IsEquippable || current_character == null || (_squadManager.select_active != -1 && _squadManager.ch_in_slot_array[_squadManager.select_active] == null))
+            {
+                equipText.gameObject.SetActive(false);
+            }
+            else
+            {
+                equipText.gameObject.SetActive(true);
+            }
+            dropText.gameObject.SetActive(true);
+            background.color = new Color32(221, 147, 39, 20);
+
         }
-        else
+
+        /*
+        else if (entry.tag == "UnequipItem")
         {
-            equipText.gameObject.SetActive(true);
+            Transform unequipText = entry.transform.Find("UnequipText");
+            TextMeshProUGUI tmpText = unequipText.GetComponent<TextMeshProUGUI>();
+
+            Transform unequip = entry.transform.Find("Unequip");
+            Image background = entry.GetComponentInChildren<Image>();
+
+            tmpText.fontStyle = FontStyles.Bold;
+            unequip.gameObject.SetActive(true);
+
+            background.color = new Color32(221, 147, 39, 20);
+
+
         }
-        dropText.gameObject.SetActive(true);
-        background.color = new Color32(221, 147, 39, 20);
+        */
+
 
         UpdateInventoryDescriptPanel();
 
@@ -1163,17 +1706,38 @@ public class UICanvasManager : MonoBehaviour
 
     private void DeselectInventoryItem(GameObject entry)
     {
-        Transform itemName = entry.transform.Find("ItemName");
-        TextMeshProUGUI nameText = itemName.GetComponent<TextMeshProUGUI>();
+        if (entry.tag == "EquipItem")
+        {
+            Transform itemName = entry.transform.Find("ItemName");
+            TextMeshProUGUI nameText = itemName.GetComponent<TextMeshProUGUI>();
 
-        Transform equipText = entry.transform.Find("Equip");
-        Transform dropText = entry.transform.Find("Drop");
-        Image background = entry.GetComponentInChildren<Image>();
+            Transform equipText = entry.transform.Find("Equip");
+            Transform dropText = entry.transform.Find("Drop");
+            Image background = entry.GetComponentInChildren<Image>();
 
-        nameText.fontStyle = FontStyles.Normal;
-        equipText.gameObject.SetActive(false);
-        dropText.gameObject.SetActive(false);
-        background.color = new Color32(152, 152, 152, 22);
+            nameText.fontStyle = FontStyles.Normal;
+            equipText.gameObject.SetActive(false);
+            dropText.gameObject.SetActive(false);
+            background.color = new Color32(152, 152, 152, 22);
+
+        }
+        /*
+        else if (entry.tag == "UnequipItem")
+        {
+            Transform unequipText = entry.transform.Find("UnequipText");
+            TextMeshProUGUI tmpText = unequipText.GetComponent<TextMeshProUGUI>();
+
+            Transform unequip = entry.transform.Find("Unequip");
+            Image background = entry.GetComponentInChildren<Image>();
+
+            tmpText.fontStyle = FontStyles.Normal;
+            unequip.gameObject.SetActive(false);
+
+            background.color = new Color32(221, 147, 39, 20);
+
+        }
+        */
+
     }
 
     // Helper method to get world space bounds of a RectTransform

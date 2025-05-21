@@ -128,7 +128,7 @@ public class EntityStats : MonoBehaviour
         will_adjusted = AdjustStatToEquipment(will, StatCategory.will);
         soul_adjusted = AdjustStatToEquipment(soul, StatCategory.soul);
 
-        Debug.Log($"{gameObject.name} AdjStats: str:{str_adjusted}, dex:{dex_adjusted}, int:{int_adjusted}, will:{will_adjusted}, soul:{soul_adjusted}");
+       // Debug.Log($"{gameObject.name} AdjStats: str:{str_adjusted}, dex:{dex_adjusted}, int:{int_adjusted}, will:{will_adjusted}, soul:{soul_adjusted}");
         UpdateAttackDefenseRatings();
     }
 
@@ -309,7 +309,7 @@ public class EntityStats : MonoBehaviour
 
         degrees_of_accuracy = 1f / ((0.0015f * ranged_attackRating) + (1f / 180f));
 
-        Debug.Log($"{gameObject.name}: melee_DR {melee_defenseRating}, blockChance={blockChance}, dodgeChance={dodgeChance}, parryChance={parryChance}, melee_AR: {melee_attackRating}, ranged_AR={ranged_attackRating}");
+        //Debug.Log($"{gameObject.name}: melee_DR {melee_defenseRating}, blockChance={blockChance}, dodgeChance={dodgeChance}, parryChance={parryChance}, melee_AR: {melee_attackRating}, ranged_AR={ranged_attackRating}");
     }
 }
 

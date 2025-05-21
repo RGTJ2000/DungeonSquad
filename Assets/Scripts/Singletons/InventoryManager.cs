@@ -75,14 +75,70 @@ public class InventoryManager : ManagerBase<InventoryManager>
     public void DropItemFromCore(RuntimeItem item)
     {
         //instantiate dropped item
-       
+
         DropManager.Instance.ThrowRuntimeItem(item, _core);
         //remove item from core
         _coreInventory.RemoveItem(item);
 
     }
 
-   
+    public void UnequipItemfromCharacter(RuntimeItem item, GameObject char_obj)
+    {
+        EntityStats _entityStats = char_obj.GetComponent<EntityStats>();
+
+        //add item to Core
+        _coreInventory.AddItem(item);
+
+        //remove item from equipped
+        switch (item.category)
+        {
+            case ItemCategory.ring:
+                _entityStats.equipped_ring = null;
+                break;
+
+            case ItemCategory.helm:
+                _entityStats.equipped_helm = null;
+                break;
+
+            case ItemCategory.amulet:
+                _entityStats.equipped_amulet = null;
+                break;
+
+            case ItemCategory.melee_weapon:
+                _entityStats.equipped_meleeWeapon = null;
+                break;
+
+            case ItemCategory.armor:
+                _entityStats.equipped_armor = null;
+                break;
+
+            case ItemCategory.ranged_weapon:
+                _entityStats.equipped_rangedWeapon = null;
+                break;
+
+            case ItemCategory.shield:
+                _entityStats.equipped_shield = null;
+                break;
+
+            case ItemCategory.boots:
+                _entityStats.equipped_boots = null;
+                break;
+
+            case ItemCategory.missile:
+                _entityStats.equipped_missile = null;
+                break;
+
+            default:
+                Debug.LogWarning("Unknown item category: " + item.category);
+                break;
+
+
+
+        }
+
+        //Update character adjusted stats
+        _entityStats.UpdateAdjustedStats();
+    }
 
     public RuntimeItem EquipItemToCharacter(RuntimeItem item, GameObject char_obj)
     {
@@ -135,9 +191,10 @@ public class InventoryManager : ManagerBase<InventoryManager>
                 break;
         }
 
-       
 
+        
         _coreInventory.RemoveItem(item);
+        Debug.Log("Removed " + item.item_name + " from Core.");
 
         //Update character adjusted stats
         _entityStats.UpdateAdjustedStats();
@@ -145,7 +202,7 @@ public class InventoryManager : ManagerBase<InventoryManager>
         if (itemToUnequip != null)
         {
             _coreInventory.AddItem(itemToUnequip);
-
+            Debug.Log("Added "+itemToUnequip.item_name+" to Core.");
             return itemToUnequip;
         }
         else

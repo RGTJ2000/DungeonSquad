@@ -10,6 +10,8 @@ TagManager:
   - Floor
   - Core
   - Item
+  - UnequipItem
+  - EquipItem
   layers:
   - Default
   - TransparentFX

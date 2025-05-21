@@ -115,55 +115,40 @@ public class Inventory : MonoBehaviour
     {
         switch (item.category)
         {
+            case ItemCategory.ring:
+                rings.Remove(item);
+                break;
+            case ItemCategory.helm:
+                helms.Remove(item);
+                break;
+            case ItemCategory.amulet:
+                amulets.Remove(item);
+                break;
 
             case ItemCategory.melee_weapon:
-                {
-                    meleeWeapons.Remove(item);
-                    break;
-                }
+                meleeWeapons.Remove(item);
+                break;
+            case ItemCategory.armor:
+                armors.Remove(item);
+                break;
             case ItemCategory.ranged_weapon:
-                {
-                    rangedWeapons.Remove(item);
-                    break;
-                }
-            case ItemCategory.missile:
-                {
-                    missiles.Remove(item);
-                    break;
-                }
-            case ItemCategory.ring:
-                {
-                    rings.Remove(item);
-                    break;
-                }
-            case ItemCategory.helm:
-                {
-                    helms.Remove(item);
-                    break;
-                }
-            case ItemCategory.amulet:
-                {
-                    amulets.Remove(item);
-                    break;
-                }
+                rangedWeapons.Remove(item);
+                break;
+
             case ItemCategory.shield:
-                {
-                    shields.Remove(item);
-                    break;
-                }
+                shields.Remove(item);
+                break;
             case ItemCategory.boots:
-                {
-                    boots.Remove(item);
-                    break;
-                }
-       
+                boots.Remove(item);
+                break;
+            case ItemCategory.missile:
+                missiles.Remove(item);
+                break;
 
             default:
-                {
-                    Debug.LogWarning("Unknown item category to remove: " + item.baseItem.item_name);
+                Debug.LogWarning("Unknown item category to remove: " + item.baseItem.item_name);
+                break;
 
-                    break;
-                }
         }
     }
 }
