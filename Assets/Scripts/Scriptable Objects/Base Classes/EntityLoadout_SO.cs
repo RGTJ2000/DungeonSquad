@@ -6,7 +6,8 @@ using UnityEngine;
 public class EntityLoadout_SO : ScriptableObject
 {
     public int character_ID = 0;
-    public string character_name;
+    public string characterName;
+    public Sprite characterPortrait;
 
     public float visible_distance = 50f;
     public float health_max = 100f;

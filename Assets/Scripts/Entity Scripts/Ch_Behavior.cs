@@ -540,4 +540,16 @@ public class Ch_Behavior : MonoBehaviour
         yield return new WaitForSeconds(rangedCooldown);
         isRangedAttacking = false;
     }
+
+    public bool CheckTargetAvailable()
+    {
+        if (_targetingscan.targeted_entity == null)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
 }

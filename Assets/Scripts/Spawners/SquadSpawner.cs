@@ -146,8 +146,12 @@ public class SquadSpawner : MonoBehaviour
 
         // --- BASIC STATS ---
         stats.character_ID = loadout.character_ID;
+        stats.characterName = loadout.characterName;
+        stats.characterPortrait = loadout.characterPortrait;
+
         stats.visible_distance = loadout.visible_distance;
         stats.health_max = loadout.health_max;
+        stats.health_current = loadout.health_max;
         stats.walking_speed = loadout.walking_speed;
         stats.running_speed = loadout.running_speed;
         stats.entity_radius = loadout.entity_radius;

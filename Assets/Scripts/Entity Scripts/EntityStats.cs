@@ -12,8 +12,11 @@ public enum StatCategory
 public class EntityStats : MonoBehaviour
 {
     public int character_ID = 0;
+    public string characterName;
+    public Sprite characterPortrait;
     public float visible_distance = 50f;
     public float health_max = 100f;
+    public float health_current;
 
     public float walking_speed = 5.0f;
     public float running_speed = 10.0f;

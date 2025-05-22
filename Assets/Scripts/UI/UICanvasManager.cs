@@ -68,6 +68,9 @@ public class UICanvasManager : ManagerBase<UICanvasManager>
     [SerializeField] private Image inventoryPanelBackground;
     [SerializeField] private Image inventoryDescriptBackground;
 
+    [SerializeField] private GameObject profilePanel;
+    private ProfilePanelController _profilePanelController;
+
 
     Image inventoryDescript_icon;
     TextMeshProUGUI inventoryDescript_txt;
@@ -256,6 +259,15 @@ public class UICanvasManager : ManagerBase<UICanvasManager>
 
         GetInventoryDescriptPanelReferences();
         GetEquipPanelReferences();
+        _profilePanelController = profilePanel.GetComponent<ProfilePanelController>();
+        if ( _profilePanelController != null )
+        {
+            Debug.Log("ProfileControlle found.");
+        }
+        else
+        {
+            Debug.Log("ProfileController NOT FOUND.");
+        }
     }
     private void OnEnable()
     {
@@ -265,7 +277,7 @@ public class UICanvasManager : ManagerBase<UICanvasManager>
         _playerInputActions.Player.UnequipItem.performed += OnUnequipItem;
 
         SquadManager.OnCharacterSelected += HandleSkillsUI;
-        SquadManager.OnCharacterSelected += UpdateInventoryPanelToCharacter;
+        SquadManager.OnCharacterSelected += UpdateInventoryPanelsToCharacter;
 
         SquadManager.OnInventorySelected += ToggleInventoryAndEquipUI;
 
@@ -281,7 +293,7 @@ public class UICanvasManager : ManagerBase<UICanvasManager>
 
 
         SquadManager.OnCharacterSelected -= HandleSkillsUI;
-        SquadManager.OnCharacterSelected -= UpdateInventoryPanelToCharacter;
+        SquadManager.OnCharacterSelected -= UpdateInventoryPanelsToCharacter;
         SquadManager.OnInventorySelected -= ToggleInventoryAndEquipUI;
 
         ItemEvents.OnItemPickedUp -= RefreshInventoryListsAndObjects;
@@ -312,6 +324,7 @@ public class UICanvasManager : ManagerBase<UICanvasManager>
         descriptionPanel_equip.SetActive(false);
         descriptionPanel_inventory.SetActive(false);
         equipPanel.SetActive(false);
+        profilePanel.SetActive(false);
 
 
         //clear inventory lists to ensure clean slate
@@ -365,6 +378,8 @@ public class UICanvasManager : ManagerBase<UICanvasManager>
             {
                 PopulateEquipPanel(ch_obj);
                 UpdateEquipDescriptPanel(ch_obj);
+                _profilePanelController.UpdatePanelToCharacter(ch_obj);
+                
             }
 
             ActivateInventoryAndEquipUI(ch_obj);
@@ -885,7 +900,14 @@ public class UICanvasManager : ManagerBase<UICanvasManager>
         if (ch_obj != null)
         {
             equipPanel.SetActive(true);
+            profilePanel.SetActive(true);
         }
+        else
+        {
+            equipPanel.SetActive(false);
+            profilePanel.SetActive(false);
+        }
+
         inventoryActive = true;
     }
 
@@ -893,6 +915,7 @@ public class UICanvasManager : ManagerBase<UICanvasManager>
     {
         inventoryPanel.SetActive(false);
         equipPanel.SetActive(false);
+        profilePanel.SetActive(false);
 
         SetEquipPanelFocus(false);
 
@@ -900,7 +923,7 @@ public class UICanvasManager : ManagerBase<UICanvasManager>
     }
 
     //this is called when squadmanager selects or deselects a character
-    private void UpdateInventoryPanelToCharacter(GameObject ch_obj)
+    private void UpdateInventoryPanelsToCharacter(GameObject ch_obj)
     {
         if (!inventoryActive)
         {
@@ -932,6 +955,9 @@ public class UICanvasManager : ManagerBase<UICanvasManager>
                 equipPanelActive = true;
                 SelectInventoryEntry(inventoryEntries[inventoryIndex]);
 
+                _profilePanelController.UpdatePanelToCharacter(ch_obj);
+                profilePanel.SetActive(true);
+
             }
             else
             {
@@ -940,6 +966,8 @@ public class UICanvasManager : ManagerBase<UICanvasManager>
                 equipPanelActive = false;
                 equipPanelFocus = false;
                 SelectInventoryEntry(inventoryEntries[inventoryIndex]);
+
+                profilePanel.SetActive(false);
             }
 
         }

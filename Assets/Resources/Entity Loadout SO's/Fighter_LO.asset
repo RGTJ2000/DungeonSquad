@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Fighter_LO
   m_EditorClassIdentifier: Assembly-CSharp::EntityLoadout_SO
   character_ID: 0
-  character_name: Fighter
+  characterName: Barrow
+  characterPortrait: {fileID: 21300000, guid: 4fab16189dad2684981562e6f97e4159, type: 3}
   visible_distance: 50
   health_max: 100
   walking_speed: 5

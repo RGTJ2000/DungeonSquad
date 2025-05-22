@@ -54,7 +54,8 @@ public class Health : MonoBehaviour
             _healthbar.UpdateHealthbar(currentHealth, maxHealth);
         }
 
-       
+        _entityStats.health_current = currentHealth;
+
 
         ShowFloatingText( Mathf.RoundToInt(damage).ToString(), type);
 
@@ -79,6 +80,7 @@ public class Health : MonoBehaviour
             _healthbar.UpdateHealthbar(currentHealth, maxHealth);
         }
        // Debug.Log($"{gameObject.name} healed for {amount}! Current health: {currentHealth}");
+       _entityStats.health_current = currentHealth;
     }
 
     private void Die()

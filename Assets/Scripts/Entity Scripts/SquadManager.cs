@@ -403,9 +403,18 @@ public class SquadManager : MonoBehaviour
             {
                 if (_chB.actionMode == ActionMode.combat)
                 {
-                    DeactivateCharacterSelectLines(select_active);
-                    select_active = -1;
-                    OnCharacterSelected?.Invoke(null);
+                    if (_chB.CheckTargetAvailable())
+                    {
+                        DeactivateCharacterSelectLines(select_active);
+                        select_active = -1;
+                        OnCharacterSelected?.Invoke(null);
+
+                    }
+                    else
+                    {
+                        return;
+                    }
+                    
 
                 }
                 else if (_chB.actionMode == ActionMode.item)
