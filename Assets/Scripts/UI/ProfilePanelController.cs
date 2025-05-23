@@ -4,6 +4,11 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
 
+public enum EquipState
+{
+    equip,
+    unequip
+}
 public class ProfilePanelController : MonoBehaviour
 {
     [SerializeField] private Image characterPortrait;
@@ -119,8 +124,20 @@ public class ProfilePanelController : MonoBehaviour
             UpdateAdjustedSlider(will_adj_slider, _chStats.will_adjusted);
             UpdateAdjustedSlider(soul_adj_slider, _chStats.soul_adjusted);
 
-            int inventoryIndex = UICanvasManager.Instance.inventoryIndex;
-            UpdateAllReadjustSliders(UICanvasManager.Instance.inventoryItems[inventoryIndex]);
+            if (!UICanvasManager.Instance.equipPanelFocus)
+            {
+                Debug.Log("Not EquipPanel Focus.");
+                int inventoryIndex = UICanvasManager.Instance.inventoryIndex;
+                UpdateAllReadjustSliders(UICanvasManager.Instance.inventoryItems[inventoryIndex], EquipState.equip);
+            }
+            else
+            {
+                Debug.Log("EquipPanel in Focus.");
+               
+                UpdateAllReadjustSliders(_chStats.GetEquippedByCategory( UICanvasManager.Instance.currentCatSelect) , EquipState.unequip);
+
+            }
+            
 
             UpdateMarker(str_marker_slider, str_marker, _chStats.strength);
             UpdateMarker(dex_marker_slider, dex_marker, _chStats.dexterity);
@@ -137,15 +154,15 @@ public class ProfilePanelController : MonoBehaviour
         }
     }
 
-    public void UpdateAllReadjustSliders(RuntimeItem newItem)
+    public void UpdateAllReadjustSliders(RuntimeItem item, EquipState equipState)
     {
-        if (_chStats != null && newItem != null && newItem.IsEquippable)
+        if (_chStats != null && item != null && item.IsEquippable)
         {
-            float newStr = ReturnAdjustStatToNewItem(_chStats.strength, StatCategory.strength, newItem);
-            float newDex = ReturnAdjustStatToNewItem(_chStats.dexterity, StatCategory.dexterity, newItem);
-            float newInt = ReturnAdjustStatToNewItem(_chStats.intelligence, StatCategory.intelligence, newItem);
-            float newWill = ReturnAdjustStatToNewItem(_chStats.will, StatCategory.will, newItem);
-            float newSoul = ReturnAdjustStatToNewItem(_chStats.soul, StatCategory.soul, newItem);
+            float newStr = ReturnAdjustStatToItemEquipUneqip(_chStats.strength, StatCategory.strength, item, equipState);
+            float newDex = ReturnAdjustStatToItemEquipUneqip(_chStats.dexterity, StatCategory.dexterity, item, equipState);
+            float newInt = ReturnAdjustStatToItemEquipUneqip(_chStats.intelligence, StatCategory.intelligence, item, equipState);
+            float newWill = ReturnAdjustStatToItemEquipUneqip(_chStats.will, StatCategory.will, item, equipState);
+            float newSoul = ReturnAdjustStatToItemEquipUneqip(_chStats.soul, StatCategory.soul, item, equipState);
 
 
             UpdateReadjSlider(str_readj_slider, str_readj_TMP, _chStats.str_adjusted, newStr);
@@ -213,25 +230,36 @@ public class ProfilePanelController : MonoBehaviour
         }
     }
 
-    private float ReturnAdjustStatToNewItem(float stat, StatCategory statCategory, RuntimeItem newItem)
+    private float ReturnAdjustStatToItemEquipUneqip(float stat, StatCategory statCategory, RuntimeItem item, EquipState equipState)
     {
         float adjustedStat;
         float totalAdjustment = 0f;
 
-        ItemCategory newItemCategory = newItem.category;
+        ItemCategory itemCategory = item.category;
 
-        if (newItemCategory == ItemCategory.ring)
+        if (itemCategory == ItemCategory.ring)
         {
-            totalAdjustment += ReturnAdjustmentToStatCategory(newItem, statCategory);
+            if (equipState == EquipState.equip)
+            {
+                totalAdjustment += ReturnAdjustmentToStatCategory(item, statCategory);
+            }
+            else
+            {
+                //add nothing if this category is to be unequipped
+            }
         }
         else if (_chStats.equipped_ring != null)
         {
             totalAdjustment += ReturnAdjustmentToStatCategory(_chStats.equipped_ring, statCategory);
         }
 
-        if (newItemCategory == ItemCategory.helm)
+
+        if (itemCategory == ItemCategory.helm)
         {
-            totalAdjustment += ReturnAdjustmentToStatCategory(newItem, statCategory);
+            if (equipState == EquipState.equip)
+            {
+                totalAdjustment += ReturnAdjustmentToStatCategory(item, statCategory);
+            }
         }
         else if (_chStats.equipped_helm != null)
         {
@@ -239,9 +267,12 @@ public class ProfilePanelController : MonoBehaviour
         }
 
         // Amulet
-        if (newItemCategory == ItemCategory.amulet)
+        if (itemCategory == ItemCategory.amulet)
         {
-            totalAdjustment += ReturnAdjustmentToStatCategory(newItem, statCategory);
+            if (equipState == EquipState.equip)
+            {
+                totalAdjustment += ReturnAdjustmentToStatCategory(item, statCategory);
+            }
         }
         else if (_chStats.equipped_amulet != null)
         {
@@ -249,9 +280,12 @@ public class ProfilePanelController : MonoBehaviour
         }
 
         // Melee Weapon
-        if (newItemCategory == ItemCategory.melee_weapon)
+        if (itemCategory == ItemCategory.melee_weapon)
         {
-            totalAdjustment += ReturnAdjustmentToStatCategory(newItem, statCategory);
+            if (equipState == EquipState.equip)
+            {
+                totalAdjustment += ReturnAdjustmentToStatCategory(item, statCategory);
+            }
         }
         else if (_chStats.equipped_meleeWeapon != null)
         {
@@ -259,9 +293,12 @@ public class ProfilePanelController : MonoBehaviour
         }
 
         // Armor
-        if (newItemCategory == ItemCategory.armor)
+        if (itemCategory == ItemCategory.armor)
         {
-            totalAdjustment += ReturnAdjustmentToStatCategory(newItem, statCategory);
+            if (equipState == EquipState.equip)
+            {
+                totalAdjustment += ReturnAdjustmentToStatCategory(item, statCategory);
+            }
         }
         else if (_chStats.equipped_armor != null)
         {
@@ -269,9 +306,12 @@ public class ProfilePanelController : MonoBehaviour
         }
 
         // Ranged Weapon
-        if (newItemCategory == ItemCategory.ranged_weapon)
+        if (itemCategory == ItemCategory.ranged_weapon)
         {
-            totalAdjustment += ReturnAdjustmentToStatCategory(newItem, statCategory);
+            if (equipState == EquipState.equip)
+            {
+                totalAdjustment += ReturnAdjustmentToStatCategory(item, statCategory);
+            }
         }
         else if (_chStats.equipped_rangedWeapon != null)
         {
@@ -279,9 +319,12 @@ public class ProfilePanelController : MonoBehaviour
         }
 
         // Shield
-        if (newItemCategory == ItemCategory.shield)
+        if (itemCategory == ItemCategory.shield)
         {
-            totalAdjustment += ReturnAdjustmentToStatCategory(newItem, statCategory);
+            if (equipState == EquipState.equip)
+            {
+                totalAdjustment += ReturnAdjustmentToStatCategory(item, statCategory);
+            }
         }
         else if (_chStats.equipped_shield != null)
         {
@@ -289,9 +332,12 @@ public class ProfilePanelController : MonoBehaviour
         }
 
         // Boots
-        if (newItemCategory == ItemCategory.boots)
+        if (itemCategory == ItemCategory.boots)
         {
-            totalAdjustment += ReturnAdjustmentToStatCategory(newItem, statCategory);
+            if (equipState == EquipState.equip)
+            {
+                totalAdjustment += ReturnAdjustmentToStatCategory(item, statCategory);
+            }
         }
         else if (_chStats.equipped_boots != null)
         {

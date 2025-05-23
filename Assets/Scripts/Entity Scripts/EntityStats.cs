@@ -61,7 +61,7 @@ public class EntityStats : MonoBehaviour
     public RuntimeItem equipped_rangedWeapon = null;
     public RuntimeItem equipped_missile = null;
 
-    public RuntimeItem equipped_ring= null;
+    public RuntimeItem equipped_ring = null;
     public RuntimeItem equipped_helm = null;
     public RuntimeItem equipped_amulet = null;
     public RuntimeItem equipped_armor = null;
@@ -102,7 +102,7 @@ public class EntityStats : MonoBehaviour
 
     private void Awake()
     {
-       
+
 
         str_adjusted = strength;
         dex_adjusted = dexterity;
@@ -118,20 +118,20 @@ public class EntityStats : MonoBehaviour
             selected_skill = skill_slot[0]; //set active skill to first slot by default 
         }
 
-       
+
 
     }
 
     public void UpdateAdjustedStats()
     {
-        
+
         str_adjusted = AdjustStatToEquipment(strength, StatCategory.strength);
         dex_adjusted = AdjustStatToEquipment(dexterity, StatCategory.dexterity);
         int_adjusted = AdjustStatToEquipment(intelligence, StatCategory.intelligence);
         will_adjusted = AdjustStatToEquipment(will, StatCategory.will);
         soul_adjusted = AdjustStatToEquipment(soul, StatCategory.soul);
 
-       // Debug.Log($"{gameObject.name} AdjStats: str:{str_adjusted}, dex:{dex_adjusted}, int:{int_adjusted}, will:{will_adjusted}, soul:{soul_adjusted}");
+        // Debug.Log($"{gameObject.name} AdjStats: str:{str_adjusted}, dex:{dex_adjusted}, int:{int_adjusted}, will:{will_adjusted}, soul:{soul_adjusted}");
         UpdateAttackDefenseRatings();
     }
 
@@ -149,7 +149,7 @@ public class EntityStats : MonoBehaviour
         {
             totalAdjustment += ReturnAdjustmentToCategory(equipped_helm, category);
         }
-        
+
         if (equipped_amulet != null)
         {
             totalAdjustment += ReturnAdjustmentToCategory(equipped_amulet, category);
@@ -159,7 +159,7 @@ public class EntityStats : MonoBehaviour
         if (equipped_meleeWeapon != null)
         {
             totalAdjustment += ReturnAdjustmentToCategory(equipped_meleeWeapon, category);
-            
+
         }
 
         if (equipped_armor != null)
@@ -184,7 +184,7 @@ public class EntityStats : MonoBehaviour
 
 
         adjustedStat = stat + totalAdjustment;
-        
+
         return adjustedStat;
     }
 
@@ -260,9 +260,9 @@ public class EntityStats : MonoBehaviour
 
         float dexSum = dex_adjusted + DR_dex;
 
-        blockChance = Mathf.Clamp(DR_str / DR_totalSum,0,1);
-        dodgeChance = Mathf.Clamp( (1 - blockChance) * (dex_adjusted /dexSum), 0,1 );
-        parryChance = Mathf.Clamp(1 - (blockChance+dodgeChance),0,1);
+        blockChance = Mathf.Clamp(DR_str / DR_totalSum, 0, 1);
+        dodgeChance = Mathf.Clamp((1 - blockChance) * (dex_adjusted / dexSum), 0, 1);
+        parryChance = Mathf.Clamp(1 - (blockChance + dodgeChance), 0, 1);
 
 
         //calculate melee_AR
@@ -276,7 +276,7 @@ public class EntityStats : MonoBehaviour
 
         melee_attackRating = (AR_str + AR_dex) / 2;
 
-        
+
 
         //calculate ranged_DR
         float ranged_DR_dex = dex_adjusted;
@@ -304,6 +304,37 @@ public class EntityStats : MonoBehaviour
         degrees_of_accuracy = 1f / ((0.0015f * ranged_attackRating) + (1f / 180f));
 
         //Debug.Log($"{gameObject.name}: melee_DR {melee_defenseRating}, blockChance={blockChance}, dodgeChance={dodgeChance}, parryChance={parryChance}, melee_AR: {melee_attackRating}, ranged_AR={ranged_attackRating}");
+    }
+
+    public RuntimeItem GetEquippedByCategory(ItemCategory category)
+    {
+        switch (category)
+        {
+            case ItemCategory.ring:
+                return equipped_ring;
+            case ItemCategory.helm:
+                return equipped_helm;
+            case ItemCategory.amulet:
+                return equipped_amulet;
+
+            case ItemCategory.melee_weapon:
+                return equipped_meleeWeapon;
+            case ItemCategory.armor:
+                return equipped_armor;
+            case ItemCategory.ranged_weapon:
+                return equipped_rangedWeapon;
+
+            case ItemCategory.shield:
+                return equipped_shield;
+            case ItemCategory.boots:
+                return equipped_boots;
+            case ItemCategory.missile:
+                return equipped_missile;
+
+            default:
+                return null;
+
+        }
     }
 }
 

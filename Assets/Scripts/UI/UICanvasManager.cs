@@ -245,7 +245,7 @@ public class UICanvasManager : ManagerBase<UICanvasManager>
 
     #endregion
 
-    [SerializeField] private ItemCategory currentCatSelect = ItemCategory.none;
+    public ItemCategory currentCatSelect = ItemCategory.none;
 
 
 
@@ -260,14 +260,7 @@ public class UICanvasManager : ManagerBase<UICanvasManager>
         GetInventoryDescriptPanelReferences();
         GetEquipPanelReferences();
         _profilePanelController = profilePanel.GetComponent<ProfilePanelController>();
-        if ( _profilePanelController != null )
-        {
-            Debug.Log("ProfileControlle found.");
-        }
-        else
-        {
-            Debug.Log("ProfileController NOT FOUND.");
-        }
+       
     }
     private void OnEnable()
     {
@@ -933,18 +926,7 @@ public class UICanvasManager : ManagerBase<UICanvasManager>
         {
             current_character = ch_obj;
 
-            //ClearInventoryListsAndObjects();
-            //PopulateInventoryListsAndObjects();
-            //ResetInventoryScrollRect();
-
-            /*
-            //update the equip option of the item entry
-            if (inventoryEntries.Count > 0)
-            {
-                SelectInventoryItem(inventoryEntries[inventoryIndex]);
-
-            }
-            */
+           
 
             if (ch_obj != null)
             {
@@ -955,13 +937,15 @@ public class UICanvasManager : ManagerBase<UICanvasManager>
                 equipPanelActive = true;
                 SelectInventoryEntry(inventoryEntries[inventoryIndex]);
 
+                Debug.Log("Update Panel to Character FOUDN. Changed to " + ch_obj.name + " Updating ProfilePanel to character. EquipPanelFocus=" +equipPanelFocus);
+
                 _profilePanelController.UpdatePanelToCharacter(ch_obj);
                 profilePanel.SetActive(true);
 
             }
             else
             {
-
+                Debug.Log("Update Panel to Character. Null characterObj found.");
                 equipPanel.gameObject.SetActive(false);
                 equipPanelActive = false;
                 equipPanelFocus = false;
@@ -1300,6 +1284,9 @@ public class UICanvasManager : ManagerBase<UICanvasManager>
 
             DeselectInventoryItem(inventoryEntries[inventoryIndex]);
 
+            //update profilepanel to show dequip stats
+            _profilePanelController.UpdateAllReadjustSliders( current_character.GetComponent<EntityStats>().GetEquippedByCategory(currentCatSelect), EquipState.unequip);
+
             equipPanelFocus = true;
         }
         else if (!state)
@@ -1327,6 +1314,9 @@ public class UICanvasManager : ManagerBase<UICanvasManager>
 
             UpdateCategorySelection(inventoryItems[inventoryIndex].category);
 
+            //update profile panel to show new equipstats
+            _profilePanelController.UpdateAllReadjustSliders(inventoryItems[inventoryIndex], EquipState.equip);
+
             equipPanelFocus = false;
 
         }
@@ -1342,6 +1332,8 @@ public class UICanvasManager : ManagerBase<UICanvasManager>
         UpdateInventoryDescriptPanel();
         PopulateEquipPanel(current_character);
         UpdateEquipDescriptPanel(current_character);
+
+        _profilePanelController.UpdateStatsPanel_1();
     }
 
     private void OnUnequipItem(InputAction.CallbackContext context)
@@ -1401,11 +1393,7 @@ public class UICanvasManager : ManagerBase<UICanvasManager>
                         break;
                 }
 
-                if (itemToUnequip == null)
-                {
-                    return;
-                }
-                else if (itemToUnequip != null)
+               if (itemToUnequip != null)
                 {
 
                     InventoryManager.Instance.UnequipItemfromCharacter(itemToUnequip, current_character);
@@ -1421,6 +1409,12 @@ public class UICanvasManager : ManagerBase<UICanvasManager>
 
 
                 }
+
+                //update profile panel
+
+
+                _profilePanelController.UpdateStatsPanel_1();
+
             }
         }
     }
@@ -1470,7 +1464,7 @@ public class UICanvasManager : ManagerBase<UICanvasManager>
 
             inventoryIndex = index;
             UpdateCategorySelection(inventoryItems[inventoryIndex].baseItem.category);
-            Debug.Log("Scrolling to index: " + inventoryIndex);
+            //Debug.Log("Scrolling to index: " + inventoryIndex);
             ScrollToItem(inventoryEntries[inventoryIndex]);
         }
 
@@ -1529,7 +1523,6 @@ public class UICanvasManager : ManagerBase<UICanvasManager>
 
         // Flip Y because UI scroll direction is inverted
         float flippedY = -localY;
-        Debug.Log("VH="+viewportHeight+" CH="+contentHeight+" flipped localY=" + flippedY);
 
         float targetPosition;
 
@@ -1575,7 +1568,7 @@ public class UICanvasManager : ManagerBase<UICanvasManager>
         // Convert to normalized position
         float targetScrollPosition = 1 - (targetPosition / (contentHeight - viewportHeight));
         targetScrollPosition = Mathf.Clamp01(targetScrollPosition);
-        Debug.Log("Target Position=" + targetPosition + " targetScrollPosition="+targetScrollPosition);
+       
 
 
         // Start smooth scrolling
@@ -1611,7 +1604,7 @@ public class UICanvasManager : ManagerBase<UICanvasManager>
                 //currentCatSelect = (inventoryItems[inventoryIndex].baseItem.category);
                 ScrollToItem(inventoryEntries[inventoryIndex]);
 
-                _profilePanelController.UpdateAllReadjustSliders(inventoryItems[inventoryIndex]);
+                
             }
 
         }
@@ -1634,6 +1627,12 @@ public class UICanvasManager : ManagerBase<UICanvasManager>
 
             //update the EquipDescript
             UpdateEquipDescriptPanel(current_character);
+
+            if (equipPanelFocus)
+            {
+
+                _profilePanelController.UpdateAllReadjustSliders(current_character.GetComponent<EntityStats>().GetEquippedByCategory(currentCatSelect), EquipState.unequip);
+            }
 
 
         }
@@ -1709,6 +1708,7 @@ public class UICanvasManager : ManagerBase<UICanvasManager>
             dropText.gameObject.SetActive(true);
             background.color = new Color32(221, 147, 39, 20);
 
+            _profilePanelController.UpdateAllReadjustSliders(inventoryItems[inventoryIndex], EquipState.equip);
         }
 
         /*

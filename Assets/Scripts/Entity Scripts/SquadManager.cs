@@ -466,7 +466,8 @@ public class SquadManager : MonoBehaviour
         //select_active = -1; //the active select index is turned off
 
         //UI deactivate because no character selected
-        OnCharacterSelected?.Invoke(null);
+
+        //OnCharacterSelected?.Invoke(null);
 
 
     }

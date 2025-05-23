@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Wizard_LO
   m_EditorClassIdentifier: Assembly-CSharp::EntityLoadout_SO
   character_ID: 2
-  character_name: Wizard
+  characterName: Elgar
+  characterPortrait: {fileID: 21300000, guid: b5e64c2b1d3f1004f8e71efe69293799, type: 3}
   visible_distance: 50
   health_max: 100
   walking_speed: 5

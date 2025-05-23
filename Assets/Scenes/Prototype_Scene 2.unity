@@ -4393,7 +4393,7 @@ MonoBehaviour:
   enemy_prefabs_array:
   - {fileID: 2167847887569344889, guid: a29005b1dd3c1da4e8ce512e19535eaf, type: 3}
   - {fileID: 4739953954638166795, guid: a063fab21be9b8e4ca709ebaed89c560, type: 3}
-  number_of_enemies: 0
+  number_of_enemies: 20
   boundmax_x: 80
   boundmax_z: 80
 --- !u!114 &1941889782 stripped

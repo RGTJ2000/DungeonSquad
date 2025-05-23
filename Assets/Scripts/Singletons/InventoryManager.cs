@@ -194,7 +194,7 @@ public class InventoryManager : ManagerBase<InventoryManager>
 
         
         _coreInventory.RemoveItem(item);
-        Debug.Log("Removed " + item.item_name + " from Core.");
+        //Debug.Log("Removed " + item.item_name + " from Core.");
 
         //Update character adjusted stats
         _entityStats.UpdateAdjustedStats();
@@ -202,7 +202,7 @@ public class InventoryManager : ManagerBase<InventoryManager>
         if (itemToUnequip != null)
         {
             _coreInventory.AddItem(itemToUnequip);
-            Debug.Log("Added "+itemToUnequip.item_name+" to Core.");
+            //Debug.Log("Added "+itemToUnequip.item_name+" to Core.");
             return itemToUnequip;
         }
         else
