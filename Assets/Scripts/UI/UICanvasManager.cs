@@ -50,9 +50,9 @@ public class UICanvasManager : ManagerBase<UICanvasManager>
     public bool equipPanelActive = false;
     public bool equipPanelFocus = false;
 
-    List<GameObject> inventoryEntries = new List<GameObject>();
-    List<RuntimeItem> inventoryItems = new List<RuntimeItem>();
-    private int inventoryIndex = 0;
+    public List<GameObject> inventoryEntries = new List<GameObject>();
+    public List<RuntimeItem> inventoryItems = new List<RuntimeItem>();
+    public int inventoryIndex = 0;
 
     private Coroutine _scrollCoroutine;
 
@@ -1610,6 +1610,8 @@ public class UICanvasManager : ManagerBase<UICanvasManager>
                 UpdateCategorySelection(inventoryItems[inventoryIndex].baseItem.category);
                 //currentCatSelect = (inventoryItems[inventoryIndex].baseItem.category);
                 ScrollToItem(inventoryEntries[inventoryIndex]);
+
+                _profilePanelController.UpdateAllReadjustSliders(inventoryItems[inventoryIndex]);
             }
 
         }

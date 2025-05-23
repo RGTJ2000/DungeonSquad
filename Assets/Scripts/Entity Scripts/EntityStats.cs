@@ -142,52 +142,43 @@ public class EntityStats : MonoBehaviour
 
         if (equipped_ring != null)
         {
-            //Debug.Log("Stats checking ring on: " + gameObject.name);
-
             totalAdjustment += ReturnAdjustmentToCategory(equipped_ring, category);
         }
 
         if (equipped_helm != null)
         {
-            //Debug.Log("Stats checking helm on: " + gameObject.name);
             totalAdjustment += ReturnAdjustmentToCategory(equipped_helm, category);
         }
         
         if (equipped_amulet != null)
         {
-            //Debug.Log("Stats checking amulet on: " + gameObject.name);
             totalAdjustment += ReturnAdjustmentToCategory(equipped_amulet, category);
 
         }
 
         if (equipped_meleeWeapon != null)
         {
-           // Debug.Log("Stats checking melee weapon on: " + gameObject.name);
             totalAdjustment += ReturnAdjustmentToCategory(equipped_meleeWeapon, category);
             
         }
 
         if (equipped_armor != null)
         {
-            //Debug.Log("Stats checking armor on: " + gameObject.name);
             totalAdjustment += ReturnAdjustmentToCategory(equipped_armor, category);
         }
 
         if (equipped_rangedWeapon != null)
         {
-            //Debug.Log("Stats checking ranged weapon on: " + gameObject.name);
             totalAdjustment += ReturnAdjustmentToCategory(equipped_rangedWeapon, category);
         }
 
         if (equipped_shield != null)
         {
-            //Debug.Log("Stats checking shield on: " + gameObject.name);
             totalAdjustment += ReturnAdjustmentToCategory(equipped_shield, category);
         }
 
         if (equipped_boots != null)
         {
-            //Debug.Log("Stats checking boots on: " + gameObject.name);
             totalAdjustment += ReturnAdjustmentToCategory(equipped_boots, category);
         }
 
