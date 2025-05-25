@@ -1333,7 +1333,7 @@ public class UICanvasManager : ManagerBase<UICanvasManager>
         PopulateEquipPanel(current_character);
         UpdateEquipDescriptPanel(current_character);
 
-        _profilePanelController.UpdateStatsPanel_1();
+        _profilePanelController.UpdateStatsPanels_1_2();
     }
 
     private void OnUnequipItem(InputAction.CallbackContext context)
@@ -1413,7 +1413,7 @@ public class UICanvasManager : ManagerBase<UICanvasManager>
                 //update profile panel
 
 
-                _profilePanelController.UpdateStatsPanel_1();
+                _profilePanelController.UpdateStatsPanels_1_2();
 
             }
         }

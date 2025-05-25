@@ -49,4 +49,4 @@ MonoBehaviour:
   launch_impulse: 0.3
   accuracy_factor: 1
   launchAudio_ID: bowLaunch
-  attack_dexModifier: 0
+  attack_dexModifier: 0.3

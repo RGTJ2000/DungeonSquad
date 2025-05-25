@@ -266,7 +266,7 @@ public class EntityStats : MonoBehaviour
 
 
         //calculate melee_AR
-        float AR_str = strength;
+        float AR_str = str_adjusted;
         float AR_dex = dex_adjusted;
         if (equipped_meleeWeapon != null)
         {
@@ -304,6 +304,18 @@ public class EntityStats : MonoBehaviour
         degrees_of_accuracy = 1f / ((0.0015f * ranged_attackRating) + (1f / 180f));
 
         //Debug.Log($"{gameObject.name}: melee_DR {melee_defenseRating}, blockChance={blockChance}, dodgeChance={dodgeChance}, parryChance={parryChance}, melee_AR: {melee_attackRating}, ranged_AR={ranged_attackRating}");
+
+        //calculate magic_AR
+        float AR_int = int_adjusted;
+        float AR_will = will_adjusted;
+        if (equipped_meleeWeapon != null)
+        {
+            AR_int += int_adjusted * equipped_meleeWeapon.MeleeWeapon.attack_intModifier;
+            AR_will += will_adjusted * equipped_meleeWeapon.MeleeWeapon.attack_willModifer;
+        }
+
+        magic_attackRating = (AR_int + AR_will) / 2;
+
     }
 
     public RuntimeItem GetEquippedByCategory(ItemCategory category)

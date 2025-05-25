@@ -1,8 +1,10 @@
 using System.Xml.Serialization;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEditor.Progress;
 
 public enum EquipState
 {
@@ -57,6 +59,18 @@ public class ProfilePanelController : MonoBehaviour
     [SerializeField] private RectTransform will_marker;
     [SerializeField] private RectTransform soul_marker;
 
+    [SerializeField] private TextMeshProUGUI meleeAR_adj_TMP;
+    [SerializeField] private TextMeshProUGUI meleeDR_adj_TMP;
+    [SerializeField] private TextMeshProUGUI rangedAR_adj_TMP;
+    [SerializeField] private TextMeshProUGUI rangedDR_adj_TMP;
+    [SerializeField] private TextMeshProUGUI magicAR_adj_TMP;
+
+    [SerializeField] private TextMeshProUGUI meleeAR_readj_TMP;
+    [SerializeField] private TextMeshProUGUI meleeDR_readj_TMP;
+    [SerializeField] private TextMeshProUGUI rangedAR_readj_TMP;
+    [SerializeField] private TextMeshProUGUI rangedDR_readj_TMP;
+    [SerializeField] private TextMeshProUGUI magicAR_readj_TMP;
+
     private EntityStats _chStats;
 
 
@@ -72,7 +86,7 @@ public class ProfilePanelController : MonoBehaviour
         _chStats = ch_obj.GetComponent<EntityStats>();
 
         UpdatePortraitPanel();
-        UpdateStatsPanel_1();
+        UpdateStatsPanels_1_2();
     }
 
 
@@ -81,7 +95,7 @@ public class ProfilePanelController : MonoBehaviour
         if (_chStats != null)
         {
             characterPortrait.sprite = _chStats.characterPortrait;
-           
+
             characterName_TMP.text = _chStats.characterName;
             UpdateHitPoints();
         }
@@ -98,13 +112,13 @@ public class ProfilePanelController : MonoBehaviour
                 $"<color=#DD9327>{((int)current)}</color><color=#1EBE05>/{((int)max)}</color>";
 
         }
-        
+
 
     }
 
-    public void UpdateStatsPanel_1()
+    public void UpdateStatsPanels_1_2()
     {
-        if (_chStats !=null)
+        if (_chStats != null)
         {
             str_base_TMP.text = $"{(int)_chStats.strength}";
             dex_base_TMP.text = $"{(int)_chStats.dexterity}";
@@ -133,11 +147,11 @@ public class ProfilePanelController : MonoBehaviour
             else
             {
                 Debug.Log("EquipPanel in Focus.");
-               
-                UpdateAllReadjustSliders(_chStats.GetEquippedByCategory( UICanvasManager.Instance.currentCatSelect) , EquipState.unequip);
+
+                UpdateAllReadjustSliders(_chStats.GetEquippedByCategory(UICanvasManager.Instance.currentCatSelect), EquipState.unequip);
 
             }
-            
+
 
             UpdateMarker(str_marker_slider, str_marker, _chStats.strength);
             UpdateMarker(dex_marker_slider, dex_marker, _chStats.dexterity);
@@ -145,7 +159,12 @@ public class ProfilePanelController : MonoBehaviour
             UpdateMarker(will_marker_slider, will_marker, _chStats.will);
             UpdateMarker(soul_marker_slider, soul_marker, _chStats.soul);
 
-           
+            UpdateAttackDefenseReadout(meleeAR_adj_TMP, _chStats.melee_attackRating);
+            UpdateAttackDefenseReadout(meleeDR_adj_TMP, _chStats.melee_defenseRating);
+            UpdateAttackDefenseReadout(rangedAR_adj_TMP, _chStats.ranged_attackRating);
+            UpdateAttackDefenseReadout(rangedDR_adj_TMP, _chStats.ranged_attackRating);
+            UpdateAttackDefenseReadout(magicAR_adj_TMP, _chStats.magic_attackRating);
+
 
 
 
@@ -154,10 +173,15 @@ public class ProfilePanelController : MonoBehaviour
         }
     }
 
+    private void UpdateAttackDefenseReadout(TextMeshProUGUI readoutText, float value)
+    {
+        readoutText.text = $"{(int)value}";
+    }
     public void UpdateAllReadjustSliders(RuntimeItem item, EquipState equipState)
     {
         if (_chStats != null && item != null && item.IsEquippable)
         {
+            //find new stats with selected equipment, if equipped or unequipped
             float newStr = ReturnAdjustStatToItemEquipUneqip(_chStats.strength, StatCategory.strength, item, equipState);
             float newDex = ReturnAdjustStatToItemEquipUneqip(_chStats.dexterity, StatCategory.dexterity, item, equipState);
             float newInt = ReturnAdjustStatToItemEquipUneqip(_chStats.intelligence, StatCategory.intelligence, item, equipState);
@@ -171,8 +195,26 @@ public class ProfilePanelController : MonoBehaviour
             UpdateReadjSlider(will_readj_slider, will_readj_TMP, _chStats.will_adjusted, newWill);
             UpdateReadjSlider(soul_readj_slider, soul_readj_TMP, _chStats.soul, newSoul);
 
+
+            float newMeleeAR = ReturnAdjustedMeleeAR(item, newStr, newDex, equipState);
+            float newMeleeDR = ReturnAdjustedMeleeDR(item, newStr, newDex, equipState);
+           
+            float newRangedAR = ReturnAdjustedRangedAR(item, newDex, newInt, equipState);
+            float newRangedDR = ReturnAdjustedRangedDR(item, newDex, equipState);
+            float newMagicAR = ReturnAdjustedMagicAR(item, newInt, newWill, equipState);
+
+
+            UpdateReadjARDR(meleeAR_readj_TMP, _chStats.melee_attackRating, newMeleeAR);
+            Debug.Log("Return newMeleeDR=" + newMeleeDR);
+            Debug.Log("Exisiting MeleeDR=" + _chStats.melee_defenseRating);
+            UpdateReadjARDR(meleeDR_readj_TMP, _chStats.melee_defenseRating, newMeleeDR);
+            UpdateReadjARDR(rangedAR_readj_TMP, _chStats.ranged_attackRating, newRangedAR);
+            UpdateReadjARDR(rangedDR_readj_TMP, _chStats.ranged_defenseRating, newRangedDR);
+            UpdateReadjARDR(magicAR_readj_TMP, _chStats.magic_attackRating, newMagicAR);
+
+
         }
-        else 
+        else
         {
             str_readj_slider.gameObject.SetActive(false);
             str_readj_TMP.enabled = false;
@@ -192,7 +234,311 @@ public class ProfilePanelController : MonoBehaviour
         }
     }
 
+    private void UpdateReadjARDR(TextMeshProUGUI readoutText, float originalValue,  float newValue)
+    {
+        if (newValue != originalValue)
+        {
+            readoutText.enabled = true;
+            readoutText.text = $"{(int)newValue}";
+        }
+        else
+        {
+            readoutText.enabled = false;
+        }
 
+    }
+
+    private float ReturnAdjustedMeleeAR(RuntimeItem item, float newStr, float newDex, EquipState equipState)
+    {
+        float AR_str;
+        float AR_dex;
+
+        if (equipState == EquipState.equip)
+        {
+            if (item.category == ItemCategory.melee_weapon)
+            {
+                AR_str = newStr + (newStr * item.MeleeWeapon.attack_strModifier);
+                AR_dex = newDex + (newDex * item.MeleeWeapon.attack_dexModifier);
+            }
+            else if (_chStats.equipped_meleeWeapon != null)
+            {
+                AR_str = newStr + (newStr * _chStats.equipped_meleeWeapon.MeleeWeapon.attack_strModifier);
+                AR_dex = newDex + (newDex * _chStats.equipped_meleeWeapon.MeleeWeapon.attack_dexModifier);
+            }
+            else
+            {
+                AR_str = newStr;
+                AR_dex = newDex;
+            }
+
+            return ((AR_str + AR_dex) / 2);
+        }
+        else if (equipState == EquipState.unequip)
+        {
+            if (item.category == ItemCategory.melee_weapon || _chStats.equipped_meleeWeapon == null)
+            {
+                AR_str = newStr;
+                AR_dex = newDex;
+            }
+            else
+            {
+                AR_str = newStr + (newStr * _chStats.equipped_meleeWeapon.MeleeWeapon.attack_strModifier);
+                AR_dex = newDex + (newDex * _chStats.equipped_meleeWeapon.MeleeWeapon.attack_dexModifier);
+            }
+
+
+            return ((newStr + newDex) / 2);
+
+        }
+        else
+        {
+            Debug.Log("Undefined EquipState specified.");
+            return 0f;
+        }
+    }
+    private float ReturnAdjustedMeleeDR(RuntimeItem item, float newStr, float newDex, EquipState equipState)
+    {
+        Debug.Log("Calculating MeleeDR with " + item.item_name + " newStr=" + newStr + " newDex=" + newDex);
+        float DR_str;
+        float DR_dex;
+
+        if (equipState == EquipState.equip)
+        {
+            //find DR_str for DR calculation
+            if (item.category == ItemCategory.shield)
+            {
+                DR_str = newStr + (newStr * item.Shield.defense_strModifier);
+            }
+            else if (_chStats.equipped_shield != null)
+            {
+                DR_str = newStr + (newStr * _chStats.equipped_shield.Shield.defense_strModifier);
+            }
+            else
+            {
+                DR_str = newStr;
+            }
+
+            //find DR_dex for DR calculation
+            if (item.category == ItemCategory.melee_weapon)
+            {
+                DR_dex = newDex + (newDex * item.MeleeWeapon.defense_dexModifier);
+            }
+            else if (_chStats.equipped_meleeWeapon != null)
+            {
+                DR_dex = newDex + (newDex * _chStats.equipped_meleeWeapon.MeleeWeapon.defense_dexModifier);
+            }
+            else
+            {
+                DR_dex = newDex;
+            }
+
+            Debug.Log("DR_str=" + DR_str + " DR_dex=" + DR_dex);
+;            return ((DR_str + DR_dex) / 2);
+        }
+        else if (equipState == EquipState.unequip)
+        {
+            if (item.category == ItemCategory.shield || _chStats.equipped_shield == null)
+            {
+                DR_str = newStr;
+            }
+            else
+            {
+                DR_str = newStr + (newStr * _chStats.equipped_shield.Shield.defense_strModifier);
+            }
+
+            if (item.category == ItemCategory.melee_weapon || _chStats.equipped_meleeWeapon == null)
+            {
+                DR_dex = newDex;
+            }
+            else
+            {
+                DR_dex = newDex + (newDex * _chStats.equipped_meleeWeapon.MeleeWeapon.defense_dexModifier);
+            }
+
+            return ((DR_str + DR_dex) / 2);
+
+
+        }
+        else
+        {
+            Debug.Log("Undefined EquipState specified.");
+            return 0f;
+        }
+
+    }
+
+    private float ReturnAdjustedRangedAR(RuntimeItem item, float newDex, float newInt, EquipState equipState)
+    {
+
+
+        if (equipState == EquipState.equip)
+        {
+            float rangedBonus = 0f;
+            
+            if (item.category == ItemCategory.ranged_weapon)
+            {
+                rangedBonus += newDex * item.RangedWeapon.attack_dexModifier;
+            }
+            else if (_chStats.equipped_rangedWeapon != null)
+            {
+                rangedBonus += newDex * _chStats.equipped_rangedWeapon.RangedWeapon.attack_dexModifier;
+            }
+            else
+            {
+                //leave rangedBonus at 0
+            }
+
+            if (item.category == ItemCategory.missile)
+            {
+                rangedBonus += newDex * item.Missile.attack_dexModifier;
+            }
+            else if (_chStats.equipped_missile != null)
+            {
+                rangedBonus += newDex * _chStats.equipped_missile.Missile.attack_dexModifier;
+            }
+            else
+            { 
+                //leave ranged unmodified
+            }
+
+            return ( (newDex + rangedBonus + newInt) / 2);
+
+        }
+        else if (equipState == EquipState.unequip)
+        {
+            float rangedBonus = 0f;
+
+            if (item.category != ItemCategory.ranged_weapon && _chStats.equipped_rangedWeapon != null)
+            {
+                rangedBonus += newDex * _chStats.equipped_rangedWeapon.RangedWeapon.attack_dexModifier;
+            }
+            else
+            {
+                //leave rangedBonus at 0
+            }
+
+            if (item.category != ItemCategory.missile && _chStats.equipped_missile != null)
+            {
+                rangedBonus += newDex * _chStats.equipped_missile.Missile.attack_dexModifier;
+            }
+            else
+            {
+                //leave rangedBonus unmodified
+            }
+
+            return ((newDex + rangedBonus + newInt) / 2);
+        }
+        else
+        {
+            Debug.Log("Undefined EquipState specified.");
+            return 0f;
+        }
+
+    }
+
+
+
+
+    private float ReturnAdjustedRangedDR(RuntimeItem item, float newDex, EquipState equipState)
+    {
+        float rangedDR_dex;
+
+        if (equipState == EquipState.equip)
+        {
+            if (item.category == ItemCategory.shield)
+            {
+                rangedDR_dex = newDex + (newDex * item.Shield.defense_dexModifier);
+            }
+            else if (_chStats.equipped_shield != null)
+            {
+                rangedDR_dex = newDex + (newDex * _chStats.equipped_shield.Shield.defense_dexModifier);
+            }
+            else
+            {
+                rangedDR_dex = newDex;
+            }
+
+            return rangedDR_dex;
+
+        }
+        else if (equipState == EquipState.unequip)
+        {
+
+            if (item.category != ItemCategory.shield && _chStats.equipped_shield != null)
+            {
+                rangedDR_dex = newDex + (newDex * _chStats.equipped_shield.Shield.defense_dexModifier);
+            }
+            else
+            {
+                rangedDR_dex= newDex;
+            }
+
+            return rangedDR_dex;
+
+
+        }
+        else
+        {
+            Debug.Log("Undefined EquipState specified.");
+            return 0f;
+        }
+
+    }
+
+    private float ReturnAdjustedMagicAR(RuntimeItem item, float newInt, float newWill, EquipState equipState)
+    {
+        if (equipState == EquipState.equip)
+        {
+            float AR_int;
+            float AR_will;
+
+            if (item.category == ItemCategory.melee_weapon)
+            {
+                AR_int = newInt + (newInt * item.MeleeWeapon.attack_intModifier);
+                AR_will = newWill + (newWill * item.MeleeWeapon.attack_willModifer);
+            }
+            else if (_chStats.equipped_meleeWeapon != null)
+            {
+                AR_int = newInt + (_chStats.equipped_meleeWeapon.MeleeWeapon.attack_intModifier);
+                AR_will = newWill + (_chStats.equipped_meleeWeapon.MeleeWeapon.attack_willModifer);
+            }
+            else
+            {
+                AR_int = newInt;
+                AR_will = newWill;
+            }
+
+            return ( (AR_int + AR_will) / 2 );
+        }
+        else if (equipState == EquipState.unequip )
+        {
+            float AR_int;
+            float AR_will;
+
+            if (item.category != ItemCategory.melee_weapon && _chStats.equipped_meleeWeapon != null)
+            {
+                AR_int = newInt + (_chStats.equipped_meleeWeapon.MeleeWeapon.attack_intModifier);
+                AR_will = newWill + (_chStats.equipped_meleeWeapon.MeleeWeapon.attack_willModifer);
+            }
+            else
+            {
+                AR_int = newInt;
+                AR_will = newWill;
+            }
+
+            return ((AR_int + AR_will) / 2);
+
+
+        }
+        else
+        {
+            Debug.Log("Undefined EquipState specified.");
+            return 0f;
+        }
+
+
+
+    }
     private void UpdateMarker(Slider slider, RectTransform marker, float value)
     {
 
@@ -209,9 +555,9 @@ public class ProfilePanelController : MonoBehaviour
 
     private void UpdateAdjustedSlider(Slider slider, float adjustedValue)
     {
-       
-            slider.value = adjustedValue;
-        
+
+        slider.value = adjustedValue;
+
     }
 
     private void UpdateReadjSlider(Slider slider, TextMeshProUGUI readoutText, float adjustedValue, float readjustedValue)
@@ -230,6 +576,9 @@ public class ProfilePanelController : MonoBehaviour
         }
     }
 
+
+
+    // *** equip/unequip calculations
     private float ReturnAdjustStatToItemEquipUneqip(float stat, StatCategory statCategory, RuntimeItem item, EquipState equipState)
     {
         float adjustedStat;

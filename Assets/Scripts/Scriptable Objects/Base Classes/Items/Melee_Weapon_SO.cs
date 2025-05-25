@@ -13,6 +13,9 @@ public class Melee_Weapon_SO : Weapon_SO
     public float attack_strModifier;
     public float attack_dexModifier;
 
+    public float attack_intModifier;
+    public float attack_willModifer;
+
     //Audio
     public string hitAudio_ID;
     public string missAudio_ID;

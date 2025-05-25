@@ -24,8 +24,8 @@ MonoBehaviour:
   maxStack: 1
   attachedCharms: []
   strModifier:
-    operatorType: 0
-    amount: 0
+    operatorType: 1
+    amount: -3
   dexModifier:
     operatorType: 1
     amount: -3

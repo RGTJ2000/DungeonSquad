@@ -49,8 +49,10 @@ MonoBehaviour:
   melee_reach: 1
   melee_damageBase: 10
   melee_damageRange: 5
-  defense_dexModifier: 0.5
-  attack_strModifier: 0.25
-  attack_dexModifier: 0.25
+  defense_dexModifier: 0
+  attack_strModifier: 0
+  attack_dexModifier: 0
+  attack_intModifier: 0
+  attack_willModifer: 0
   hitAudio_ID: swordHit
   missAudio_ID: swordMiss
