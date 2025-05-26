@@ -35,6 +35,7 @@ public class ProfilePanelController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI will_readj_TMP;
     [SerializeField] private TextMeshProUGUI soul_readj_TMP;
 
+
     [SerializeField] private Slider str_adj_slider;
     [SerializeField] private Slider dex_adj_slider;
     [SerializeField] private Slider int_adj_slider;
@@ -70,6 +71,35 @@ public class ProfilePanelController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI rangedAR_readj_TMP;
     [SerializeField] private TextMeshProUGUI rangedDR_readj_TMP;
     [SerializeField] private TextMeshProUGUI magicAR_readj_TMP;
+
+    [SerializeField] private TextMeshProUGUI confusion_DR_TMP;
+    [SerializeField] private TextMeshProUGUI fear_DR_TMP;
+    [SerializeField] private TextMeshProUGUI fire_DR_TMP;
+    [SerializeField] private TextMeshProUGUI frost_DR_TMP;
+    [SerializeField] private TextMeshProUGUI poison_DR_TMP;
+    [SerializeField] private TextMeshProUGUI sleep_DR_TMP;
+
+    [SerializeField] private TextMeshProUGUI confusion_DR_readj_TMP;
+    [SerializeField] private TextMeshProUGUI fear_DR_readj_TMP;
+    [SerializeField] private TextMeshProUGUI fire_DR_readj_TMP;
+    [SerializeField] private TextMeshProUGUI frost_DR_readj_TMP;
+    [SerializeField] private TextMeshProUGUI poison_DR_readj_TMP;
+    [SerializeField] private TextMeshProUGUI sleep_DR_readj_TMP;
+
+    Color32 greenCRT_color = new Color32(30, 190, 5, 255);
+    Color32 amberCRT_color_transparent = new Color32(221, 147, 39, 150);
+    Color32 amberCRT_color_solid = new Color32(221, 147, 39, 255);
+    Color32 blueCRT_color_transparent = new Color32(85, 85, 255, 150);
+    Color32 blueCRT_color_solid = new Color32(85, 85, 255, 255);
+    //Color32 lightBlueCRT_color_transparent = new Color32(20, 131, 227, 150);
+    //Color32 lightBlueCRT_color_solid = new Color32(20, 131, 227, 255);
+
+    Color32 lightBlueCRT_color_transparent = new Color32(85, 255, 255, 150);
+    Color32 lightBlueCRT_color_solid = new Color32(85, 255, 255, 255);
+    Color32 redCRT_color_solid = new Color32(196, 0, 0, 255);
+    Color32 redCRT_color_transparent = new Color32(196, 0, 0, 150);
+
+
 
     private EntityStats _chStats;
 
@@ -142,13 +172,13 @@ public class ProfilePanelController : MonoBehaviour
             {
                 Debug.Log("Not EquipPanel Focus.");
                 int inventoryIndex = UICanvasManager.Instance.inventoryIndex;
-                UpdateAllReadjustSliders(UICanvasManager.Instance.inventoryItems[inventoryIndex], EquipState.equip);
+                UpdateReadjustSlidersAndStats(UICanvasManager.Instance.inventoryItems[inventoryIndex], EquipState.equip);
             }
             else
             {
                 Debug.Log("EquipPanel in Focus.");
 
-                UpdateAllReadjustSliders(_chStats.GetEquippedByCategory(UICanvasManager.Instance.currentCatSelect), EquipState.unequip);
+                UpdateReadjustSlidersAndStats(_chStats.GetEquippedByCategory(UICanvasManager.Instance.currentCatSelect), EquipState.unequip);
 
             }
 
@@ -159,13 +189,18 @@ public class ProfilePanelController : MonoBehaviour
             UpdateMarker(will_marker_slider, will_marker, _chStats.will);
             UpdateMarker(soul_marker_slider, soul_marker, _chStats.soul);
 
-            UpdateAttackDefenseReadout(meleeAR_adj_TMP, _chStats.melee_attackRating);
-            UpdateAttackDefenseReadout(meleeDR_adj_TMP, _chStats.melee_defenseRating);
-            UpdateAttackDefenseReadout(rangedAR_adj_TMP, _chStats.ranged_attackRating);
-            UpdateAttackDefenseReadout(rangedDR_adj_TMP, _chStats.ranged_attackRating);
-            UpdateAttackDefenseReadout(magicAR_adj_TMP, _chStats.magic_attackRating);
+            UpdateReadout(meleeAR_adj_TMP, _chStats.melee_attackRating);
+            UpdateReadout(meleeDR_adj_TMP, _chStats.melee_defenseRating);
+            UpdateReadout(rangedAR_adj_TMP, _chStats.ranged_attackRating);
+            UpdateReadout(rangedDR_adj_TMP, _chStats.ranged_attackRating);
+            UpdateReadout(magicAR_adj_TMP, _chStats.magic_attackRating);
 
-
+            UpdateReadout(confusion_DR_TMP, _chStats.confusion_defenseRating);
+            UpdateReadout(fear_DR_TMP, _chStats.fear_defenseRating);
+            UpdateReadout(fire_DR_TMP, _chStats.fire_defenseRating);
+            UpdateReadout(frost_DR_TMP, _chStats.frost_defenseRating);
+            UpdateReadout(poison_DR_TMP, _chStats.poison_defenseRating);
+            UpdateReadout(sleep_DR_TMP, _chStats.sleep_defenseRating);
 
 
 
@@ -173,11 +208,13 @@ public class ProfilePanelController : MonoBehaviour
         }
     }
 
-    private void UpdateAttackDefenseReadout(TextMeshProUGUI readoutText, float value)
+    
+
+    private void UpdateReadout(TextMeshProUGUI readoutText, float value)
     {
         readoutText.text = $"{(int)value}";
     }
-    public void UpdateAllReadjustSliders(RuntimeItem item, EquipState equipState)
+    public void UpdateReadjustSlidersAndStats(RuntimeItem item, EquipState equipState)
     {
         if (_chStats != null && item != null && item.IsEquippable)
         {
@@ -195,49 +232,100 @@ public class ProfilePanelController : MonoBehaviour
             UpdateReadjSlider(will_readj_slider, will_readj_TMP, _chStats.will_adjusted, newWill);
             UpdateReadjSlider(soul_readj_slider, soul_readj_TMP, _chStats.soul, newSoul);
 
-
+            //calculate readjustedARDRs
             float newMeleeAR = ReturnAdjustedMeleeAR(item, newStr, newDex, equipState);
             float newMeleeDR = ReturnAdjustedMeleeDR(item, newStr, newDex, equipState);
-           
             float newRangedAR = ReturnAdjustedRangedAR(item, newDex, newInt, equipState);
             float newRangedDR = ReturnAdjustedRangedDR(item, newDex, equipState);
             float newMagicAR = ReturnAdjustedMagicAR(item, newInt, newWill, equipState);
 
 
-            UpdateReadjARDR(meleeAR_readj_TMP, _chStats.melee_attackRating, newMeleeAR);
-            Debug.Log("Return newMeleeDR=" + newMeleeDR);
-            Debug.Log("Exisiting MeleeDR=" + _chStats.melee_defenseRating);
-            UpdateReadjARDR(meleeDR_readj_TMP, _chStats.melee_defenseRating, newMeleeDR);
-            UpdateReadjARDR(rangedAR_readj_TMP, _chStats.ranged_attackRating, newRangedAR);
-            UpdateReadjARDR(rangedDR_readj_TMP, _chStats.ranged_defenseRating, newRangedDR);
-            UpdateReadjARDR(magicAR_readj_TMP, _chStats.magic_attackRating, newMagicAR);
+            UpdateReadjustReadout(meleeAR_readj_TMP, _chStats.melee_attackRating, newMeleeAR);
+            UpdateReadjustReadout(meleeDR_readj_TMP, _chStats.melee_defenseRating, newMeleeDR);
+            UpdateReadjustReadout(rangedAR_readj_TMP, _chStats.ranged_attackRating, newRangedAR);
+            UpdateReadjustReadout(rangedDR_readj_TMP, _chStats.ranged_defenseRating, newRangedDR);
+            UpdateReadjustReadout(magicAR_readj_TMP, _chStats.magic_attackRating, newMagicAR);
+
+            //calculate resistDRs
+            float newConfusionDR = ReturnAdjustedResistDR(newInt, newWill);
+            float newFearDR = ReturnAdjustedResistDR(newInt, newSoul);
+            float newFireDR = ReturnAdjustedResistDR(newStr, newWill);
+            float newFrostDR = ReturnAdjustedResistDR(newDex, newSoul);
+            float newPoisonDR = ReturnAdjustedResistDR(newStr, newSoul);
+            float newSleepDR = ReturnAdjustedResistDR(newStr, newInt);
+
+            UpdateReadjustReadout(confusion_DR_readj_TMP, _chStats.confusion_defenseRating, newConfusionDR);
+            UpdateReadjustReadout(fear_DR_readj_TMP, _chStats.fear_defenseRating, newFearDR);
+            UpdateReadjustReadout(fire_DR_readj_TMP, _chStats.fire_defenseRating, newFireDR);
+            UpdateReadjustReadout(frost_DR_readj_TMP, _chStats.frost_defenseRating, newFrostDR);
+            UpdateReadjustReadout(poison_DR_readj_TMP, _chStats.poison_defenseRating, newPoisonDR);
+            UpdateReadjustReadout(sleep_DR_readj_TMP, _chStats.sleep_defenseRating, newSleepDR);
 
 
         }
         else
         {
             str_readj_slider.gameObject.SetActive(false);
+            str_readj_TMP.transform.parent.gameObject.SetActive(false);
             str_readj_TMP.enabled = false;
 
             dex_readj_slider.gameObject.SetActive(false);
+            dex_readj_TMP.transform.parent.gameObject.SetActive(false);
             dex_readj_TMP.enabled = false;
 
             int_readj_slider.gameObject.SetActive(false);
+            int_readj_TMP.transform.parent.gameObject.SetActive(false);
             int_readj_TMP.enabled = false;
 
             will_readj_slider.gameObject.SetActive(false);
+            will_readj_TMP.transform.parent.gameObject.SetActive(false);
             will_readj_TMP.enabled = false;
 
             soul_readj_slider.gameObject.SetActive(false);
+            soul_readj_TMP.transform.parent.gameObject.SetActive(false);
             soul_readj_TMP.enabled = false;
+
+            meleeAR_readj_TMP.enabled = false;
+            meleeDR_readj_TMP.enabled = false;
+            rangedAR_readj_TMP.enabled= false;
+            rangedDR_readj_TMP.enabled = false;
+            magicAR_readj_TMP.enabled = false;
+
+
+            confusion_DR_readj_TMP.enabled = false;
+            fear_DR_readj_TMP.enabled = false;
+            fire_DR_readj_TMP.enabled = false;
+            frost_DR_readj_TMP.enabled = false;
+            poison_DR_readj_TMP.enabled = false;
+            sleep_DR_readj_TMP.enabled = false;
 
         }
     }
 
-    private void UpdateReadjARDR(TextMeshProUGUI readoutText, float originalValue,  float newValue)
+    private float ReturnAdjustedResistDR(float stat1, float stat2)
+    {
+        return (stat1 + stat2) / 2;
+
+        //add code for amulet resists
+
+    }
+    private void UpdateReadjustReadout(TextMeshProUGUI readoutText, float originalValue,  float newValue)
     {
         if (newValue != originalValue)
         {
+
+            if (newValue < originalValue)
+            {
+                //decrease
+                readoutText.color = amberCRT_color_solid;
+            }
+            else
+            {
+                //increase
+                readoutText.color = lightBlueCRT_color_solid;
+            }
+
+
             readoutText.enabled = true;
             readoutText.text = $"{(int)newValue}";
         }
@@ -298,7 +386,7 @@ public class ProfilePanelController : MonoBehaviour
     }
     private float ReturnAdjustedMeleeDR(RuntimeItem item, float newStr, float newDex, EquipState equipState)
     {
-        Debug.Log("Calculating MeleeDR with " + item.item_name + " newStr=" + newStr + " newDex=" + newDex);
+        
         float DR_str;
         float DR_dex;
 
@@ -332,7 +420,7 @@ public class ProfilePanelController : MonoBehaviour
                 DR_dex = newDex;
             }
 
-            Debug.Log("DR_str=" + DR_str + " DR_dex=" + DR_dex);
+            
 ;            return ((DR_str + DR_dex) / 2);
         }
         else if (equipState == EquipState.unequip)
@@ -435,9 +523,6 @@ public class ProfilePanelController : MonoBehaviour
         }
 
     }
-
-
-
 
     private float ReturnAdjustedRangedDR(RuntimeItem item, float newDex, EquipState equipState)
     {
@@ -566,11 +651,29 @@ public class ProfilePanelController : MonoBehaviour
         {
             slider.gameObject.SetActive(false);
             readoutText.enabled = false;
+            readoutText.transform.parent.gameObject.SetActive(false);
+
         }
         else
         {
+            Image fillImage = slider.gameObject.GetComponentInChildren<Image>();
+
+            if (readjustedValue < adjustedValue)
+            {
+                //decrease
+                fillImage.color = amberCRT_color_transparent;
+                readoutText.color = amberCRT_color_solid;
+            }
+            else
+            {
+                //increase
+                fillImage.color = lightBlueCRT_color_transparent;
+                readoutText.color = lightBlueCRT_color_solid;
+            }
+
             slider.value = readjustedValue;
             readoutText.text = $"{(int)readjustedValue}";
+            readoutText.transform.parent.gameObject.SetActive(true);
             readoutText.enabled = true;
             slider.gameObject.SetActive(true);
         }

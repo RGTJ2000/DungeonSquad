@@ -1285,7 +1285,7 @@ public class UICanvasManager : ManagerBase<UICanvasManager>
             DeselectInventoryItem(inventoryEntries[inventoryIndex]);
 
             //update profilepanel to show dequip stats
-            _profilePanelController.UpdateAllReadjustSliders( current_character.GetComponent<EntityStats>().GetEquippedByCategory(currentCatSelect), EquipState.unequip);
+            _profilePanelController.UpdateReadjustSlidersAndStats( current_character.GetComponent<EntityStats>().GetEquippedByCategory(currentCatSelect), EquipState.unequip);
 
             equipPanelFocus = true;
         }
@@ -1315,7 +1315,7 @@ public class UICanvasManager : ManagerBase<UICanvasManager>
             UpdateCategorySelection(inventoryItems[inventoryIndex].category);
 
             //update profile panel to show new equipstats
-            _profilePanelController.UpdateAllReadjustSliders(inventoryItems[inventoryIndex], EquipState.equip);
+            _profilePanelController.UpdateReadjustSlidersAndStats(inventoryItems[inventoryIndex], EquipState.equip);
 
             equipPanelFocus = false;
 
@@ -1631,7 +1631,7 @@ public class UICanvasManager : ManagerBase<UICanvasManager>
             if (equipPanelFocus)
             {
 
-                _profilePanelController.UpdateAllReadjustSliders(current_character.GetComponent<EntityStats>().GetEquippedByCategory(currentCatSelect), EquipState.unequip);
+                _profilePanelController.UpdateReadjustSlidersAndStats(current_character.GetComponent<EntityStats>().GetEquippedByCategory(currentCatSelect), EquipState.unequip);
             }
 
 
@@ -1708,7 +1708,7 @@ public class UICanvasManager : ManagerBase<UICanvasManager>
             dropText.gameObject.SetActive(true);
             background.color = new Color32(221, 147, 39, 20);
 
-            _profilePanelController.UpdateAllReadjustSliders(inventoryItems[inventoryIndex], EquipState.equip);
+            _profilePanelController.UpdateReadjustSlidersAndStats(inventoryItems[inventoryIndex], EquipState.equip);
         }
 
         /*

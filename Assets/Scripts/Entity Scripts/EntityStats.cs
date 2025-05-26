@@ -49,12 +49,49 @@ public class EntityStats : MonoBehaviour
 
     public float magic_attackRating = 15f;
     //public float magic_defenseRating = 10f;
-    public float confusion_defenseRating = 10f;
-    public float fear_defenseRating = 10f;
-    public float fire_defenseRating = 10f;
-    public float frost_defenseRating = 10f;
-    public float poison_defenseRating = 10f;
-    public float sleep_defenseRating = 10f;
+
+    //****Status Defenses
+    public float confusion_defenseRating;
+    public float fear_defenseRating;
+    public float fire_defenseRating;
+    public float frost_defenseRating;
+    public float poison_defenseRating;
+    public float sleep_defenseRating;
+
+    public float confusion_AL = 20;  //Activation Limit (AL)
+    public float fear_AL = 20;
+    public float fire_AL = 20;
+    public float frost_AL = 20;
+    public float poison_AL = 20;
+    public float sleep_AL = 20;
+
+    public float confusion_AL_adjusted;
+    public float fear_AL_adjusted;
+    public float fire_AL_adjusted;
+    public float frost_AL_adjusted;
+    public float poison_AL_adjusted;
+    public float sleep_AL_adjusted;
+
+    public float confusion_dissipationRate = 1f; //Dissipation Factor
+    public float fear_dissipationRate = 1f;
+    public float fire_dissipationRate = 2f;
+    public float frost_dissipationRate = 1f;
+    public float poison_dissipationRate = 1f;
+    public float sleep_dissipationRate = 1f;
+
+    public float confusion_dissipationRate_adjusted;
+    public float fear_dissipationRate_adjusted;
+    public float fire_dissipationRate_adjusted;
+    public float frost_dissipationRate_adjusted;
+    public float poison_dissipationRate_adjusted;
+    public float sleep_dissipationRate_adjusted;
+
+    public float confusion_damageMultiplier = 1f;
+    public float fear_damageMultiplier = 1f;
+    public float fire_damageMultiplier = 2f;
+    public float frost_damageMultiplier = 1f;
+    public float poison_damageMultiplier = 1f;
+    public float sleep_damageMultiplier = 1f;
 
 
     public RuntimeItem equipped_meleeWeapon = null;
@@ -79,26 +116,9 @@ public class EntityStats : MonoBehaviour
 
     public Skill_SO selected_skill;
 
-    public float confusion_AL = 20;
-    public float fear_AL = 20;
-    public float fire_AL = 20;
-    public float frost_AL = 20;
-    public float poison_AL = 20;
-    public float sleep_AL = 20;
+  
 
-    public float confusion_dissipationRate = 1f;
-    public float fear_dissipationRate = 1f;
-    public float fire_dissipationRate = 2f;
-    public float frost_dissipationRate = 1f;
-    public float poison_dissipationRate = 1f;
-    public float sleep_dissipationRate = 1f;
-
-    public float confusion_damageMultiplier = 1f;
-    public float fear_damageMultiplier = 1f;
-    public float fire_damageMultiplier = 2f;
-    public float frost_damageMultiplier = 1f;
-    public float poison_damageMultiplier = 1f;
-    public float sleep_damageMultiplier = 1f;
+   
 
     private void Awake()
     {
@@ -109,6 +129,9 @@ public class EntityStats : MonoBehaviour
         int_adjusted = intelligence;
         will_adjusted = will;
         soul_adjusted = soul;
+
+      
+
     }
 
     private void Start()
@@ -124,17 +147,75 @@ public class EntityStats : MonoBehaviour
 
     public void UpdateAdjustedStats()
     {
-
+        //1) adjusted stats
         str_adjusted = AdjustStatToEquipment(strength, StatCategory.strength);
         dex_adjusted = AdjustStatToEquipment(dexterity, StatCategory.dexterity);
         int_adjusted = AdjustStatToEquipment(intelligence, StatCategory.intelligence);
         will_adjusted = AdjustStatToEquipment(will, StatCategory.will);
         soul_adjusted = AdjustStatToEquipment(soul, StatCategory.soul);
 
-        // Debug.Log($"{gameObject.name} AdjStats: str:{str_adjusted}, dex:{dex_adjusted}, int:{int_adjusted}, will:{will_adjusted}, soul:{soul_adjusted}");
+        //2) AD DR's
         UpdateAttackDefenseRatings();
+
+        //3 Resists
+        UpdateResistStats();
     }
 
+    private void UpdateResistStats()
+    {
+        //***Resist DRs
+        //calculated as the character's base resist modified by their stats
+
+        confusion_defenseRating = CalculateResistDR(int_adjusted, will_adjusted);
+        fear_defenseRating =  CalculateResistDR(int_adjusted, soul_adjusted);
+
+        fire_defenseRating = CalculateResistDR(str_adjusted, will_adjusted);
+        frost_defenseRating = CalculateResistDR(dex_adjusted, soul_adjusted);
+
+        poison_defenseRating = CalculateResistDR(str_adjusted, soul_adjusted);
+        sleep_defenseRating = CalculateResistDR(str_adjusted, int_adjusted);
+
+        //**Resist AL_adjusted
+        confusion_AL_adjusted = Mathf.Max(confusion_AL + (confusion_AL * BonusFactorFromDR(confusion_defenseRating)), 1f);
+        fear_AL_adjusted = Mathf.Max(fear_AL + (fear_AL * BonusFactorFromDR(fear_defenseRating)), 1f);
+        fire_AL_adjusted = Mathf.Max(fire_AL + (fire_AL * BonusFactorFromDR(fire_defenseRating)), 1f);
+        frost_AL_adjusted = Mathf.Max(frost_AL + (frost_AL * BonusFactorFromDR(frost_defenseRating)), 1f);
+        poison_AL_adjusted = Mathf.Max(poison_AL + (poison_AL * BonusFactorFromDR(poison_defenseRating)), 1f);
+        sleep_AL_adjusted = Mathf.Max(sleep_AL + (sleep_AL * BonusFactorFromDR(sleep_defenseRating)), 1f);
+
+        //***Resist DissipationRates adjusted
+        confusion_dissipationRate_adjusted = confusion_dissipationRate * (1 + BonusFactorFromDR(confusion_defenseRating));
+        fear_dissipationRate_adjusted = fear_dissipationRate * (1 + BonusFactorFromDR(fear_defenseRating));
+        fire_dissipationRate_adjusted = fire_dissipationRate * (1 + BonusFactorFromDR(fire_defenseRating));
+        frost_dissipationRate_adjusted = frost_dissipationRate * (1 + BonusFactorFromDR(frost_defenseRating));
+        poison_dissipationRate_adjusted = poison_dissipationRate * (1 + BonusFactorFromDR(poison_defenseRating));
+        sleep_dissipationRate_adjusted = sleep_dissipationRate * (1 + BonusFactorFromDR(sleep_defenseRating));
+
+
+    }
+
+    private float BonusFactorFromDR(float DR_value)
+    {
+        return (DR_value - 50) / 50;
+    }
+
+
+    private float CalculateResistDR(float stat1, float stat2)
+    {
+        return (stat1 + stat2) / 2;
+
+        //add code for amulet resists
+    }
+
+    private float CalculateResistAL(float baseResist, float stat1,  float stat2)
+    {
+        float statAverage = (stat1 + stat2) / 2f;
+        float statBonus = (statAverage - 50f)/2f;
+        float newValue = baseResist + statBonus;
+        Debug.Log("statAve=" + statAverage + " statBonus=" + statBonus);
+        return Mathf.Max( newValue, 1f);
+
+    }
     private float AdjustStatToEquipment(float stat, StatCategory category)
     {
         float adjustedStat;

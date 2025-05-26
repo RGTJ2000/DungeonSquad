@@ -119,6 +119,18 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &11323087 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3897714096606190861, guid: fbcab680c8a31b6449e09c6308cbc469,
+    type: 3}
+  m_PrefabInstance: {fileID: 845498381}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &42325677
 GameObject:
   m_ObjectHideFlags: 0
@@ -440,6 +452,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &68891747 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3897714096606190861, guid: fbcab680c8a31b6449e09c6308cbc469,
+    type: 3}
+  m_PrefabInstance: {fileID: 1252209399}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &87742329
 GameObject:
   m_ObjectHideFlags: 0
@@ -831,7 +855,7 @@ PrefabInstance:
     - target: {fileID: 364166043061640401, guid: fbcab680c8a31b6449e09c6308cbc469,
         type: 3}
       propertyPath: m_Name
-      value: ResistReadoutPanel
+      value: ConfusionPanel
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -952,6 +976,30 @@ Transform:
   m_Children: []
   m_Father: {fileID: 566565174}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &256058436 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3039032791353880444, guid: fbcab680c8a31b6449e09c6308cbc469,
+    type: 3}
+  m_PrefabInstance: {fileID: 954000783}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &295389183 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3897714096606190861, guid: fbcab680c8a31b6449e09c6308cbc469,
+    type: 3}
+  m_PrefabInstance: {fileID: 353126065}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &304651841
 GameObject:
   m_ObjectHideFlags: 0
@@ -1501,12 +1549,12 @@ PrefabInstance:
     - target: {fileID: 364166043061640401, guid: fbcab680c8a31b6449e09c6308cbc469,
         type: 3}
       propertyPath: m_Name
-      value: ResistReadoutPanel (1)
+      value: FearPanel
       objectReference: {fileID: 0}
     - target: {fileID: 8424051573980848704, guid: fbcab680c8a31b6449e09c6308cbc469,
         type: 3}
       propertyPath: m_text
-      value: 'SLEEP:'
+      value: 'FEAR:'
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1854,6 +1902,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &501086762 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3897714096606190861, guid: fbcab680c8a31b6449e09c6308cbc469,
+    type: 3}
+  m_PrefabInstance: {fileID: 1919626171}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &502732144 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7667432817004733077, guid: 0610d2c7953ff254d961812ed5bdecc4,
@@ -1936,11 +1996,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &601033215 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3039032791353880444, guid: fbcab680c8a31b6449e09c6308cbc469,
+    type: 3}
+  m_PrefabInstance: {fileID: 845498381}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &601871565 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8424164776549969251, guid: 0c2507a38640df04a84d9fc5a2f5ca11,
     type: 3}
   m_PrefabInstance: {fileID: 6194641793005389680}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &619320235 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3897714096606190861, guid: fbcab680c8a31b6449e09c6308cbc469,
+    type: 3}
+  m_PrefabInstance: {fileID: 221335869}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
@@ -2687,7 +2771,7 @@ PrefabInstance:
     - target: {fileID: 364166043061640401, guid: fbcab680c8a31b6449e09c6308cbc469,
         type: 3}
       propertyPath: m_Name
-      value: ResistReadoutPanel (4)
+      value: PoisonPanel
       objectReference: {fileID: 0}
     - target: {fileID: 8424051573980848704, guid: fbcab680c8a31b6449e09c6308cbc469,
         type: 3}
@@ -3317,12 +3401,12 @@ PrefabInstance:
     - target: {fileID: 364166043061640401, guid: fbcab680c8a31b6449e09c6308cbc469,
         type: 3}
       propertyPath: m_Name
-      value: ResistReadoutPanel (5)
+      value: SleepPanel
       objectReference: {fileID: 0}
     - target: {fileID: 8424051573980848704, guid: fbcab680c8a31b6449e09c6308cbc469,
         type: 3}
       propertyPath: m_text
-      value: 'FEAR:'
+      value: 'SLEEP:'
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3983,6 +4067,18 @@ MonoBehaviour:
   rangedAR_readj_TMP: {fileID: 868243202}
   rangedDR_readj_TMP: {fileID: 1983135064}
   magicAR_readj_TMP: {fileID: 921011940}
+  confusion_DR_TMP: {fileID: 619320235}
+  fear_DR_TMP: {fileID: 295389183}
+  fire_DR_TMP: {fileID: 68891747}
+  frost_DR_TMP: {fileID: 501086762}
+  poison_DR_TMP: {fileID: 11323087}
+  sleep_DR_TMP: {fileID: 1777432117}
+  confusion_DR_readj_TMP: {fileID: 2141972549}
+  fear_DR_readj_TMP: {fileID: 1558293781}
+  fire_DR_readj_TMP: {fileID: 1844500609}
+  frost_DR_readj_TMP: {fileID: 2119017476}
+  poison_DR_readj_TMP: {fileID: 601033215}
+  sleep_DR_readj_TMP: {fileID: 256058436}
 --- !u!114 &1125500001 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4351829208933218145, guid: 0610d2c7953ff254d961812ed5bdecc4,
@@ -4337,7 +4433,7 @@ PrefabInstance:
     - target: {fileID: 364166043061640401, guid: fbcab680c8a31b6449e09c6308cbc469,
         type: 3}
       propertyPath: m_Name
-      value: ResistReadoutPanel (2)
+      value: FirePanel
       objectReference: {fileID: 0}
     - target: {fileID: 8424051573980848704, guid: fbcab680c8a31b6449e09c6308cbc469,
         type: 3}
@@ -4653,6 +4749,18 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 1773197941}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1558293781 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3039032791353880444, guid: fbcab680c8a31b6449e09c6308cbc469,
+    type: 3}
+  m_PrefabInstance: {fileID: 353126065}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1619607110
 GameObject:
   m_ObjectHideFlags: 0
@@ -5324,6 +5432,21 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7690748672765152736, guid: 0610d2c7953ff254d961812ed5bdecc4,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0.15294118
+      objectReference: {fileID: 0}
+    - target: {fileID: 7690748672765152736, guid: 0610d2c7953ff254d961812ed5bdecc4,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.5764706
+      objectReference: {fileID: 0}
+    - target: {fileID: 7690748672765152736, guid: 0610d2c7953ff254d961812ed5bdecc4,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0.8666667
+      objectReference: {fileID: 0}
     - target: {fileID: 7786741543336688418, guid: 0610d2c7953ff254d961812ed5bdecc4,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -5333,6 +5456,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7827909561951647107, guid: 0610d2c7953ff254d961812ed5bdecc4,
+        type: 3}
+      propertyPath: m_Value
+      value: 146.5
       objectReference: {fileID: 0}
     - target: {fileID: 8286555003712768546, guid: 0610d2c7953ff254d961812ed5bdecc4,
         type: 3}
@@ -5407,6 +5535,18 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3187193533888104222, guid: 0610d2c7953ff254d961812ed5bdecc4,
     type: 3}
   m_PrefabInstance: {fileID: 1773197941}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1777432117 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3897714096606190861, guid: fbcab680c8a31b6449e09c6308cbc469,
+    type: 3}
+  m_PrefabInstance: {fileID: 954000783}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
@@ -6007,6 +6147,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1844500609 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3039032791353880444, guid: fbcab680c8a31b6449e09c6308cbc469,
+    type: 3}
+  m_PrefabInstance: {fileID: 1252209399}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1844759755
 GameObject:
   m_ObjectHideFlags: 0
@@ -6334,7 +6486,7 @@ PrefabInstance:
     - target: {fileID: 364166043061640401, guid: fbcab680c8a31b6449e09c6308cbc469,
         type: 3}
       propertyPath: m_Name
-      value: ResistReadoutPanel (3)
+      value: FrostPanel
       objectReference: {fileID: 0}
     - target: {fileID: 8424051573980848704, guid: fbcab680c8a31b6449e09c6308cbc469,
         type: 3}
@@ -6610,6 +6762,30 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2119017476 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3039032791353880444, guid: fbcab680c8a31b6449e09c6308cbc469,
+    type: 3}
+  m_PrefabInstance: {fileID: 1919626171}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2141972549 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3039032791353880444, guid: fbcab680c8a31b6449e09c6308cbc469,
+    type: 3}
+  m_PrefabInstance: {fileID: 221335869}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &6194641793005389680
