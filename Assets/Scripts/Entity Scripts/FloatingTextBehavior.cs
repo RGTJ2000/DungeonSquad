@@ -7,7 +7,7 @@ public class FloatingTextBehavior : MonoBehaviour
     private Camera mainCamera;
     public Transform parentTransform; // Cache parent for position sync
     private Vector3 initialLocalOffset; // Store the starting offset
-
+    private Vector3 activeFloatVector = Vector3.up;
     public float duration = 1.0f;
 
     private float floatSpeed = 2.0f;
@@ -24,6 +24,8 @@ public class FloatingTextBehavior : MonoBehaviour
         //parentTransform = transform.parent; // Store parent before unparenting
         //initialLocalOffset = transform.localPosition; // Capture offset before unparenting
         //transform.SetParent(null, false);
+
+
         initialLocalOffset = transform.position - parentTransform.position;
         StartCoroutine(FloatAndFade());
     }
@@ -32,6 +34,11 @@ public class FloatingTextBehavior : MonoBehaviour
     void LateUpdate()
     {
     
+    }
+
+    public void SetFloatVector(Vector3 floatVector)
+    {
+        activeFloatVector = floatVector;
     }
 
     IEnumerator FloatAndFade()
@@ -53,7 +60,8 @@ public class FloatingTextBehavior : MonoBehaviour
                 Vector3 basePosition = parentTransform.position + initialLocalOffset;
                 transform.position = Vector3.Lerp(basePosition, basePosition + new Vector3(0, 2.0f, 0), elapsedTime / duration);
                 */
-                transform.position = parentTransform.position + initialLocalOffset + Vector3.up*floatSpeed*elapsedTime;
+                Debug.Log("active float vector=" + activeFloatVector);
+                transform.position = parentTransform.position + initialLocalOffset + activeFloatVector*floatSpeed*elapsedTime;
                     
 
             }

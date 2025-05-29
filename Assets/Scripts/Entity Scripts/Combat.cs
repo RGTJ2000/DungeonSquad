@@ -24,6 +24,7 @@ public class Combat : MonoBehaviour
     private Ch_Behavior _chMove = null;
     private EnemyMove _enemyMove = null;
     private Health _health;
+    private FloatTextDisplay _floatTextDisplay;
 
 
     void Start()
@@ -34,6 +35,7 @@ public class Combat : MonoBehaviour
         _magicHandler = GetComponent<MagicHandler>();
         _incantHandler = GetComponent<IncantHandler>();
         _navMeshAgent = GetComponent<NavMeshAgent>();
+        _floatTextDisplay = GetComponent<FloatTextDisplay>();
 
         if (TryGetComponent<Ch_Behavior>(out _chMove))
         {
@@ -119,7 +121,7 @@ public class Combat : MonoBehaviour
             }
         }
     }
-    
+
     /*
     private void MagicAttackTarget(GameObject target_object)
     {
@@ -170,7 +172,7 @@ public class Combat : MonoBehaviour
 
         }
     }
-      */  
+      */
     private void IncantTarget(GameObject target_object)
     {
 
@@ -225,23 +227,85 @@ public class Combat : MonoBehaviour
         }
     }
 
-    public void ReceiveCombatResult(bool isHit, string damageType, float damageReceived, GameObject attacker)
+    //public void ReceiveCombatResult(bool isHit, string damageType, float damageReceived, GameObject attacker)
+    public void ReceiveCombatResult(CombatResult combat_result)
     {
        
 
-        if (isHit)
+        if (combat_result.resultType == CombatResultType.hit || combat_result.resultType == CombatResultType.critical)
         {
-            _health.TakeDamage(damageReceived, damageType); // Apply damage to the Health component
+            foreach (DamageResult damageResult in combat_result.damageResultList)
+            {
+                //show the damage as floating text
+                _floatTextDisplay.ShowFloatDamage(damageResult.DamageAmount, combat_result.resultType, damageResult.DamageType);
+
+                //allot the damage to either health or status
+                switch (damageResult.DamageType)
+                {
+                    case DamageType.physical:
+                        // Handle physical damage
+                        _health.TakeDamage(damageResult.DamageAmount, damageResult.DamageType);
+                        break;
+
+                    case DamageType.confusion:
+                        // Handle confusion effect
+                        
+                        //add points to statusTracker
+                        break;
+
+                    case DamageType.fear:
+                        // Handle fear effect
+                        //add points to statusTracker
+
+                        break;
+
+                    case DamageType.fire:
+                        // Handle fire damage (maybe apply burning)
+                        //add points to statusTracker
+
+                        break;
+
+                    case DamageType.frost:
+                        // Handle frost damage (maybe slow target)
+                        //add points to statusTracker
+
+                        break;
+
+                    case DamageType.poison:
+                        // Handle poison damage (maybe apply DoT)
+                        //add points to statusTracker
+
+                        break;
+
+                    case DamageType.sleep:
+                        // Handle sleep effect (maybe disable actions)
+                        //add points to statusTracker
+
+                        break;
+
+                    default:
+                        // Optional: catch unexpected or unhandled types
+                        Debug.LogWarning("Unhandled damage type: " + damageResult.DamageType);
+                        break;
+
+                }
+
+
+            }
+            
         }
         else
         {
-            _health.Miss();
+            //_health.Miss();
+            _floatTextDisplay.ShowFloatMiss(combat_result.resultType);
         }
 
+        /*
         if (GetComponent<EnemyMove>() != null)
         {
-            GetComponent<EnemyMove>().CheckAndSetAttacker(attacker);
+            GetComponent<EnemyMove>().CheckAndSetAttacker(combat_result.attacker);
         }
+        */
 
 
     }

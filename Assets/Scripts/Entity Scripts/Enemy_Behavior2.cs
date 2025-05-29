@@ -301,8 +301,13 @@ public class Enemy_Behavior2 : MonoBehaviour
 
                                 isMeleeAttacking = true;
 
-                                engageBehavior_SO.skill_SO.Use(gameObject, target);
+                                if (target != null)
+                                {
+                                    //Debug.Log("Target= "+target.name+"  GameObject="+gameObject.name);
+                                    engageBehavior_SO.skill_SO.Use(gameObject, target);
 
+
+                                }
                                 StartCoroutine(MeleeAttackCooldown(_entityStats.equipped_meleeWeapon.MeleeWeapon.attackCooldown));
                             }
                         }

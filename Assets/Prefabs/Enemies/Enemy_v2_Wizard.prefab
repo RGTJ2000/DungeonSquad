@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 3548719630717265920}
   - component: {fileID: 6182601809259373197}
   - component: {fileID: -7230519720751827061}
+  - component: {fileID: -3511875231695384615}
   m_Layer: 10
   m_Name: Enemy_v2_Wizard
   m_TagString: Enemy
@@ -197,20 +198,37 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   character_ID: 100
+  characterName: 
+  characterPortrait: {fileID: 0}
   visible_distance: 50
   health_max: 30
+  health_current: 0
   walking_speed: 2
   running_speed: 3
   entity_radius: 0.5
+  entity_reach: 3
   strength: 50
   dexterity: 50
   intelligence: 50
   will: 50
   soul: 50
+  str_adjusted: 0
+  dex_adjusted: 0
+  int_adjusted: 0
+  will_adjusted: 0
+  soul_adjusted: 0
   melee_attackRating: 15
   melee_defenseRating: 10
+  melee_critModifier: 0
+  ranged_critModifier: 0
+  melee_dodgeChance: 0
+  melee_blockChance: 0
+  melee_parryChance: 0
+  ranged_blockChance: 0
+  ranged_dodgeChance: 0
   ranged_attackRating: 15
   ranged_defenseRating: 10
+  degrees_of_accuracy: 0
   magic_attackRating: 15
   confusion_defenseRating: 10
   fear_defenseRating: 10
@@ -218,6 +236,36 @@ MonoBehaviour:
   frost_defenseRating: 10
   poison_defenseRating: 10
   sleep_defenseRating: 10
+  confusion_AL: 20
+  fear_AL: 20
+  fire_AL: 20
+  frost_AL: 20
+  poison_AL: 20
+  sleep_AL: 20
+  confusion_AL_adjusted: 0
+  fear_AL_adjusted: 0
+  fire_AL_adjusted: 0
+  frost_AL_adjusted: 0
+  poison_AL_adjusted: 0
+  sleep_AL_adjusted: 0
+  confusion_dissipationRate: 1
+  fear_dissipationRate: 1
+  fire_dissipationRate: 2
+  frost_dissipationRate: 1
+  poison_dissipationRate: 1
+  sleep_dissipationRate: 1
+  confusion_dissipationRate_adjusted: 0
+  fear_dissipationRate_adjusted: 0
+  fire_dissipationRate_adjusted: 0
+  frost_dissipationRate_adjusted: 0
+  poison_dissipationRate_adjusted: 0
+  sleep_dissipationRate_adjusted: 0
+  confusion_damageMultiplier: 1
+  fear_damageMultiplier: 1
+  fire_damageMultiplier: 2
+  frost_damageMultiplier: 1
+  poison_damageMultiplier: 1
+  sleep_damageMultiplier: 1
   equipped_meleeWeapon:
     baseItem: {fileID: 11400000, guid: c11ce7e4b9bf619419957a7f71b013e7, type: 2}
     stackCount: 0
@@ -230,30 +278,36 @@ MonoBehaviour:
     baseItem: {fileID: 0}
     stackCount: 0
     attachedCharms: []
+  equipped_ring:
+    baseItem: {fileID: 0}
+    stackCount: 0
+    attachedCharms: []
+  equipped_helm:
+    baseItem: {fileID: 0}
+    stackCount: 0
+    attachedCharms: []
+  equipped_amulet:
+    baseItem: {fileID: 0}
+    stackCount: 0
+    attachedCharms: []
+  equipped_armor:
+    baseItem: {fileID: 0}
+    stackCount: 0
+    attachedCharms: []
+  equipped_shield:
+    baseItem: {fileID: 0}
+    stackCount: 0
+    attachedCharms: []
+  equipped_boots:
+    baseItem: {fileID: 0}
+    stackCount: 0
+    attachedCharms: []
   active_targetingTag: Character
   maxSkillSlots: 5
   skill_slot:
   - {fileID: 11400000, guid: 1124a068fe6ce9b40aa23da75dcdff3a, type: 2}
   active_skillSlot: 0
   selected_skill: {fileID: 0}
-  confusion_AL: 20
-  fear_AL: 20
-  fire_AL: 20
-  frost_AL: 20
-  poison_AL: 20
-  sleep_AL: 20
-  confusion_dissipationRate: 1
-  fear_dissipationRate: 1
-  fire_dissipationRate: 2
-  frost_dissipationRate: 1
-  poison_dissipationRate: 1
-  sleep_dissipationRate: 1
-  confusion_damageMultiplier: 1
-  fear_damageMultiplier: 1
-  fire_damageMultiplier: 2
-  frost_damageMultiplier: 1
-  poison_damageMultiplier: 1
-  sleep_damageMultiplier: 1
 --- !u!114 &480314182212027364
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -313,7 +367,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e64d2e272250b1540bfb898b711a7f2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  degrees_of_accuracy: 5
 --- !u!114 &6182601809259373197
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -351,13 +404,29 @@ MonoBehaviour:
   silver_count: 0
   gold_count: 2
   platinum_count: 2
+  rings: []
+  helms: []
+  amulets: []
   meleeWeapons: []
-  rangedWeapons: []
-  missiles: []
   armors: []
+  rangedWeapons: []
   shields: []
+  boots: []
+  missiles: []
   potions: []
   scrolls: []
-  amulets: []
-  rings: []
   gems: []
+--- !u!114 &-3511875231695384615
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1880400774692741218}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b4091222985bed4390e7e11ce544475, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  floatingTextPrefab: {fileID: 8424693797070645721, guid: a46f4fc061cfedf45aa46af33ee1f59a,
+    type: 3}

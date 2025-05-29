@@ -27,11 +27,13 @@ public class WeaponEditor : Editor
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Crit Settings", EditorStyles.boldLabel);
         weapon.critChance_base = EditorGUILayout.Slider("Crit Chance Base", weapon.critChance_base, 0f, 1f);
+        /*
         weapon.critChance_weight_str = EditorGUILayout.Slider("Crit Chance Weight (STR)", weapon.critChance_weight_str, 0f, 1f);
         weapon.critChance_weight_dex = EditorGUILayout.Slider("Crit Chance Weight (DEX)", weapon.critChance_weight_dex, 0f, 1f);
         weapon.critChance_weight_int = EditorGUILayout.Slider("Crit Chance Weight (INT)", weapon.critChance_weight_int, 0f, 1f);
         weapon.critChance_weight_will = EditorGUILayout.Slider("Crit Chance Weight (WILL)", weapon.critChance_weight_will, 0f, 1f);
         weapon.critChance_weight_soul = EditorGUILayout.Slider("Crit Chance Weight (SOUL)", weapon.critChance_weight_soul, 0f, 1f);
+        */
 
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Specific Weapon Fields", EditorStyles.boldLabel);

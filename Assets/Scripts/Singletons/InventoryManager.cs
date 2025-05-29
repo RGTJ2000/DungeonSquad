@@ -135,7 +135,7 @@ public class InventoryManager : ManagerBase<InventoryManager>
 
 
         }
-
+        Debug.Log("Unequipped " + item.item_name);
         //Update character adjusted stats
         _entityStats.UpdateAdjustedStats();
     }

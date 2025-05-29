@@ -9,13 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: Cleric_LO
-  m_EditorClassIdentifier: Assembly-CSharp::EntityLoadout_SO
-  character_ID: 3
-  characterName: Cleric
+  m_Script: {fileID: 11500000, guid: 26c434c908a17d74382537f3fdaf44c5, type: 3}
+  m_Name: EnemyRanger_LO
+  m_EditorClassIdentifier: 
+  character_ID: 0
+  characterName: Enemy Ranger
   characterPortrait: {fileID: 0}
-  entity_prefab: {fileID: 0}
+  entity_prefab: {fileID: 4739953954638166795, guid: a063fab21be9b8e4ca709ebaed89c560,
+    type: 3}
   visible_distance: 50
   health_max: 100
   walking_speed: 5
@@ -38,15 +39,15 @@ MonoBehaviour:
   poison_defenseRating: 10
   sleep_defenseRating: 10
   equipped_meleeWeapon:
-    baseItem: {fileID: 11400000, guid: 99addd19d2a9ce7448797625b7aa00f3, type: 2}
+    baseItem: {fileID: 0}
     stackCount: 1
     attachedCharms: []
   equipped_rangedWeapon:
-    baseItem: {fileID: 0}
+    baseItem: {fileID: 11400000, guid: fff9698c686307a4698f242a7e669550, type: 2}
     stackCount: 1
     attachedCharms: []
   equipped_missile:
-    baseItem: {fileID: 0}
+    baseItem: {fileID: 11400000, guid: 3ca1cf42af935e7439c3954489a8786e, type: 2}
     stackCount: 1
     attachedCharms: []
   equipped_ring:
@@ -74,9 +75,7 @@ MonoBehaviour:
     stackCount: 1
     attachedCharms: []
   maxSkillSlots: 5
-  skill_slot:
-  - {fileID: 11400000, guid: 89a87b22ebdaf504eb7215cd34c86953, type: 2}
-  - {fileID: 11400000, guid: 68269be72b2a8734c92db619120d46be, type: 2}
+  skill_slot: []
   active_skillSlot: 0
   confusion_AL: 20
   fear_AL: 20
@@ -96,7 +95,4 @@ MonoBehaviour:
   frost_damageMultiplier: 1
   poison_damageMultiplier: 1
   sleep_damageMultiplier: 1
-  inventoryItems:
-  - baseItem: {fileID: 11400000, guid: 99addd19d2a9ce7448797625b7aa00f3, type: 2}
-    stackCount: 0
-    attachedCharms: []
+  inventoryItems: []

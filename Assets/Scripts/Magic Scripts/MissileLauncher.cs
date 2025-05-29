@@ -27,23 +27,20 @@ public class MissileLauncher : MonoBehaviour
         GameObject missile; //the missile to be instantiated
         EntityStats _attackerStats = origin_obj.GetComponent<EntityStats>();
 
-        RuntimeItem missile_rt_SO = _attackerStats.equipped_missile;
+        Ranged_Weapon_SO rangedWeapon = _attackerStats.equipped_rangedWeapon.RangedWeapon;
+        Missile_SO equippedMissile = _attackerStats.equipped_missile.Missile;
 
-        Missile_SO missileSO = _attackerStats.equipped_missile.baseItem as Missile_SO;
+        //Missile_SO missileSO = _attackerStats.equipped_missile.baseItem as Missile_SO;
 
-        GameObject missile_prefab = missileSO.missileLaunch_prefab;
+        GameObject missile_prefab = equippedMissile.missileLaunch_prefab;
 
-        float missileSpeed = _attackerStats.equipped_rangedWeapon.RangedWeapon.launch_impulse / missile_rt_SO.Missile.missile_weight;
+        float missileSpeed = rangedWeapon.launch_impulse / equippedMissile.missile_weight;
+
 
         //calculate orientation and launch vector
         Vector3 launch_vector = CalculateLaunchVector(target_obj, missileSpeed);
 
         launch_vector = RandomizeLaunchAccuracy(launch_vector);
-
-       
-       
-
-        //missile = Instantiate(missile_prefab, transform.position+transform.forward*_attackerStats.entity_radius, transform.rotation);
 
         missile = Instantiate(missile_prefab, transform.position, transform.rotation);
 
@@ -51,7 +48,14 @@ public class MissileLauncher : MonoBehaviour
         CapsuleCollider entityCollider = GetComponent<CapsuleCollider>();
         missileCollider.enabled = false;
 
-        missile.GetComponent<MissileGuidance>().SetMissileParameters(origin_obj, launch_vector, missile_rt_SO, missileSpeed);
+        float missileCritChance = rangedWeapon.critChance_base * (1 + equippedMissile.missile_critBaseModifier) * (1 + _attackerStats.ranged_critModifier);
+        Debug.Log("Ranged Weapon crit base=" + rangedWeapon.critChance_base + "  missile crit modifier=" + equippedMissile.missile_critBaseModifier + "  attacker ranged crit mod=" + _attackerStats.ranged_critModifier);
+
+        MissileData missileData = new MissileData(origin_obj, target_obj, _attackerStats.ranged_attackRating, missileCritChance, equippedMissile.damageList);
+
+        Debug.Log("Sending missileData to Prefab. --attacker:"+origin_obj.name+" --target:"+target_obj.name+" --attacker_AR="+_attackerStats.ranged_attackRating+"  --missileCritChance="+missileCritChance);
+
+        missile.GetComponent<MissileGuidance>().SetMissileParameters(missileData, launch_vector, missileSpeed);
 
         missile.transform.LookAt(target_obj.transform, Vector3.up);
 
@@ -61,9 +65,6 @@ public class MissileLauncher : MonoBehaviour
             Physics.IgnoreCollision(missileCollider, entityCollider, true);
         }
         StartCoroutine(EnableCollider(missileCollider));
-
-
-        //missile.GetComponent<MissileGuidance>().SetMissileParameters(origin_obj, launch_vector, damageBase, damageRange, missileSpeed, missileRange);
 
 
         string soundID = _attackerStats.equipped_rangedWeapon.RangedWeapon.launchAudio_ID;
@@ -115,7 +116,7 @@ public class MissileLauncher : MonoBehaviour
         Vector3 randomized_vector;
 
         float degrees_offtarget = (_entityStats.degrees_of_accuracy / 2) * Random.Range(-1.0f, 1.0f); //degrees missile can be offtarget
-        Debug.Log($"DEGREES OFF TARGET = {degrees_offtarget}");
+        //Debug.Log($"DEGREES OFF TARGET = {degrees_offtarget}");
 
         Vector3 random_rotation_axis = Vector3.Cross(original_vector, Vector3.up).normalized;
         random_rotation_axis = Quaternion.AngleAxis(Random.Range(360f, 0f), original_vector.normalized) * random_rotation_axis;

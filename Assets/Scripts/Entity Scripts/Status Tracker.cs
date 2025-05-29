@@ -333,7 +333,7 @@ public class StatusTracker : MonoBehaviour
 
             } else
             {
-                _health.TakeDamage(1f * _entityStats.fire_damageMultiplier, "fire");
+                _health.TakeDamage(1f * _entityStats.fire_damageMultiplier, DamageType.fire);
                 fireInCooldown = true;
                 StartCoroutine(StartFireCooldown());
 

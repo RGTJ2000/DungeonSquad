@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 1775318302924137596}
   - component: {fileID: 6395120073249413416}
   - component: {fileID: -1926371635559672760}
+  - component: {fileID: 4289309330656767326}
   m_Layer: 10
   m_Name: Enemy_v2_Fighter
   m_TagString: Enemy
@@ -197,10 +198,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   character_ID: 100
+  characterName: 
+  characterPortrait: {fileID: 0}
   visible_distance: 50
   health_max: 30
-  walking_speed: 2
-  running_speed: 3
+  health_current: 0
+  walking_speed: 0
+  running_speed: 0
   entity_radius: 0.5
   entity_reach: 3
   strength: 50
@@ -215,8 +219,16 @@ MonoBehaviour:
   soul_adjusted: 0
   melee_attackRating: 15
   melee_defenseRating: 10
+  melee_critModifier: 0
+  ranged_critModifier: 0
+  melee_dodgeChance: 0
+  melee_blockChance: 0
+  melee_parryChance: 0
+  ranged_blockChance: 0
+  ranged_dodgeChance: 0
   ranged_attackRating: 15
   ranged_defenseRating: 10
+  degrees_of_accuracy: 0
   magic_attackRating: 15
   confusion_defenseRating: 10
   fear_defenseRating: 10
@@ -224,6 +236,36 @@ MonoBehaviour:
   frost_defenseRating: 10
   poison_defenseRating: 10
   sleep_defenseRating: 10
+  confusion_AL: 20
+  fear_AL: 20
+  fire_AL: 20
+  frost_AL: 20
+  poison_AL: 20
+  sleep_AL: 20
+  confusion_AL_adjusted: 0
+  fear_AL_adjusted: 0
+  fire_AL_adjusted: 0
+  frost_AL_adjusted: 0
+  poison_AL_adjusted: 0
+  sleep_AL_adjusted: 0
+  confusion_dissipationRate: 1
+  fear_dissipationRate: 1
+  fire_dissipationRate: 2
+  frost_dissipationRate: 1
+  poison_dissipationRate: 1
+  sleep_dissipationRate: 1
+  confusion_dissipationRate_adjusted: 0
+  fear_dissipationRate_adjusted: 0
+  fire_dissipationRate_adjusted: 0
+  frost_dissipationRate_adjusted: 0
+  poison_dissipationRate_adjusted: 0
+  sleep_dissipationRate_adjusted: 0
+  confusion_damageMultiplier: 1
+  fear_damageMultiplier: 1
+  fire_damageMultiplier: 2
+  frost_damageMultiplier: 1
+  poison_damageMultiplier: 1
+  sleep_damageMultiplier: 1
   equipped_meleeWeapon:
     baseItem: {fileID: 11400000, guid: 99addd19d2a9ce7448797625b7aa00f3, type: 2}
     stackCount: 0
@@ -266,24 +308,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 68269be72b2a8734c92db619120d46be, type: 2}
   active_skillSlot: 0
   selected_skill: {fileID: 0}
-  confusion_AL: 20
-  fear_AL: 20
-  fire_AL: 20
-  frost_AL: 20
-  poison_AL: 20
-  sleep_AL: 20
-  confusion_dissipationRate: 1
-  fear_dissipationRate: 1
-  fire_dissipationRate: 2
-  frost_dissipationRate: 1
-  poison_dissipationRate: 1
-  sleep_dissipationRate: 1
-  confusion_damageMultiplier: 1
-  fear_damageMultiplier: 1
-  fire_damageMultiplier: 2
-  frost_damageMultiplier: 1
-  poison_damageMultiplier: 1
-  sleep_damageMultiplier: 1
 --- !u!114 &4341201199413033475
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -343,7 +367,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e64d2e272250b1540bfb898b711a7f2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  degrees_of_accuracy: 5
 --- !u!114 &6395120073249413416
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -393,3 +416,17 @@ MonoBehaviour:
   potions: []
   scrolls: []
   gems: []
+--- !u!114 &4289309330656767326
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2167847887569344889}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b4091222985bed4390e7e11ce544475, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  floatingTextPrefab: {fileID: 8424693797070645721, guid: a46f4fc061cfedf45aa46af33ee1f59a,
+    type: 3}

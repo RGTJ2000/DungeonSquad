@@ -47,11 +47,16 @@ public class RuntimeItem
 
 
     // --- Typed Accessors ---
+    public Ring_SO Ring => baseItem as Ring_SO;
+    public Helm_SO Helm => baseItem as Helm_SO;
+    public Amulet_SO Amulet => baseItem as Amulet_SO;
     public Melee_Weapon_SO MeleeWeapon => baseItem as Melee_Weapon_SO;
+    public Armor_SO Armor => baseItem as Armor_SO;
     public Ranged_Weapon_SO RangedWeapon => baseItem as Ranged_Weapon_SO;
+    public Shield_SO Shield => baseItem as Shield_SO;
+    public Boots_SO Boots => baseItem as Boots_SO;
     public Missile_SO Missile => baseItem as Missile_SO;
 
-    public Shield_SO Shield => baseItem as Shield_SO;
 
     /*
     public Armor_SO Armor => baseItem as Armor_SO;

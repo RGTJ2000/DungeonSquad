@@ -41,7 +41,7 @@ public class Health : MonoBehaviour
         currentHealth = maxHealth;
     }
 
-    public void TakeDamage(float damage, string type)
+    public void TakeDamage(float damage, DamageType damageType)
     {
 
         
@@ -57,7 +57,7 @@ public class Health : MonoBehaviour
         _entityStats.health_current = currentHealth;
 
 
-        ShowFloatingText( Mathf.RoundToInt(damage).ToString(), type);
+        //ShowFloatingText( Mathf.RoundToInt(damage).ToString(), resultType);
 
         if (currentHealth <= 0)
         {
@@ -68,7 +68,7 @@ public class Health : MonoBehaviour
 
     public void Miss()
     {
-        ShowFloatingText("miss", "physical");
+        ShowFloatingText("miss", CombatResultType.miss);
     }
 
     public void Heal(float amount)
@@ -102,7 +102,7 @@ public class Health : MonoBehaviour
         return maxHealth;
     }
 
-    void ShowFloatingText(string text, string type)
+    void ShowFloatingText(string text, CombatResultType resultType)
     {
         if (floatingTextPrefab != null)
         {
@@ -118,10 +118,22 @@ public class Health : MonoBehaviour
 
             TextMeshPro _textMeshProComponent = floatingText.GetComponent<TextMeshPro>();
 
-            if (type == "crit")
+            if (resultType == CombatResultType.critical)
             {
                 _textMeshProComponent.color = Color.red;
             }
+            else if (resultType == CombatResultType.hit)
+            {
+                _textMeshProComponent.color = Color.red;
+            }
+            else if (resultType == CombatResultType.miss)
+            {
+                _textMeshProComponent.color = Color.white;
+
+
+            }
+
+            /*
             else if (type == "fire")
             {
                 _textMeshProComponent.color = Color.red;
@@ -139,6 +151,7 @@ public class Health : MonoBehaviour
             {
                 _textMeshProComponent.color= Color.white;
             }
+            */
 
             _textMeshProComponent.text = text;
 

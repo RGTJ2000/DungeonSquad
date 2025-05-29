@@ -91,9 +91,6 @@ public class ProfilePanelController : MonoBehaviour
     Color32 amberCRT_color_solid = new Color32(221, 147, 39, 255);
     Color32 blueCRT_color_transparent = new Color32(85, 85, 255, 150);
     Color32 blueCRT_color_solid = new Color32(85, 85, 255, 255);
-    //Color32 lightBlueCRT_color_transparent = new Color32(20, 131, 227, 150);
-    //Color32 lightBlueCRT_color_solid = new Color32(20, 131, 227, 255);
-
     Color32 lightBlueCRT_color_transparent = new Color32(85, 255, 255, 150);
     Color32 lightBlueCRT_color_solid = new Color32(85, 255, 255, 255);
     Color32 redCRT_color_solid = new Color32(196, 0, 0, 255);

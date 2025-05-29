@@ -13,6 +13,8 @@ public class MissileGuidance : MonoBehaviour
     private float missile_critChance;
     private RuntimeItem missile_SO;
 
+    private MissileData _missileData;
+
     //private Vector3 launch_origin;
 
     private Rigidbody _rb;
@@ -86,7 +88,10 @@ public class MissileGuidance : MonoBehaviour
 
                 transform.SetParent(collided_obj.transform);
                 
-                CombatManager.Instance.ResolveMissile(origin_obj, collided_obj, missile_SO, missile_AR, missile_critChance);
+                //update _missileData target to the collided_obj
+                _missileData.target = collided_obj;
+
+                CombatManager.Instance.ResolveMissile(_missileData);
             }
             else
             {
@@ -110,33 +115,37 @@ public class MissileGuidance : MonoBehaviour
     }
 
 
-    public void SetMissileParameters(GameObject originObj, Vector3 heading, RuntimeItem missile, float speed)
+    //public void SetMissileParameters(GameObject originObj, Vector3 heading, RuntimeItem missile, float speed)
+    public void SetMissileParameters(MissileData missileData, Vector3 launchVector, float speed)
+
     {
         inFlight = true;
-        origin_obj = originObj;
-        missile_SO = missile;
-        heading_vector = heading;
-
-        
-
-        damage_base = missile_SO.Missile.missile_damageBase;
-        damage_range = missile_SO.Missile.missile_damageRange;
-
-        EntityStats _attackerStats = origin_obj.GetComponent<EntityStats>();
-
-        //set missile AR and critChance (need to calculate critChance here in case attacker changes weapons or dies while missile in flight)
-        missile_AR = _attackerStats.ranged_attackRating;
-        missile_critChance = CalculateCritChance(_attackerStats);
-
-        //set missile velocity
+        _missileData = missileData;
+        origin_obj = missileData.attacker;
+        heading_vector = launchVector;
         missile_speed = speed;
+
         Rigidbody _rb = GetComponent<Rigidbody>();
+
         if (_rb != null)
         {
             _rb.linearVelocity = heading_vector.normalized * missile_speed;
 
-            
         }
+
+
+        //damage_base = missile_SO.Missile.missile_damageBase;
+        //damage_range = missile_SO.Missile.missile_damageRange;
+
+        //EntityStats _attackerStats = origin_obj.GetComponent<EntityStats>();
+
+        //set missile AR and critChance (need to calculate critChance here in case attacker changes weapons or dies while missile in flight)
+        //missile_AR = _attackerStats.ranged_attackRating;
+        //missile_critChance = CalculateCritChance(_attackerStats);
+
+        //set missile velocity
+
+
 
 
     }
@@ -155,6 +164,7 @@ public class MissileGuidance : MonoBehaviour
 
     }
 
+    /*
     private float CalculateCritChance(EntityStats attackerStats)
     {
         float critChance = 0f;
@@ -175,9 +185,11 @@ public class MissileGuidance : MonoBehaviour
 
         return critChance;
     }
+    
     private float CritCalc(float weight, float stat)
     {
         float calc = weight * ((stat - 50) / 50);
         return calc;
     }
+    */
 }

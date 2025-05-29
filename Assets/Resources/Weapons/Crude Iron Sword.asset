@@ -40,15 +40,18 @@ MonoBehaviour:
     operatorType: 0
     amount: 0
   attackCooldown: 1
-  critChance_base: 1
-  critChance_weight_str: 1
-  critChance_weight_dex: 0.5
-  critChance_weight_int: 0
-  critChance_weight_will: 0
-  critChance_weight_soul: 0
+  critChance_base: 0.5
   melee_reach: 1
   melee_damageBase: 10
   melee_damageRange: 5
+  melee_critBase: 0
+  damageList:
+  - damageType: 5
+    damage_base: 2
+    damage_range: 1
+  - damageType: 0
+    damage_base: 2
+    damage_range: 1
   defense_dexModifier: 0
   attack_strModifier: 0
   attack_dexModifier: 0

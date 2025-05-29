@@ -1,4 +1,6 @@
+using NUnit.Framework;
 using UnityEngine;
+using System.Collections.Generic;
 
 
 public enum Entity_DefaultBehavior
@@ -76,3 +78,98 @@ public enum ActionMode
     combat,
     item
 }
+
+#region COMBAT ENUMS STRUCTS
+
+public enum DamageType
+{
+    physical,
+    confusion,
+    fear,
+    fire,
+    frost,
+    poison,
+    sleep
+}
+
+public enum CombatResultType
+{
+    hit,
+    critical,
+    miss,
+    parry,
+    block,
+    dodge
+}
+
+[System.Serializable]
+public struct DamageStats
+{
+    public DamageType damageType;
+    public float damage_base;
+    public float damage_range;
+
+    public DamageStats(DamageType damageType, float damage_base, float damage_range)
+    {
+        this.damageType = damageType;
+        this.damage_base = damage_base;
+        this.damage_range = damage_range;
+    }
+   
+}
+
+public struct DamageResult
+{
+    private DamageType damageType;
+    private float damageAmount;
+
+    public DamageResult(DamageType damageType, float damageAmount)
+    {
+        this.damageType = damageType;
+        this.damageAmount = damageAmount;
+       
+    }
+
+    public DamageType DamageType => damageType;
+    public float DamageAmount => damageAmount;
+
+
+}
+
+public struct MissileData
+{
+    public GameObject attacker;
+    public GameObject target;
+    public float attacker_rangedAR;
+    public float critChance;
+    public List<DamageStats> damageList;
+
+    public MissileData(GameObject attacker, GameObject target, float attacker_rangedAR, float critChance, List<DamageStats> damageList)
+    {
+        this.attacker = attacker;
+        this.target = target;
+        this.attacker_rangedAR = attacker_rangedAR;
+        this.critChance = critChance;
+        this.damageList = damageList;
+    }
+
+  
+
+}
+
+public struct CombatResult
+{
+    public GameObject attacker;
+    public CombatResultType resultType;
+    public List<DamageResult> damageResultList;
+
+    public CombatResult(GameObject attacker, CombatResultType resultType, List<DamageResult> resultList)
+    {
+        this.attacker = attacker;
+        this.resultType = resultType;
+        this.damageResultList = resultList;
+    }
+}
+
+
+#endregion

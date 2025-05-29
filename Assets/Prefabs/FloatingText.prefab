@@ -190,6 +190,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b97c57035d871f24c8621ae300395a1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  parentTransform: {fileID: 0}
   duration: 1
 --- !u!95 &1155928474285867377
 Animator:

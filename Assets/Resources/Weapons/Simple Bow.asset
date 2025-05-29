@@ -40,12 +40,7 @@ MonoBehaviour:
     operatorType: 0
     amount: 0
   attackCooldown: 1
-  critChance_base: 0.5
-  critChance_weight_str: 0.25
-  critChance_weight_dex: 0.75
-  critChance_weight_int: 0
-  critChance_weight_will: 0
-  critChance_weight_soul: 0
+  critChance_base: 0.25
   launch_impulse: 0.3
   accuracy_factor: 1
   launchAudio_ID: bowLaunch

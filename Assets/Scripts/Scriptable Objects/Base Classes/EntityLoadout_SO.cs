@@ -8,6 +8,7 @@ public class EntityLoadout_SO : ScriptableObject
     public int character_ID = 0;
     public string characterName;
     public Sprite characterPortrait;
+    public GameObject entity_prefab;
 
     public float visible_distance = 50f;
     public float health_max = 100f;

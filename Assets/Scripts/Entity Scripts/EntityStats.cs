@@ -39,9 +39,15 @@ public class EntityStats : MonoBehaviour
     public float melee_attackRating = 15f;
     public float melee_defenseRating = 10f;
 
-    public float dodgeChance;
-    public float blockChance;
-    public float parryChance;
+    public float melee_critModifier;
+    public float ranged_critModifier;
+
+    public float melee_dodgeChance;
+    public float melee_blockChance;
+    public float melee_parryChance;
+
+    public float ranged_blockChance;
+    public float ranged_dodgeChance;
 
     public float ranged_attackRating = 15f;
     public float ranged_defenseRating = 10f;
@@ -159,6 +165,20 @@ public class EntityStats : MonoBehaviour
 
         //3 Resists
         UpdateResistStats();
+
+        //4 Update critsModifiers
+        UpdateCritChances();
+    }
+
+    private void UpdateCritChances()
+    {
+        
+
+        melee_critModifier =  ReturnStatBonusFactor((str_adjusted+dex_adjusted+will_adjusted)/3) ;
+        ranged_critModifier = ReturnStatBonusFactor( (dex_adjusted+int_adjusted+will_adjusted)  / 3) ;
+        //Debug.Log("melee_critMod set to "+melee_critModifier+" ranged_critMod set to "+ranged_critModifier+ "-------str_adj="+str_adjusted+ "dex_adj="+dex_adjusted+"will_adj="+will_adjusted);
+        
+
     }
 
     private void UpdateResistStats()
@@ -176,27 +196,27 @@ public class EntityStats : MonoBehaviour
         sleep_defenseRating = CalculateResistDR(str_adjusted, int_adjusted);
 
         //**Resist AL_adjusted
-        confusion_AL_adjusted = Mathf.Max(confusion_AL + (confusion_AL * BonusFactorFromDR(confusion_defenseRating)), 1f);
-        fear_AL_adjusted = Mathf.Max(fear_AL + (fear_AL * BonusFactorFromDR(fear_defenseRating)), 1f);
-        fire_AL_adjusted = Mathf.Max(fire_AL + (fire_AL * BonusFactorFromDR(fire_defenseRating)), 1f);
-        frost_AL_adjusted = Mathf.Max(frost_AL + (frost_AL * BonusFactorFromDR(frost_defenseRating)), 1f);
-        poison_AL_adjusted = Mathf.Max(poison_AL + (poison_AL * BonusFactorFromDR(poison_defenseRating)), 1f);
-        sleep_AL_adjusted = Mathf.Max(sleep_AL + (sleep_AL * BonusFactorFromDR(sleep_defenseRating)), 1f);
+        confusion_AL_adjusted = Mathf.Max(confusion_AL + (confusion_AL * ReturnStatBonusFactor(confusion_defenseRating)), 1f);
+        fear_AL_adjusted = Mathf.Max(fear_AL + (fear_AL * ReturnStatBonusFactor(fear_defenseRating)), 1f);
+        fire_AL_adjusted = Mathf.Max(fire_AL + (fire_AL * ReturnStatBonusFactor(fire_defenseRating)), 1f);
+        frost_AL_adjusted = Mathf.Max(frost_AL + (frost_AL * ReturnStatBonusFactor(frost_defenseRating)), 1f);
+        poison_AL_adjusted = Mathf.Max(poison_AL + (poison_AL * ReturnStatBonusFactor(poison_defenseRating)), 1f);
+        sleep_AL_adjusted = Mathf.Max(sleep_AL + (sleep_AL * ReturnStatBonusFactor(sleep_defenseRating)), 1f);
 
         //***Resist DissipationRates adjusted
-        confusion_dissipationRate_adjusted = confusion_dissipationRate * (1 + BonusFactorFromDR(confusion_defenseRating));
-        fear_dissipationRate_adjusted = fear_dissipationRate * (1 + BonusFactorFromDR(fear_defenseRating));
-        fire_dissipationRate_adjusted = fire_dissipationRate * (1 + BonusFactorFromDR(fire_defenseRating));
-        frost_dissipationRate_adjusted = frost_dissipationRate * (1 + BonusFactorFromDR(frost_defenseRating));
-        poison_dissipationRate_adjusted = poison_dissipationRate * (1 + BonusFactorFromDR(poison_defenseRating));
-        sleep_dissipationRate_adjusted = sleep_dissipationRate * (1 + BonusFactorFromDR(sleep_defenseRating));
+        confusion_dissipationRate_adjusted = confusion_dissipationRate * (1 + ReturnStatBonusFactor(confusion_defenseRating));
+        fear_dissipationRate_adjusted = fear_dissipationRate * (1 + ReturnStatBonusFactor(fear_defenseRating));
+        fire_dissipationRate_adjusted = fire_dissipationRate * (1 + ReturnStatBonusFactor(fire_defenseRating));
+        frost_dissipationRate_adjusted = frost_dissipationRate * (1 + ReturnStatBonusFactor(frost_defenseRating));
+        poison_dissipationRate_adjusted = poison_dissipationRate * (1 + ReturnStatBonusFactor(poison_defenseRating));
+        sleep_dissipationRate_adjusted = sleep_dissipationRate * (1 + ReturnStatBonusFactor(sleep_defenseRating));
 
 
     }
 
-    private float BonusFactorFromDR(float DR_value)
+    private float ReturnStatBonusFactor(float stat)
     {
-        return (DR_value - 50) / 50;
+        return (stat - 50f) / 50f;
     }
 
 
@@ -339,11 +359,41 @@ public class EntityStats : MonoBehaviour
 
         melee_defenseRating = DR_totalSum / 2;
 
+
+        //MISS CHANCES
         float dexSum = dex_adjusted + DR_dex;
 
-        blockChance = Mathf.Clamp(DR_str / DR_totalSum, 0, 1);
-        dodgeChance = Mathf.Clamp((1 - blockChance) * (dex_adjusted / dexSum), 0, 1);
-        parryChance = Mathf.Clamp(1 - (blockChance + dodgeChance), 0, 1);
+
+        if (equipped_shield != null)
+        {
+            //block is the proportion of strength vs dexterity
+            melee_blockChance = Mathf.Clamp(DR_str / DR_totalSum, 0, 1);
+
+        }
+        else 
+        {
+            melee_blockChance = 0f;
+        }
+
+        ranged_blockChance = melee_blockChance;
+
+        //parry and dodge are dexterity based
+        
+        if (equipped_meleeWeapon != null)
+        {
+            //take what's left after melee_block, than use the proportion of DR_dex vs dex_adjusted
+            melee_parryChance = Mathf.Clamp((1 - melee_blockChance) * (DR_dex/ dexSum), 0, 1);
+        }
+        else
+        {
+            melee_parryChance = 0f;
+        }
+
+        melee_dodgeChance = Mathf.Clamp(1 - (melee_blockChance + melee_dodgeChance), 0, 1);
+
+
+        ranged_dodgeChance = Mathf.Clamp(1-ranged_blockChance, 0, 1);
+
 
 
         //calculate melee_AR

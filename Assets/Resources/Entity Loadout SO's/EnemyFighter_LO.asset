@@ -9,13 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: Cleric_LO
-  m_EditorClassIdentifier: Assembly-CSharp::EntityLoadout_SO
-  character_ID: 3
-  characterName: Cleric
+  m_Script: {fileID: 11500000, guid: 26c434c908a17d74382537f3fdaf44c5, type: 3}
+  m_Name: EnemyFighter_LO
+  m_EditorClassIdentifier: 
+  character_ID: 0
+  characterName: Enemy Fighter
   characterPortrait: {fileID: 0}
-  entity_prefab: {fileID: 0}
+  entity_prefab: {fileID: 2167847887569344889, guid: a29005b1dd3c1da4e8ce512e19535eaf,
+    type: 3}
   visible_distance: 50
   health_max: 100
   walking_speed: 5
@@ -74,9 +75,7 @@ MonoBehaviour:
     stackCount: 1
     attachedCharms: []
   maxSkillSlots: 5
-  skill_slot:
-  - {fileID: 11400000, guid: 89a87b22ebdaf504eb7215cd34c86953, type: 2}
-  - {fileID: 11400000, guid: 68269be72b2a8734c92db619120d46be, type: 2}
+  skill_slot: []
   active_skillSlot: 0
   confusion_AL: 20
   fear_AL: 20
@@ -96,7 +95,4 @@ MonoBehaviour:
   frost_damageMultiplier: 1
   poison_damageMultiplier: 1
   sleep_damageMultiplier: 1
-  inventoryItems:
-  - baseItem: {fileID: 11400000, guid: 99addd19d2a9ce7448797625b7aa00f3, type: 2}
-    stackCount: 0
-    attachedCharms: []
+  inventoryItems: []
