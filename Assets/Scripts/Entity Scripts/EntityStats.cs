@@ -54,7 +54,7 @@ public class EntityStats : MonoBehaviour
     public float degrees_of_accuracy = 0f;
 
     public float magic_attackRating = 15f;
-    //public float magic_defenseRating = 10f;
+    public float magic_defenseRating = 10f;
 
     //****Status Defenses
     public float confusion_defenseRating;
@@ -92,6 +92,7 @@ public class EntityStats : MonoBehaviour
     public float poison_dissipationRate_adjusted;
     public float sleep_dissipationRate_adjusted;
 
+    public float magic_damageMultiplier = 1f;
     public float confusion_damageMultiplier = 1f;
     public float fear_damageMultiplier = 1f;
     public float fire_damageMultiplier = 2f;
@@ -436,15 +437,23 @@ public class EntityStats : MonoBehaviour
 
         //Debug.Log($"{gameObject.name}: melee_DR {melee_defenseRating}, blockChance={blockChance}, dodgeChance={dodgeChance}, parryChance={parryChance}, melee_AR: {melee_attackRating}, ranged_AR={ranged_attackRating}");
 
+        //calculate magic_DR
+        float AR_will = will_adjusted;
+        float DR_soul = soul_adjusted;
+        magic_defenseRating = (will_adjusted + soul_adjusted) / 2;
+
+        if (equipped_amulet != null)
+        {
+            magic_defenseRating *= (1 + equipped_amulet.Amulet.defensePhysical_modifier);
+        }
+
         //calculate magic_AR
         float AR_int = int_adjusted;
-        float AR_will = will_adjusted;
         if (equipped_meleeWeapon != null)
         {
             AR_int += int_adjusted * equipped_meleeWeapon.MeleeWeapon.attack_intModifier;
             AR_will += will_adjusted * equipped_meleeWeapon.MeleeWeapon.attack_willModifer;
         }
-
         magic_attackRating = (AR_int + AR_will) / 2;
 
     }

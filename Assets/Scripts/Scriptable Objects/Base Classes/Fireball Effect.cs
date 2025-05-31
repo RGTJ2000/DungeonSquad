@@ -1,3 +1,5 @@
+using NUnit.Framework;
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Fireball Effect", menuName = "Spells/Fireball Effect")]
@@ -9,12 +11,14 @@ public class FireballEffect : SpellEffect_SO
     public float travelSpeed;
     public float contact_damageBase;
     public float contact_damageRange;
+    public List<DamageStats> contactDamageStats;
 
     public float blastDiameter;
     public float blastImpulse;
     public float blastSpeed;
     public float blast_damageBase;
     public float blast_damageRange;
+    public List<DamageStats> blastDamageStats;
 
     public override void Execute(Spell_SO spell, GameObject caster, GameObject target)
     {
@@ -29,7 +33,7 @@ public class FireballEffect : SpellEffect_SO
 
         Fireball_Guidance _fbGuidance = fireball.GetComponent<Fireball_Guidance>();
 
-        _fbGuidance.SetParameters(caster, target, startSize, spell.castingTime, travelSpeed, contact_damageBase, contact_damageRange, blastDiameter, blastImpulse, blastSpeed, blast_damageBase, blast_damageRange, _casterStats.magic_attackRating);
+        _fbGuidance.SetParameters(caster, target, contactDamageStats, blastDamageStats, startSize, spell.castingTime, travelSpeed, blastDiameter, blastImpulse, blastSpeed, _casterStats.magic_attackRating);
 
 
     }

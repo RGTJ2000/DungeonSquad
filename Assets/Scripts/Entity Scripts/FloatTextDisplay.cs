@@ -12,7 +12,8 @@ public class FloatTextDisplay : MonoBehaviour
     private float offset_randomXrange;
     private Vector3 sideFloatVector = new Vector3(0.5f, -1f , 0);
     private Vector3 defaultFloatVector = Vector3.up;
-   
+    private float defaultFontSize = 10f;
+    private float smallTextSize = 5f;
 
     void Start()
     {
@@ -44,14 +45,47 @@ public class FloatTextDisplay : MonoBehaviour
                     {
                         _tmp.color = GameColors.AmberCRTSolid;
                     }
+
                     _floatTextBehavior.SetFloatVector(defaultFloatVector);
+                    break;
+                case DamageType.confusion:
+                    _tmp.color = Color.gray;
+                    _tmp.fontSize = smallTextSize;
+                    _floatTextBehavior.SetFloatVector(sideFloatVector);
+                    break;
+                case DamageType.fear:
+                    _tmp.color = Color.yellow;
+                    _tmp.fontSize = smallTextSize;
+                    _floatTextBehavior.SetFloatVector(sideFloatVector);
+                    break;
+                case DamageType.fire:
+                    if (transform.CompareTag("Character"))
+                    {
+                        _tmp.color = Color.red;
+
+                    }
+                    else
+                    {
+                        _tmp.color = GameColors.AmberCRTSolid;
+                    }
+                    _tmp.fontSize = defaultFontSize;
+                    _floatTextBehavior.SetFloatVector(defaultFloatVector);
+                    break;
+                case DamageType.frost:
+                    _tmp.color = Color.blue;
+                    _tmp.fontSize = smallTextSize;
+                    _floatTextBehavior.SetFloatVector(sideFloatVector);
                     break;
                 case DamageType.poison:
                     _tmp.color = Color.green;
-                    _tmp.fontSize = 5f;
+                    _tmp.fontSize = smallTextSize;
                     _floatTextBehavior.SetFloatVector(sideFloatVector);
                     break;
-
+                case DamageType.sleep:
+                    _tmp.color = Color.white;
+                    _tmp.fontSize = smallTextSize;
+                    _floatTextBehavior.SetFloatVector(sideFloatVector);
+                    break;
                 default:
                     _tmp.color = Color.black;
                     Debug.Log("DamageType for float text not recognized.");
@@ -66,18 +100,7 @@ public class FloatTextDisplay : MonoBehaviour
 
                 _tmp.fontMaterial.SetColor(ShaderUtilities.ID_OutlineColor, Color.black);
 
-                /*
-                if (transform.CompareTag("Character"))
-                {
-                    _tmp.fontMaterial.SetColor(ShaderUtilities.ID_OutlineColor, Color.black);
-                }
-                else
-                {
-                    _tmp.fontMaterial.SetColor(ShaderUtilities.ID_OutlineColor, Color.red);
-
-
-                }
-                */
+                
             }
 
             _tmp.text = $"{(int)damageAmount}";
@@ -129,8 +152,11 @@ public class FloatTextDisplay : MonoBehaviour
                 case CombatResultType.parry:
                     _tmp.text = "parry";
                     break;
+                case CombatResultType.resist:
+                    _tmp.text = "resist";
+                    break;
                 default:
-                    _tmp.text = "???";
+                    _tmp.text = "???CombatResultType";
                     break;
             }
 

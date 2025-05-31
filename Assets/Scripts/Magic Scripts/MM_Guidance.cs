@@ -4,13 +4,18 @@ using System.Collections;
 using System.Collections.Generic;
 
 
-public class MM_Guidance2 : MonoBehaviour
+public class MM_Guidance : MonoBehaviour
 {
     private GameObject missile_target;
 
     private GameObject origin_obj = null;
     private float damage_base = 0f;
     private float damage_range = 0f;
+    private DamageType damage_type = DamageType.physical;
+    private List<DamageStats> damageStatsList;
+
+    private bool alwaysHit;
+
     private float caster_magicAR;
     private string targetTag;
 
@@ -25,10 +30,9 @@ public class MM_Guidance2 : MonoBehaviour
 
 
     private float mm_acc = 200f;
-    private float magic_hitChanceMultiplier = 100f;
+    //private float magic_hitChanceMultiplier = 100f;
 
     private Rigidbody _rb;
-    //private ParticleSystem _particleSystem;
 
 
 
@@ -110,7 +114,7 @@ public class MM_Guidance2 : MonoBehaviour
             {
                 
 
-                CombatManager.Instance.ResolveMagic(origin_obj, collided_obj, "physical", damage_base, damage_range, magic_hitChanceMultiplier, caster_magicAR);
+                CombatManager.Instance.ResolveMagic(origin_obj, collided_obj, damageStatsList, alwaysHit, caster_magicAR);
 
             }
 
@@ -121,17 +125,16 @@ public class MM_Guidance2 : MonoBehaviour
 
     }
 
-    public void SetMMParameters(GameObject originObj, GameObject target, float castTime, float acc, float _damageBase, float _damageRange, float mm_hitChanceMultiplier, float magicAR)
+    public void SetMMParameters(GameObject originObj, GameObject target, float castTime, float acc, List<DamageStats> _damageStatsList, bool _alwaysHit, float magicAR)
     {
         //Debug.Log("Magic Missile target: " + target.name);
         origin_obj = originObj;
         missile_target = target;
         riseDuration = castTime;
         mm_acc = acc;
-        damage_base = _damageBase;
-        damage_range = _damageRange;
-        magic_hitChanceMultiplier = mm_hitChanceMultiplier;
+        damageStatsList = _damageStatsList;
         caster_magicAR = magicAR;
+        alwaysHit = _alwaysHit;
 
         EntityStats _entityStats = originObj.GetComponent<EntityStats>();
         Targeting_Type type = _entityStats.selected_skill.skill_targetType;
@@ -142,6 +145,7 @@ public class MM_Guidance2 : MonoBehaviour
                 switch (type)
                 {
                     case Targeting_Type.self:
+                        targetTag = "none";
                         break;
                     case Targeting_Type.group:
                         targetTag = "Character";
@@ -150,6 +154,7 @@ public class MM_Guidance2 : MonoBehaviour
                         targetTag = "Enemy";
                         break;
                     case Targeting_Type.area:
+                        targetTag = "none";
                         break;
                     default:
                         targetTag = "none";
@@ -163,6 +168,7 @@ public class MM_Guidance2 : MonoBehaviour
                 switch (type)
                 {
                     case Targeting_Type.self:
+                        targetTag = "none";
                         break;
                     case Targeting_Type.group:
                         targetTag = "Enemy";
@@ -171,6 +177,7 @@ public class MM_Guidance2 : MonoBehaviour
                         targetTag = "Character";
                         break;
                     case Targeting_Type.area:
+                        targetTag = "none";
                         break;
                     default:
                         targetTag = "none";
@@ -202,7 +209,6 @@ public class MM_Guidance2 : MonoBehaviour
 
         SoundManager.Instance.PlaySoundByKeyAtGameObject("magicMissile_launch", gameObject, SoundCategory.sfx);
 
-        // SoundManager.Instance.PlayMMLaunch();
 
         yield return new WaitForSeconds(launchPause);
 

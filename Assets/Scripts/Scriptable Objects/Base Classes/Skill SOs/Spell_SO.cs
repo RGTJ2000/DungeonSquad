@@ -8,7 +8,8 @@ public class Spell_SO : Skill_SO
     [Header("General Stats")]
     public float castingTime;
     public Vector3 castingOffsetfromCaster;
-    public float hitChanceMultiplier;
+    //public float hitChanceMultiplier;
+    public bool alwaysHit;
 
     [Header("Spell Effect")]
     [SerializeField] private SpellEffect_SO effect;

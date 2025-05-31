@@ -53,8 +53,8 @@ public class MagicHandler : MonoBehaviour
         Debug.DrawLine(instantiatePoint, instantiatePoint+Vector3.up *3, Color.red, 2.0f);
        
         GameObject magicMissile = Instantiate(magicMissile_prefab, instantiatePoint, transform.rotation);
-        MM_Guidance2 _mmGuidance2 = magicMissile.GetComponent<MM_Guidance2>();
-        _mmGuidance2.SetMMParameters(gameObject, mmTarget, mm_castingTime, 200f, mm_damageBase, mm_damageRange, mm_hitChanceMultiplier, _entityStats.magic_attackRating);
+        MM_Guidance _mmGuidance2 = magicMissile.GetComponent<MM_Guidance>();
+        //_mmGuidance2.SetMMParameters(gameObject, mmTarget, mm_castingTime, 200f, mm_damageBase, mm_damageRange, DamageType.physical, mm_hitChanceMultiplier, _entityStats.magic_attackRating);
        
         yield return new WaitForSeconds(mm_castingTime);
 

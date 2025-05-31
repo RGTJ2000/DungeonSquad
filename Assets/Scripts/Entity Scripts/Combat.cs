@@ -122,7 +122,7 @@ public class Combat : MonoBehaviour
         }
     }
 
-    /*
+    
     private void MagicAttackTarget(GameObject target_object)
     {
         Vector3 target_direction = target_object.transform.position - transform.position;
@@ -136,15 +136,11 @@ public class Combat : MonoBehaviour
 
         if (!isMagicAttacking && Vector3.Angle(transform.forward, target_direction) < 10f) //if not currently casting and last spell completed and facing target do this
         {
-            /* OLD CODE WITH MAGIC HANDLER
-            isMagicAttacking = true;  //is now casting
-            _magicHandler.CastActiveSpell(target_object); //magicHandler will set isCasting to true and completed to false
-            **********************
 
             isMagicAttacking = true;
             magic_completed = false;
 
-            Skill_SO skill = _entityStats.active_skill;
+            Skill_SO skill = _entityStats.selected_skill;
             if (skill is Spell_SO spell)
             {
                 Debug.Log("Magic attack beginnging for " + spell.skill_name);
@@ -172,7 +168,7 @@ public class Combat : MonoBehaviour
 
         }
     }
-      */
+      
     private void IncantTarget(GameObject target_object)
     {
 
@@ -244,7 +240,7 @@ public class Combat : MonoBehaviour
                 {
                     case DamageType.physical:
                         // Handle physical damage
-                        _health.TakeDamage(damageResult.DamageAmount, damageResult.DamageType);
+                        _health.TakeDamage(damageResult.DamageAmount);
                         break;
 
                     case DamageType.confusion:
@@ -262,7 +258,7 @@ public class Combat : MonoBehaviour
                     case DamageType.fire:
                         // Handle fire damage (maybe apply burning)
                         //add points to statusTracker
-
+                        _health.TakeDamage(damageResult.DamageAmount);
                         break;
 
                     case DamageType.frost:

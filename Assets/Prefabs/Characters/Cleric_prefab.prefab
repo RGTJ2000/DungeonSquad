@@ -315,6 +315,7 @@ MonoBehaviour:
   ranged_defenseRating: 10
   degrees_of_accuracy: 0
   magic_attackRating: 15
+  magic_defenseRating: 10
   confusion_defenseRating: 10
   fear_defenseRating: 10
   fire_defenseRating: 10
@@ -345,6 +346,7 @@ MonoBehaviour:
   frost_dissipationRate_adjusted: 0
   poison_dissipationRate_adjusted: 0
   sleep_dissipationRate_adjusted: 0
+  magic_damageMultiplier: 1
   confusion_damageMultiplier: 1
   fear_damageMultiplier: 1
   fire_damageMultiplier: 2

@@ -1,8 +1,5 @@
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
-using UnityEngine.UIElements.Experimental;
-using System.Reflection;
-
+using System.Collections.Generic;
 
 [CreateAssetMenu(fileName = "New Magic Missile Effect", menuName = "Spells/Magic Missile Effect")]
 public class MagicMissileEffect : SpellEffect_SO
@@ -11,6 +8,9 @@ public class MagicMissileEffect : SpellEffect_SO
 
     public float damageBase;
     public float damageRange;
+
+    public List<DamageStats> damageStats;
+  
 
     public float acceleration = 200f;
 
@@ -29,9 +29,9 @@ public class MagicMissileEffect : SpellEffect_SO
         Physics.IgnoreCollision(mmCollider, entityCollider, true);
 
 
-        MM_Guidance2 _mmGuidance2 = magicMissile.GetComponent<MM_Guidance2>();
+        MM_Guidance _mmGuidance2 = magicMissile.GetComponent<MM_Guidance>();
 
-        _mmGuidance2.SetMMParameters(caster, target, spell.castingTime, acceleration, damageBase, damageRange, spell.hitChanceMultiplier, _casterStats.magic_attackRating);
+        _mmGuidance2.SetMMParameters(caster, target, spell.castingTime, acceleration, damageStats, spell.alwaysHit, _casterStats.magic_attackRating);
 
     }
 

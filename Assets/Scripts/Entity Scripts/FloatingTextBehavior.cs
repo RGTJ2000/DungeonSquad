@@ -6,6 +6,7 @@ public class FloatingTextBehavior : MonoBehaviour
 {
     private Camera mainCamera;
     public Transform parentTransform; // Cache parent for position sync
+    private Vector3 lastParentPosition;
     private Vector3 initialLocalOffset; // Store the starting offset
     private Vector3 activeFloatVector = Vector3.up;
     public float duration = 1.0f;
@@ -27,6 +28,7 @@ public class FloatingTextBehavior : MonoBehaviour
 
 
         initialLocalOffset = transform.position - parentTransform.position;
+        lastParentPosition = transform.position;
         StartCoroutine(FloatAndFade());
     }
 
@@ -39,6 +41,7 @@ public class FloatingTextBehavior : MonoBehaviour
     public void SetFloatVector(Vector3 floatVector)
     {
         activeFloatVector = floatVector;
+        Debug.Log("Set float vector = " + activeFloatVector);
     }
 
     IEnumerator FloatAndFade()
@@ -56,14 +59,15 @@ public class FloatingTextBehavior : MonoBehaviour
             // Sync position with parent, then float up in world space
             if (parentTransform != null)
             {
-                /*
-                Vector3 basePosition = parentTransform.position + initialLocalOffset;
-                transform.position = Vector3.Lerp(basePosition, basePosition + new Vector3(0, 2.0f, 0), elapsedTime / duration);
-                */
-                Debug.Log("active float vector=" + activeFloatVector);
-                transform.position = parentTransform.position + initialLocalOffset + activeFloatVector*floatSpeed*elapsedTime;
-                    
+            
 
+                transform.position = parentTransform.position + initialLocalOffset + activeFloatVector*floatSpeed*elapsedTime;
+                lastParentPosition = parentTransform.position;
+
+            }
+            else
+            {
+                transform.position = lastParentPosition + initialLocalOffset + activeFloatVector * floatSpeed * elapsedTime;
             }
             
 

@@ -96,7 +96,7 @@ public class CombatManager : MonoBehaviour
                 }
                 else if (_defenderStats.equipped_armor != null)
                 {
-                    damageDone -= (_defenderStats.equipped_armor.Armor.damageNegation_base + Random.Range(0, _defenderStats.equipped_armor.Armor.damageNegation_range + 1));
+                    damageDone -= Mathf.Max((_defenderStats.equipped_armor.Armor.damageNegation_base + Random.Range(0, _defenderStats.equipped_armor.Armor.damageNegation_range + 1)),0);
                 }
 
                 DamageResult damageResult = new DamageResult(damageStats.damageType, damageDone);
@@ -135,7 +135,7 @@ public class CombatManager : MonoBehaviour
 
     }
 
-   
+
     public void ResolveMissile(MissileData _mData)
     {
         Combat _combatOfDefender = _mData.target.GetComponent<Combat>();         // Get target's combat component
@@ -190,7 +190,7 @@ public class CombatManager : MonoBehaviour
                 }
                 else if (_defenderStats.equipped_armor != null)
                 {
-                    damageDone -= (_defenderStats.equipped_armor.Armor.damageNegation_base + Random.Range(0, _defenderStats.equipped_armor.Armor.damageNegation_range + 1));
+                    damageDone -= Mathf.Max((_defenderStats.equipped_armor.Armor.damageNegation_base + Random.Range(0, _defenderStats.equipped_armor.Armor.damageNegation_range + 1)),0);
                 }
 
                 DamageResult damageResult = new DamageResult(damageStats.damageType, damageDone);
@@ -222,107 +222,103 @@ public class CombatManager : MonoBehaviour
         _combatOfDefender.ReceiveCombatResult(combatResult);
     }
 
-    public void ResolveMagic(GameObject attacker, GameObject hit_object, string magicType, float damageBase, float damageRange, float magic_hitChanceMultiplier, float caster_magicAR)
+    public void ResolveMagic(GameObject attacker, GameObject defender, List<DamageStats> damageList, bool alwaysHit, float caster_magicAR)
     {
-
-
-        Combat _combatOfDefender = hit_object.GetComponent<Combat>();
-        StatusTracker _statusTracker = hit_object.GetComponent<StatusTracker>();
-        //EntityStats _attackerStats = attacker.GetComponent<EntityStats>();
-        EntityStats _defenderStats = hit_object.GetComponent<EntityStats>();
-
-        float magic_AR = caster_magicAR;
-        float magic_DR;
-        float magic_damageMultiplier;
-
-        switch (magicType)
+        if (defender !=null)
         {
-            case "confusion":
-                magic_DR = _defenderStats.confusion_defenseRating;
-                magic_damageMultiplier = _defenderStats.confusion_damageMultiplier;
-                break;
-            case "fear":
-                magic_DR = _defenderStats.fear_defenseRating;
-                magic_damageMultiplier = _defenderStats.fear_damageMultiplier;
-                break;
-            case "fire":
-                magic_DR = _defenderStats.fire_defenseRating;
-                magic_damageMultiplier = _defenderStats.fire_damageMultiplier;
-                break;
-            case "frost":
-                magic_DR = _defenderStats.frost_defenseRating;
-                magic_damageMultiplier = _defenderStats.frost_damageMultiplier;
-                break;
-            case "poison":
-                magic_DR = _defenderStats.poison_defenseRating;
-                magic_damageMultiplier = _defenderStats.poison_damageMultiplier;
-                break;
-            case "sleep":
-                magic_DR = _defenderStats.sleep_defenseRating;
-                magic_damageMultiplier = _defenderStats.sleep_damageMultiplier;
-                break;
-            case "physical":
-                magic_DR = _defenderStats.ranged_defenseRating;
-                magic_damageMultiplier = 1f;
-                break;
-            default:
-                magic_DR = _defenderStats.ranged_defenseRating;
-                magic_damageMultiplier = 1f;
-                break;
-        }
+            Combat _combatOfDefender = defender.GetComponent<Combat>();
+            StatusTracker _statusTracker = defender.GetComponent<StatusTracker>();
+            EntityStats _defenderStats = defender.GetComponent<EntityStats>();
 
-        float hitChance = (magic_AR * magic_AR) / ((magic_AR * magic_AR) + (magic_DR * magic_DR));
-        hitChance = Mathf.Clamp01(hitChance * magic_hitChanceMultiplier);
+            float magic_AR = caster_magicAR;
+            float defender_DR;
+            float magic_damageMultiplier;
+            CombatResultType resultType;
 
-        if (Random.value < hitChance)
-        {
-            float damage_received = (damageBase + Random.Range(0, damageRange + 1)) * magic_damageMultiplier;
+            List<DamageResult> damageResultList = new List<DamageResult>();
 
-            //_combatOfDefender.ReceiveCombatResult(true, magicType, damage_received, attacker);
+            bool isHit = false;
 
-            if (_statusTracker != null)
+            //go through damage list and address each damage attempt
+            foreach (DamageStats damageStats in damageList)
             {
-                _statusTracker.ReceiveStatusCount(damage_received, magicType);
+                damageResultList.Clear();
+                switch (damageStats.damageType)
+                {
+                    case DamageType.physical:
+                        defender_DR = _defenderStats.magic_defenseRating;
+                        magic_damageMultiplier = _defenderStats.magic_damageMultiplier;
+                        break;
+                    case DamageType.confusion:
+                        defender_DR = _defenderStats.confusion_defenseRating;
+                        magic_damageMultiplier = _defenderStats.confusion_damageMultiplier;
+                        break;
+                    case DamageType.fear:
+                        defender_DR = _defenderStats.fear_defenseRating;
+                        magic_damageMultiplier = _defenderStats.fear_damageMultiplier;
+                        break;
+                    case DamageType.fire:
+                        defender_DR = _defenderStats.fire_defenseRating;
+                        magic_damageMultiplier = _defenderStats.fire_damageMultiplier;
+                        break;
+                    case DamageType.frost:
+                        defender_DR = _defenderStats.frost_defenseRating;
+                        magic_damageMultiplier = _defenderStats.frost_damageMultiplier;
+                        break;
+                    case DamageType.poison:
+                        defender_DR = _defenderStats.poison_defenseRating;
+                        magic_damageMultiplier = _defenderStats.poison_damageMultiplier;
+                        break;
+                    case DamageType.sleep:
+                        defender_DR = _defenderStats.sleep_defenseRating;
+                        magic_damageMultiplier = _defenderStats.sleep_damageMultiplier;
+                        break;
+                    default:
+                        defender_DR = _defenderStats.magic_defenseRating;
+                        magic_damageMultiplier = _defenderStats.magic_damageMultiplier;
+                        break;
+                }
+
+
+                if (alwaysHit)
+                {
+                    isHit = true;
+                }
+                else
+                {
+                    //calculate hit chance
+                    float hitChance = CalculateHitChance(caster_magicAR, defender_DR);
+                    // Determine if the attack hits
+                    isHit = (Random.value < hitChance);
+                }
+
+                if (isHit)
+                {
+                    resultType = CombatResultType.hit;
+
+                    float damageDone = (damageStats.damage_base + Random.Range(0, damageStats.damage_range + 1)) * magic_damageMultiplier;
+
+                    DamageResult damageResult = new DamageResult(damageStats.damageType, damageDone);
+                    damageResultList.Add(damageResult);
+                }
+                else
+                {
+                    resultType = CombatResultType.resist;
+                }
+
+                CombatResult combatResult = new CombatResult(attacker, resultType, damageResultList);
+
+                // Send the result to the target
+                _combatOfDefender.ReceiveCombatResult(combatResult);
+
 
             }
-
-
         }
-
-
     }
 
-    /*
-    private float CalculateCritChance(EntityStats attackerStats)
-    {
-        float critChance = 0f;
+  
 
-        float str_w = attackerStats.equipped_meleeWeapon.MeleeWeapon.critChance_weight_str;
-
-        float dex_w = attackerStats.equipped_meleeWeapon.MeleeWeapon.critChance_weight_dex;
-        float int_w = attackerStats.equipped_meleeWeapon.MeleeWeapon.critChance_weight_int;
-        float will_w = attackerStats.equipped_meleeWeapon.MeleeWeapon.critChance_weight_will;
-        float soul_w = attackerStats.equipped_meleeWeapon.MeleeWeapon.critChance_weight_soul;
-
-        float STR = attackerStats.strength;
-        float DEX = attackerStats.dexterity;
-        float INT = attackerStats.intelligence;
-        float WLL = attackerStats.will;
-        float SOL = attackerStats.soul;
-
-        // This can increase the critChance by 2x at attribute=100. If attribute >100 then critchance keeps going up.
-        critChance = attackerStats.equipped_meleeWeapon.MeleeWeapon.critChance_base * (1 + ((CritCalc(str_w, STR) + CritCalc(dex_w, DEX) + CritCalc(int_w, INT) + CritCalc(will_w, WLL) + CritCalc(soul_w, SOL)) / (str_w + dex_w + int_w + will_w + soul_w)));
-        //Debug.Log($"Crit Chance = {critChance}");
-
-        return critChance;
-    }
-    */
-
-    private float CritCalc(float weight, float stat)
-    {
-        float calc = weight * ((stat - 50) / 50);
-        return calc;
-    }
+ 
 
     private float CalculateHitChance(float attackerAR, float defenderDR)
     {

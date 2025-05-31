@@ -99,7 +99,8 @@ public enum CombatResultType
     miss,
     parry,
     block,
-    dodge
+    dodge,
+    resist
 }
 
 [System.Serializable]

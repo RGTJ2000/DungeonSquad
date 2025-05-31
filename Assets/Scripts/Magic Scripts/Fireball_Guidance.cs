@@ -25,6 +25,9 @@ public class Fireball_Guidance : MonoBehaviour
     private float blast_dBase;
     private float blast_dRange;
 
+    private List<DamageStats> contactDamageStats;
+    private List<DamageStats> blastDamageStats;
+
     private float magic_hitChanceMultiplier = 1f;
     private float caster_magicAR;
 
@@ -92,7 +95,9 @@ public class Fireball_Guidance : MonoBehaviour
         {
             if (other.CompareTag("Enemy") || other.CompareTag("Character"))
             {
-                CombatManager.Instance.ResolveMagic(caster, other.gameObject, "fire", contact_dBase, contact_dRange, magic_hitChanceMultiplier, caster_magicAR);
+                CombatManager.Instance.ResolveMagic(caster, other.gameObject, contactDamageStats, false, caster_magicAR);
+                
+                //CombatManager.Instance.ResolveMagic(caster, other.gameObject, "fire", contact_dBase, contact_dRange, magic_hitChanceMultiplier, caster_magicAR);
             }
 
         }
@@ -139,7 +144,8 @@ public class Fireball_Guidance : MonoBehaviour
             explosionBegun = true;
             SoundManager.Instance.StopLoopingSource(burningAudioSource);
             SoundManager.Instance.PlaySoundByKeyAtPosition("fireball_blast", transform.position, SoundCategory.sfx);
-            DamagAreaMakeList();
+           
+            DamageEntitiesInBlastArea();
 
         }
 
@@ -178,11 +184,15 @@ public class Fireball_Guidance : MonoBehaviour
                 if (info.entity_obj != null)
                 {
                     Rigidbody _rb = info.entity_obj.GetComponent<Rigidbody>();
-                    _rb.isKinematic = false;
-                    NavMeshAgent _navMeshAgent = info.entity_obj.GetComponent<NavMeshAgent>();
-                    _navMeshAgent.enabled = false;
-                    Debug.Log("Adding impulse " + blastImpulse + " to " + info.entity_obj.name);
-                    _rb.AddForce(info.moveDirection * blastImpulse * info.dModifier, ForceMode.Impulse);
+                    if (_rb != null)
+                    {
+                        _rb.isKinematic = false;
+                        NavMeshAgent _navMeshAgent = info.entity_obj.GetComponent<NavMeshAgent>();
+                        _navMeshAgent.enabled = false;
+                        Debug.Log("Adding impulse " + blastImpulse + " to " + info.entity_obj.name);
+                        _rb.AddForce(info.moveDirection * blastImpulse * info.dModifier, ForceMode.Impulse);
+                    }
+                    
                 }
                
             }
@@ -197,9 +207,14 @@ public class Fireball_Guidance : MonoBehaviour
                 if (info.entity_obj != null)
                 {
                     Rigidbody _rb = info.entity_obj.GetComponent<Rigidbody>();
-                    _rb.isKinematic = true;
-                    NavMeshAgent _nmAgent = info.entity_obj.GetComponent<NavMeshAgent>();
-                    _nmAgent.enabled = true;
+                    if (_rb != null)
+                    {
+                        _rb.isKinematic = true;
+                        NavMeshAgent _nmAgent = info.entity_obj.GetComponent<NavMeshAgent>();
+                        _nmAgent.enabled = true;
+
+                    }
+                    
                 }
             }
         }
@@ -210,43 +225,59 @@ public class Fireball_Guidance : MonoBehaviour
 
     }
 
-    public void SetParameters(GameObject caster_obj, GameObject target_obj, float size, float duration, float travelSpeed, float contactDB, float contactDR, float diameter, float impulse, float bSpeed, float blastDB, float blastDR, float magicAR)
+    //public void SetParameters(GameObject caster_obj, GameObject target_obj, float size, float duration, float travelSpeed, float contactDB, float contactDR, float diameter, float impulse, float bSpeed, float blastDB, float blastDR, float magicAR)
+    public void SetParameters(GameObject caster_obj, GameObject target_obj, List<DamageStats> _contactDamageStats, List<DamageStats> _blastDamageStats, float _startSize, float duration, float travelSpeed, float _blastDiameter, float impulse, float bSpeed, float magicAR)
     {
         caster = caster_obj;
         target = target_obj;
+        contactDamageStats = _contactDamageStats;
+        blastDamageStats = _blastDamageStats;
+        startSize = _startSize;
+
         cast_duration = duration;
         fbSpeed = travelSpeed;
-        contact_dBase = contactDB;
-        contact_dRange = contactDR;
-        blastDiameter = diameter;
+
+        //contact_dBase = contactDB;
+        //contact_dRange = contactDR;
+
+        blastDiameter = _blastDiameter;
         blastImpulse = impulse;
+
         blastSpeed = bSpeed;
-        blast_dBase = blastDB;
-        blast_dRange = blastDR;
-        startSize = size;
+        //blast_dBase = blastDB;
+        //blast_dRange = blastDR;
+       
 
         blastRadius = blastDiameter / 2;
         endPosition = target_obj.transform.position;
         heading = (endPosition - transform.position).normalized;
         startScale = transform.localScale;
-        endScale = Vector3.one * size;
+        endScale = Vector3.one * startSize;
 
         caster_magicAR = magicAR;
     }
 
-    private void DamagAreaMakeList()
+    private void DamageEntitiesInBlastArea()
     {
         Collider[] hits = Physics.OverlapSphere(transform.position, blastRadius);
 
         foreach (var hit in hits)
         {
-            if (hit.CompareTag("Enemy"))
+            if (hit.CompareTag("Enemy") || hit.CompareTag("Character"))
             {
 
                 Vector3 distanceVector = (hit.transform.position - transform.position);
                 float distModifier = (1 - Mathf.Clamp01(distanceVector.magnitude / blastRadius));
 
-                CombatManager.Instance.ResolveMagic(caster, hit.gameObject, "fire", blast_dBase * distModifier, blast_dRange * distModifier, 1f, caster_magicAR);
+                float newBlastDamageBase = blastDamageStats[0].damage_base * distModifier;
+                float newBlastDamageRange = blastDamageStats[0].damage_range * distModifier;
+
+                DamageStats newDamageStat = new DamageStats(blastDamageStats[0].damageType, newBlastDamageBase, newBlastDamageRange);
+
+                List<DamageStats> damageStats_byDistance = new List<DamageStats>();
+                damageStats_byDistance.Add(newDamageStat);
+
+                CombatManager.Instance.ResolveMagic(caster, hit.gameObject, damageStats_byDistance, false, caster_magicAR);
 
                 Vector3 moveVector = distanceVector;
 

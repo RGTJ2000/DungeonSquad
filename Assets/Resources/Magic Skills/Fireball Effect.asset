@@ -18,8 +18,16 @@ MonoBehaviour:
   travelSpeed: 10
   contact_damageBase: 5
   contact_damageRange: 2
+  contactDamageStats:
+  - damageType: 3
+    damage_base: 5
+    damage_range: 2
   blastDiameter: 15
   blastImpulse: 1000
   blastSpeed: 50
   blast_damageBase: 20
   blast_damageRange: 5
+  blastDamageStats:
+  - damageType: 3
+    damage_base: 20
+    damage_range: 5

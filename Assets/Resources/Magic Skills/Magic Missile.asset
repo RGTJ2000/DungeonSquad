@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skill_type: magic
   skill_name: Magic Missile
-  skill_targetType: other
-  cooldown: 10
+  skill_targetType: 0
+  cooldown: 3
   skill_icon: {fileID: 21300000, guid: b33e786eec6b72f43924c68e932bd507, type: 3}
   castingTime: 2
   castingOffsetfromCaster: {x: 0, y: 0, z: 0.5}
-  hitChanceMultiplier: 10
+  alwaysHit: 1
   effect: {fileID: 11400000, guid: b036c132afdadd548b9064162021b63e, type: 2}

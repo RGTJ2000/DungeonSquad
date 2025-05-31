@@ -15,6 +15,7 @@ MonoBehaviour:
   character_ID: 2
   characterName: Elgar
   characterPortrait: {fileID: 21300000, guid: b5e64c2b1d3f1004f8e71efe69293799, type: 3}
+  entity_prefab: {fileID: 0}
   visible_distance: 50
   health_max: 100
   walking_speed: 5
@@ -22,8 +23,8 @@ MonoBehaviour:
   entity_radius: 0.5
   strength: 50
   dexterity: 50
-  intelligence: 50
-  will: 50
+  intelligence: 80
+  will: 80
   soul: 50
   melee_attackRating: 15
   melee_defenseRating: 10

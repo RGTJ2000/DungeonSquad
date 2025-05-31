@@ -19,8 +19,8 @@ MonoBehaviour:
     type: 3}
   visible_distance: 50
   health_max: 100
-  walking_speed: 5
-  running_speed: 10
+  walking_speed: 0
+  running_speed: 0
   entity_radius: 0.5
   strength: 50
   dexterity: 50

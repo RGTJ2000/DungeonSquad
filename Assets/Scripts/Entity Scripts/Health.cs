@@ -41,7 +41,7 @@ public class Health : MonoBehaviour
         currentHealth = maxHealth;
     }
 
-    public void TakeDamage(float damage, DamageType damageType)
+    public void TakeDamage(float damage)
     {
 
         
