@@ -43,8 +43,11 @@ MonoBehaviour:
   missile_damageRange: 3
   missile_critBaseModifier: 0
   damageList:
-  - damageType: 0
-    damage_base: 5
+  - damageType: 5
+    damage_base: 10
+    damage_range: 3
+  - damageType: 3
+    damage_base: 10
     damage_range: 3
   TestInteger: 0
   missile_weight: 0.01

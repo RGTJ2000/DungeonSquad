@@ -65,6 +65,9 @@ public class Ch_Behavior : MonoBehaviour
         _skillCooldownTracker = GetComponent<SkillCooldownTracker>();
     }
 
+    
+    
+
     void FixedUpdate()
     {
         if (isEngaging)
@@ -466,7 +469,6 @@ public class Ch_Behavior : MonoBehaviour
             _controller.enabled = true;
 
             Vector3 look_direction = core_obj.transform.forward;
-
             if (look_direction != Vector3.zero && !isEngaging) // Avoid errors if direction is zero
             {
                 Quaternion lookRotation = Quaternion.LookRotation(look_direction);
@@ -477,9 +479,19 @@ public class Ch_Behavior : MonoBehaviour
 
             //transform.rotation = core_obj.transform.rotation;
 
+            Vector3 ch_velocity = Mathf.Clamp(core_homing_vector.magnitude, 0f, 1.0f) * core_homing_vector.normalized * _entityStats.running_speed;
+
+            if (_controller.isGrounded)
+            {
+                ch_velocity.y = -2f; // Small negative value to "stick" to ground
+            }
+            else
+            {
+                ch_velocity.y += -9.81f * Time.deltaTime; // Apply gravity
+            }
 
 
-            _controller.Move(Mathf.Clamp(core_homing_vector.magnitude, 0f, 1.0f) * core_homing_vector.normalized * _entityStats.running_speed * Time.deltaTime);
+            _controller.Move(ch_velocity* Time.deltaTime);
 
 
         }

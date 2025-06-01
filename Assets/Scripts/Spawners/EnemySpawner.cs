@@ -165,7 +165,7 @@ public class EnemySpawner : MonoBehaviour
         }
         else
         {
-            Debug.Log("Enemy stats armor set to null.");
+           
             stats.equipped_armor = null;
         
 

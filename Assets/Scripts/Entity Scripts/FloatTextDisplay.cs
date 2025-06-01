@@ -72,9 +72,17 @@ public class FloatTextDisplay : MonoBehaviour
                     _floatTextBehavior.SetFloatVector(defaultFloatVector);
                     break;
                 case DamageType.frost:
-                    _tmp.color = Color.blue;
-                    _tmp.fontSize = smallTextSize;
-                    _floatTextBehavior.SetFloatVector(sideFloatVector);
+                    if (transform.CompareTag("Character"))
+                    {
+                        _tmp.color = Color.blue;
+
+                    }
+                    else
+                    {
+                        _tmp.color = GameColors.LightBlueCRTSolid;
+                    }
+                    _tmp.fontSize = defaultFontSize;
+                    _floatTextBehavior.SetFloatVector(defaultFloatVector);
                     break;
                 case DamageType.poison:
                     _tmp.color = Color.green;

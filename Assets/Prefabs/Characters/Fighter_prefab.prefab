@@ -19,11 +19,12 @@ GameObject:
   - component: {fileID: 77670621238866512}
   - component: {fileID: 6487196247645795817}
   - component: {fileID: -3550961381114425859}
-  - component: {fileID: -8387748906942977624}
   - component: {fileID: 8012943975583438393}
+  - component: {fileID: -8387748906942977624}
   - component: {fileID: -668208144980565996}
   - component: {fileID: -1442031986964680587}
   - component: {fileID: 5599730107762126832}
+  - component: {fileID: 1087458599528652450}
   m_Layer: 7
   m_Name: Fighter_prefab
   m_TagString: Character
@@ -268,19 +269,6 @@ MonoBehaviour:
   active_line: 0
   target_obj: {fileID: 0}
   visibleDistance: 50
---- !u!114 &-8387748906942977624
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 525372921199117038}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 92d1b10c457dcaf41b1afa06ebdc2d21, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cooldownPairs: []
 --- !u!114 &8012943975583438393
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -309,6 +297,19 @@ MonoBehaviour:
   potions: []
   scrolls: []
   gems: []
+--- !u!114 &-8387748906942977624
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 525372921199117038}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92d1b10c457dcaf41b1afa06ebdc2d21, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cooldownPairs: []
 --- !u!114 &-668208144980565996
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -369,6 +370,7 @@ MonoBehaviour:
   ranged_defenseRating: 10
   degrees_of_accuracy: 0
   magic_attackRating: 15
+  magic_defenseRating: 10
   confusion_defenseRating: 10
   fear_defenseRating: 10
   fire_defenseRating: 10
@@ -399,6 +401,7 @@ MonoBehaviour:
   frost_dissipationRate_adjusted: 0
   poison_dissipationRate_adjusted: 0
   sleep_dissipationRate_adjusted: 0
+  magic_damageMultiplier: 1
   confusion_damageMultiplier: 1
   fear_damageMultiplier: 1
   fire_damageMultiplier: 2
@@ -462,6 +465,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   floatingTextPrefab: {fileID: 8424693797070645721, guid: a46f4fc061cfedf45aa46af33ee1f59a,
     type: 3}
+--- !u!114 &1087458599528652450
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 525372921199117038}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0fd7a790273106428b00a1f9df59c17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  status_tracker_prefab: {fileID: 1177263311566587354, guid: 2944f3a3a7fa21043b2cd11b141f4630,
+    type: 3}
+  confusionIcon: {fileID: 21300000, guid: 1d0c59475256d234898aa01a8ddbe44d, type: 3}
+  fearIcon: {fileID: 21300000, guid: a2c74976bace1384f8f7bd727c82d475, type: 3}
+  fireIcon: {fileID: 21300000, guid: c61c51197ebb0794bbba47a48703e7bc, type: 3}
+  frostIcon: {fileID: 21300000, guid: 001a5d7e2a6ad264bbb5b58f344d0bef, type: 3}
+  poisonIcon: {fileID: 21300000, guid: 9e3f6bb0fc514d24486035aaccb1952b, type: 3}
+  sleepIcon: {fileID: 21300000, guid: 5332924991b164e4f9bc548507dc932d, type: 3}
 --- !u!1001 &5708516792251157275
 PrefabInstance:
   m_ObjectHideFlags: 0

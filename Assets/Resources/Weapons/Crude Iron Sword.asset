@@ -46,12 +46,9 @@ MonoBehaviour:
   melee_damageRange: 5
   melee_critBase: 0
   damageList:
-  - damageType: 5
-    damage_base: 2
-    damage_range: 1
   - damageType: 0
-    damage_base: 2
-    damage_range: 1
+    damage_base: 10
+    damage_range: 5
   defense_dexModifier: 0
   attack_strModifier: 0
   attack_dexModifier: 0

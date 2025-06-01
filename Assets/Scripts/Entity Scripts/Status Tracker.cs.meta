@@ -6,6 +6,12 @@ MonoImporter:
   defaultReferences:
   - status_tracker_prefab: {fileID: 1177263311566587354, guid: 2944f3a3a7fa21043b2cd11b141f4630,
       type: 3}
+  - confusionIcon: {fileID: 21300000, guid: 1d0c59475256d234898aa01a8ddbe44d, type: 3}
+  - fearIcon: {fileID: 21300000, guid: a2c74976bace1384f8f7bd727c82d475, type: 3}
+  - fireIcon: {fileID: 21300000, guid: c61c51197ebb0794bbba47a48703e7bc, type: 3}
+  - frostIcon: {fileID: 21300000, guid: 001a5d7e2a6ad264bbb5b58f344d0bef, type: 3}
+  - poisonIcon: {fileID: 21300000, guid: 9e3f6bb0fc514d24486035aaccb1952b, type: 3}
+  - sleepIcon: {fileID: 21300000, guid: 5332924991b164e4f9bc548507dc932d, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

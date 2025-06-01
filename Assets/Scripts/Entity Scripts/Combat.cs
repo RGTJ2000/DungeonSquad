@@ -25,6 +25,7 @@ public class Combat : MonoBehaviour
     private EnemyMove _enemyMove = null;
     private Health _health;
     private FloatTextDisplay _floatTextDisplay;
+    private StatusTracker _statusTracker;
 
 
     void Start()
@@ -36,6 +37,7 @@ public class Combat : MonoBehaviour
         _incantHandler = GetComponent<IncantHandler>();
         _navMeshAgent = GetComponent<NavMeshAgent>();
         _floatTextDisplay = GetComponent<FloatTextDisplay>();
+        _statusTracker = GetComponent<StatusTracker>();
 
         if (TryGetComponent<Ch_Behavior>(out _chMove))
         {
@@ -245,38 +247,39 @@ public class Combat : MonoBehaviour
 
                     case DamageType.confusion:
                         // Handle confusion effect
-                        
+                        _statusTracker.ReceiveStatusCount(damageResult.DamageAmount, damageResult.DamageType);
                         //add points to statusTracker
                         break;
 
                     case DamageType.fear:
                         // Handle fear effect
                         //add points to statusTracker
-
+                        _statusTracker.ReceiveStatusCount(damageResult.DamageAmount, damageResult.DamageType);
                         break;
 
                     case DamageType.fire:
                         // Handle fire damage (maybe apply burning)
                         //add points to statusTracker
                         _health.TakeDamage(damageResult.DamageAmount);
+                        _statusTracker.ReceiveStatusCount(damageResult.DamageAmount, damageResult.DamageType);
                         break;
 
                     case DamageType.frost:
                         // Handle frost damage (maybe slow target)
                         //add points to statusTracker
-
+                        _statusTracker.ReceiveStatusCount(damageResult.DamageAmount, damageResult.DamageType);
                         break;
 
                     case DamageType.poison:
                         // Handle poison damage (maybe apply DoT)
                         //add points to statusTracker
-
+                        _statusTracker.ReceiveStatusCount(damageResult.DamageAmount, damageResult.DamageType);
                         break;
 
                     case DamageType.sleep:
                         // Handle sleep effect (maybe disable actions)
                         //add points to statusTracker
-
+                        _statusTracker.ReceiveStatusCount(damageResult.DamageAmount, damageResult.DamageType);
                         break;
 
                     default:

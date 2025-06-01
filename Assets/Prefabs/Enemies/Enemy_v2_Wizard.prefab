@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 6182601809259373197}
   - component: {fileID: -7230519720751827061}
   - component: {fileID: -3511875231695384615}
+  - component: {fileID: -7396621971002626197}
   m_Layer: 10
   m_Name: Enemy_v2_Wizard
   m_TagString: Enemy
@@ -230,6 +231,7 @@ MonoBehaviour:
   ranged_defenseRating: 10
   degrees_of_accuracy: 0
   magic_attackRating: 15
+  magic_defenseRating: 10
   confusion_defenseRating: 10
   fear_defenseRating: 10
   fire_defenseRating: 10
@@ -260,6 +262,7 @@ MonoBehaviour:
   frost_dissipationRate_adjusted: 0
   poison_dissipationRate_adjusted: 0
   sleep_dissipationRate_adjusted: 0
+  magic_damageMultiplier: 1
   confusion_damageMultiplier: 1
   fear_damageMultiplier: 1
   fire_damageMultiplier: 2
@@ -430,3 +433,37 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   floatingTextPrefab: {fileID: 8424693797070645721, guid: a46f4fc061cfedf45aa46af33ee1f59a,
     type: 3}
+--- !u!114 &-7396621971002626197
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1880400774692741218}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0fd7a790273106428b00a1f9df59c17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  status_tracker_prefab: {fileID: 1177263311566587354, guid: 2944f3a3a7fa21043b2cd11b141f4630,
+    type: 3}
+  confusionIcon: {fileID: 21300000, guid: 1d0c59475256d234898aa01a8ddbe44d, type: 3}
+  fearIcon: {fileID: 21300000, guid: a2c74976bace1384f8f7bd727c82d475, type: 3}
+  fireIcon: {fileID: 21300000, guid: c61c51197ebb0794bbba47a48703e7bc, type: 3}
+  frostIcon: {fileID: 21300000, guid: 001a5d7e2a6ad264bbb5b58f344d0bef, type: 3}
+  poisonIcon: {fileID: 21300000, guid: 9e3f6bb0fc514d24486035aaccb1952b, type: 3}
+  sleepIcon: {fileID: 21300000, guid: 5332924991b164e4f9bc548507dc932d, type: 3}
+  iconArray:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  statusCountArray:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0

@@ -47,8 +47,16 @@ public class StatusTracker : MonoBehaviour
         }
     }
 
-    [SerializeField]
+
     private StatusData[] statusArray = new StatusData[6];
+
+    [SerializeField] private Sprite confusionIcon;
+    [SerializeField] private Sprite fearIcon;
+    [SerializeField] private Sprite fireIcon;
+    [SerializeField] private Sprite frostIcon;
+    [SerializeField] private Sprite poisonIcon;
+    [SerializeField] private Sprite sleepIcon;
+
 
     private bool confusionActive = false;
     private bool fearActive = false;
@@ -57,29 +65,31 @@ public class StatusTracker : MonoBehaviour
     private bool poisonActive = false;
     private bool sleepActive = false;
 
+    private bool confusionInCooldown = false;
+    private bool confusionStopped = true;
+
+    private bool fearInCooldown = false;
+    private bool fearStopped = true;
+
     private bool fireInCooldown = false;
     private bool fireStopped = true;
-    private bool frostInCooldown = false;
-    /*
-    [SerializeField] private Sprite fearIcon;
-    [SerializeField] private Sprite confusionIcon;
-    [SerializeField] private Sprite sleepIcon;
-    [SerializeField] private Sprite poisonIcon;
-    [SerializeField] private Sprite fireIcon;
-    [SerializeField] private Sprite frostIcon;
-    
 
-    private float fearCount = 10f;
-    private float confusionCount = 10f;
-    private float sleepCount = 10f;
-    private float poisonCount = 0f;
-    private float fireCount = 0f;
-    private float frostCount = 0f;
-    */
+    private bool frostInCooldown = false;
+    private bool frostStopped = true;
+
+    private bool poisonInCooldown = false;
+    private bool poisonStopped = true;
+
+    private bool sleepInCooldown = false;
+    private bool sleepStopped = true;
+
+
+   
 
     EntityStats _entityStats;
+    FloatTextDisplay _floatTextDisplay;
 
-    private Image[] slots_array;
+    private Image[] imageStack_array;
 
     void Start()
     {
@@ -88,12 +98,14 @@ public class StatusTracker : MonoBehaviour
         _mainCamera = Camera.main;
 
         _entityStats = GetComponent<EntityStats>();
-
         _health = GetComponent<Health>();
+        _floatTextDisplay = GetComponent<FloatTextDisplay>();
 
-        slots_array = _statusStack.GetComponentsInChildren<Image>();
+        imageStack_array = _statusStack.GetComponentsInChildren<Image>();
 
-        System.Array.Sort(slots_array, (a, b) => a.name.CompareTo(b.name));
+        System.Array.Sort(imageStack_array, (a, b) => a.name.CompareTo(b.name));
+
+        InitializeStatusArray();
 
     }
 
@@ -113,7 +125,8 @@ public class StatusTracker : MonoBehaviour
         directionToCamera.y = 0;
         // If direction is zero (directly above/below), skip to avoid errors
         directionToCamera.Normalize();
-        transform.rotation = Quaternion.LookRotation(-directionToCamera, Vector3.up);
+
+        _statusStack.transform.rotation = Quaternion.LookRotation(-directionToCamera, Vector3.up);
 
         _statusStack.transform.position = transform.position + stackOffset;
 
@@ -174,21 +187,22 @@ public class StatusTracker : MonoBehaviour
 
         for (int i = 0; i < activeList.Count; i++)
         {
-            slots_array[i].enabled = true;
+            imageStack_array[i].enabled = true;
             
-            Color color = slots_array[i].color;
+            Color color = imageStack_array[i].color;
             float visibilityTier = Mathf.Ceil(activeList[i].statusCount / 5);
             color.a = Mathf.Clamp01(visibilityTier * 0.4f);
-            slots_array[i].color = color;
+            imageStack_array[i].color = color;
             
-
-            slots_array[i].sprite = activeList[i].statusIcon;
+            //set the icon in the stack to that status icon
+            imageStack_array[i].sprite = activeList[i].statusIcon;
 
         }
 
-        for (int i = activeList.Count; i < slots_array.Length; i++)
+        for (int i = activeList.Count; i < imageStack_array.Length; i++)
         {
-            slots_array[i].enabled = false;
+            //count up from the top of the used stack to top of stack, turning off unused image slots
+            imageStack_array[i].enabled = false;
         }
 
 
@@ -322,44 +336,171 @@ public class StatusTracker : MonoBehaviour
 
     private void PerformDamage()
     {
+        if (confusionActive && !confusionInCooldown)
+        {
+            confusionInCooldown = true;
+            StartCoroutine(StartConfusionCooldown());
+
+            if (confusionStopped)
+            {
+                confusionStopped = false;
+            }
+          
+        }
+
+        if (fearActive && !fearInCooldown)
+        {
+            fearInCooldown = true;
+            StartCoroutine(StartFearCooldown());
+
+            if (fearStopped)
+            {
+                fearStopped = false;
+            }
+         
+        }
+
         if (fireActive && !fireInCooldown)
         {
+            fireInCooldown = true;
+
+            StartCoroutine(StartFireCooldown());
+
             if (fireStopped)
             {
-                StartCoroutine(StartFireCooldown()); //warm up the fire damage
-                
                 fireStopped = false;
-                fireInCooldown = true;
-
-            } else
-            {
-                _health.TakeDamage(1f * _entityStats.fire_damageMultiplier);
-                fireInCooldown = true;
-                StartCoroutine(StartFireCooldown());
-
             }
+            else
+            {
+                float damage = 1f * _entityStats.fire_damageMultiplier;
+                _health.TakeDamage(damage);
+                _floatTextDisplay.ShowFloatDamage(damage, CombatResultType.hit, DamageType.fire);
+            }
+        }
 
+        if (frostActive && !frostInCooldown)
+        {
+            frostInCooldown = true;
+            StartCoroutine(StartFrostCooldown());
+           
+
+            if (frostStopped)
+            {
+                frostStopped = false;
+            }
+            else
+            {
+                float damage = 1f * _entityStats.frost_damageMultiplier;
+                _health.TakeDamage(damage);
+                _floatTextDisplay.ShowFloatDamage(damage, CombatResultType.hit, DamageType.frost);
+            }
+        }
+
+        if (poisonActive && !poisonInCooldown)
+        {
+            poisonInCooldown = true;
+            StartCoroutine(StartPoisonCooldown());
+            
+
+            if (poisonStopped)
+            {
+                poisonStopped = false;
+            }
+            else
+            {
+                float damage = 1f * _entityStats.poison_damageMultiplier;
+                _health.TakeDamage(damage);
+                _floatTextDisplay.ShowFloatDamage(damage, CombatResultType.hit, DamageType.physical);
+            }
+        }
+
+        if (sleepActive && !sleepInCooldown)
+        {
+            sleepInCooldown = true;
+            StartCoroutine(StartSleepCooldown());
+          
+            if (sleepStopped)
+            {
+                sleepStopped = false;
+            }
             
         }
     }
 
+    IEnumerator StartConfusionCooldown()
+    {
+        yield return new WaitForSeconds(1.0f);
+        confusionInCooldown = false;
+    }
+
+    IEnumerator StartFearCooldown()
+    {
+        yield return new WaitForSeconds(1.0f);
+        fearInCooldown = false;
+    }
     IEnumerator StartFireCooldown()
     {
         yield return new WaitForSeconds(1.0f);
         fireInCooldown = false;
     }
- 
-    public void ReceiveStatusCount(float damage, string type)
+    IEnumerator StartFrostCooldown()
     {
-        switch (type)
+        yield return new WaitForSeconds(1.0f);
+        frostInCooldown = false;
+    }
+
+    IEnumerator StartPoisonCooldown()
+    {
+        yield return new WaitForSeconds(1.0f);
+        poisonInCooldown = false;
+    }
+
+    IEnumerator StartSleepCooldown()
+    {
+        yield return new WaitForSeconds(1.0f);
+        sleepInCooldown = false;
+    }
+    public void ReceiveStatusCount(float damage, DamageType damageType)
+    {
+        switch (damageType)
         {
-            case "fire":
+            case DamageType.confusion:
+                statusArray[(int)StatusType.confusion].statusCount += damage;
+                break;
+            case DamageType.fear:
+                statusArray[(int)StatusType.fear].statusCount += damage;
+                break;
+            case DamageType.fire:
                 statusArray[(int)StatusType.fire].statusCount += damage;
+                break;
+            case DamageType.frost:
+                statusArray[(int)StatusType.frost].statusCount += damage;
+                break;
+            case DamageType.poison:
+                statusArray[(int)StatusType.poison].statusCount += damage;
+                break;
+            case DamageType.sleep:
+                statusArray[(int)StatusType.sleep].statusCount += damage;
+                break;
+            default:
                 break;
         }
     }
     private void OnDestroy()
     {
         Destroy(_statusStack);
+    }
+
+
+    private void InitializeStatusArray()
+    {
+        
+        statusArray[0] = new StatusData(StatusType.confusion, 0f, confusionIcon);
+        statusArray[1] = new StatusData(StatusType.fear, 0f, fearIcon);
+        statusArray[2] = new StatusData(StatusType.fire, 0f, fireIcon);
+        statusArray[3] = new StatusData(StatusType.frost, 0f, frostIcon);
+        statusArray[4] = new StatusData(StatusType.poison, 0f, poisonIcon);
+        statusArray[5] = new StatusData(StatusType.sleep, 0f, sleepIcon);
+
     }
 }
