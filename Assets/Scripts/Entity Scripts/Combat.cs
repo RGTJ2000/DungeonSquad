@@ -313,8 +313,10 @@ public class Combat : MonoBehaviour
     {
         isMeleeAttacking = true; // Set the cooldown flag
 
+        float waitTime = _entityStats.equipped_meleeWeapon.MeleeWeapon.cycleTime / StatScale(_entityStats.dex_adjusted);
+
         // Wait for the cooldown duration
-        yield return new WaitForSeconds(_entityStats.equipped_meleeWeapon.MeleeWeapon.attackCooldown);
+        yield return new WaitForSeconds(waitTime);
 
         isMeleeAttacking = false; // Reset the cooldown flag
     }
@@ -322,14 +324,27 @@ public class Combat : MonoBehaviour
     IEnumerator RangedAttackCooldown()
     {
         isRangedAttacking = true;
-        yield return new WaitForSeconds(_entityStats.equipped_rangedWeapon.RangedWeapon.attackCooldown);
+
+
+        float waitTime = _entityStats.equipped_rangedWeapon.RangedWeapon.cycleTime / StatScale(_entityStats.dex_adjusted);
+        Debug.Log("range wait time = " + waitTime);
+        // Wait for the cooldown duration
+        yield return new WaitForSeconds(waitTime);
+
+        
         isRangedAttacking = false;
     }
 
     IEnumerator WaitforCastingToComplete(float castingTime)
     {
-        yield return new WaitForSeconds(castingTime);
+        float waitTime = castingTime / StatScale(_entityStats.int_adjusted);
+        yield return new WaitForSeconds(waitTime);
         magic_completed = true;
+    }
+
+    private float StatScale(float stat)
+    {
+        return (stat - 50f) / 50f;
     }
 
 }

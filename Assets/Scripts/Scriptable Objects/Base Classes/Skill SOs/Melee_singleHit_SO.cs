@@ -14,7 +14,7 @@ public class Melee_singleHit_SO : Skill_SO
 
         equippedWeapon_SO = _entityStats.equipped_meleeWeapon;
 
-        cooldown = equippedWeapon_SO.MeleeWeapon.attackCooldown; //set the cooldown to atacker's weapon
+        cooldown = equippedWeapon_SO.MeleeWeapon.cycleTime / (1+ StatScale(_entityStats.dex_adjusted)) ; //set the cooldown to atacker's weapon
 
         CombatManager.Instance.ResolveMelee(user, target);
 
@@ -26,6 +26,11 @@ public class Melee_singleHit_SO : Skill_SO
 
 
 
+    }
+
+    private float StatScale(float stat)
+    {
+        return (stat - 50f) / 50f;
     }
 
 

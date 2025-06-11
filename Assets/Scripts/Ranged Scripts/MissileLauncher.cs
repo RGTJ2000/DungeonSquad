@@ -48,12 +48,14 @@ public class MissileLauncher : MonoBehaviour
         CapsuleCollider entityCollider = GetComponent<CapsuleCollider>();
         missileCollider.enabled = false;
 
-        float missileCritChance = rangedWeapon.critChance_base * (1 + equippedMissile.missile_critBaseModifier) * (1 + _attackerStats.ranged_critModifier);
-        Debug.Log("Ranged Weapon crit base=" + rangedWeapon.critChance_base + "  missile crit modifier=" + equippedMissile.missile_critBaseModifier + "  attacker ranged crit mod=" + _attackerStats.ranged_critModifier);
+        //MISSILE CRIT CHANCE
+        float missileCritChance = rangedWeapon.ranged_critBase * (1 + equippedMissile.missile_critBaseModifier) * (1 + (2*_attackerStats.ranged_critBonusFactor));
+
+        //Debug.Log("Ranged Weapon crit base=" + rangedWeapon.ranged_critBase + "  missile crit modifier=" + equippedMissile.missile_critBaseModifier + "  attacker ranged crit mod=" + _attackerStats.ranged_critBonusFactor);
 
         MissileData missileData = new MissileData(origin_obj, target_obj, _attackerStats.ranged_attackRating, missileCritChance, equippedMissile.damageList);
 
-        Debug.Log("Sending missileData to Prefab. --attacker:"+origin_obj.name+" --target:"+target_obj.name+" --attacker_AR="+_attackerStats.ranged_attackRating+"  --missileCritChance="+missileCritChance);
+        //Debug.Log("Sending missileData to Prefab. --attacker:"+origin_obj.name+" --target:"+target_obj.name+" --attacker_AR="+_attackerStats.ranged_attackRating+"  --missileCritChance="+missileCritChance);
 
         missile.GetComponent<MissileGuidance>().SetMissileParameters(missileData, launch_vector, missileSpeed);
 

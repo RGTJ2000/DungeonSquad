@@ -161,7 +161,7 @@ public class Ch_Behavior : MonoBehaviour
                 Skill_SO skill = skill_performing;
                 skill.Use(gameObject, obj_to_ranged);
 
-                StartCoroutine(RangedAttackCooldown(_entityStats.equipped_rangedWeapon.RangedWeapon.attackCooldown));
+                StartCoroutine(RangedAttackCooldown(_entityStats.equipped_rangedWeapon.RangedWeapon.cycleTime));
             }
         }
 
@@ -535,7 +535,10 @@ public class Ch_Behavior : MonoBehaviour
 
     IEnumerator WaitforCastingToComplete(float castingTime)
     {
-        yield return new WaitForSeconds(castingTime);
+        float waitTime = castingTime / (1 + StatScale(_entityStats.int_adjusted));
+        Debug.Log("casting wait time = " + waitTime);
+
+        yield return new WaitForSeconds(waitTime);
         magicCompleted = true;
     }
 
@@ -549,7 +552,11 @@ public class Ch_Behavior : MonoBehaviour
 
     IEnumerator RangedAttackCooldown(float rangedCooldown)
     {
-        yield return new WaitForSeconds(rangedCooldown);
+
+        float waitTime = rangedCooldown / (1 + StatScale(_entityStats.dex_adjusted));
+        Debug.Log("range wait time = " + waitTime);
+
+        yield return new WaitForSeconds(waitTime);
         isRangedAttacking = false;
     }
 
@@ -563,5 +570,11 @@ public class Ch_Behavior : MonoBehaviour
         {
             return true;
         }
+    }
+
+
+    private float StatScale(float stat)
+    {
+        return (stat - 50f) / 50f;
     }
 }

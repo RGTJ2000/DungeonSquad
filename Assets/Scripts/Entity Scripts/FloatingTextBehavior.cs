@@ -41,7 +41,7 @@ public class FloatingTextBehavior : MonoBehaviour
     public void SetFloatVector(Vector3 floatVector)
     {
         activeFloatVector = floatVector;
-        Debug.Log("Set float vector = " + activeFloatVector);
+        //Debug.Log("Set float vector = " + activeFloatVector);
     }
 
     IEnumerator FloatAndFade()

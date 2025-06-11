@@ -39,8 +39,8 @@ public class EntityStats : MonoBehaviour
     public float melee_attackRating = 15f;
     public float melee_defenseRating = 10f;
 
-    public float melee_critModifier;
-    public float ranged_critModifier;
+    public float melee_critBonusFactor;
+    public float ranged_critBonusFactor;
 
     public float melee_dodgeChance;
     public float melee_blockChance;
@@ -175,8 +175,8 @@ public class EntityStats : MonoBehaviour
     {
         
 
-        melee_critModifier =  ReturnStatBonusFactor((str_adjusted+dex_adjusted+will_adjusted)/3) ;
-        ranged_critModifier = ReturnStatBonusFactor( (dex_adjusted+int_adjusted+will_adjusted)  / 3) ;
+        melee_critBonusFactor =  ReturnStatBonusFactor((str_adjusted+dex_adjusted+will_adjusted)/3) ;
+        ranged_critBonusFactor = ReturnStatBonusFactor( (dex_adjusted+int_adjusted+will_adjusted)  / 3) ;
         //Debug.Log("melee_critMod set to "+melee_critModifier+" ranged_critMod set to "+ranged_critModifier+ "-------str_adj="+str_adjusted+ "dex_adj="+dex_adjusted+"will_adj="+will_adjusted);
         
 
@@ -340,20 +340,19 @@ public class EntityStats : MonoBehaviour
         return value;
     }
 
-
     public void UpdateAttackDefenseRatings()
     {
         //calculate melee_DR and dodge-block-parry chances
         float DR_str = str_adjusted;
         if (equipped_shield != null)
         {
-            DR_str += str_adjusted * equipped_shield.Shield.defense_strModifier;
+            DR_str += str_adjusted * equipped_shield.Shield.defense_strBonusFactor;
         }
 
         float DR_dex = dex_adjusted;
         if (equipped_meleeWeapon != null)
         {
-            DR_dex += dex_adjusted * equipped_meleeWeapon.MeleeWeapon.defense_dexModifier;
+            DR_dex += dex_adjusted * equipped_meleeWeapon.MeleeWeapon.defense_dexBonusFactor;
         }
 
         float DR_totalSum = DR_str + DR_dex;
@@ -402,8 +401,8 @@ public class EntityStats : MonoBehaviour
         float AR_dex = dex_adjusted;
         if (equipped_meleeWeapon != null)
         {
-            AR_str += str_adjusted * equipped_meleeWeapon.MeleeWeapon.attack_strModifier;
-            AR_dex += dex_adjusted * equipped_meleeWeapon.MeleeWeapon.attack_dexModifier;
+            AR_str += str_adjusted * equipped_meleeWeapon.MeleeWeapon.attack_strBonusFactor;
+            AR_dex += dex_adjusted * equipped_meleeWeapon.MeleeWeapon.attack_dexBonusFactor;
         }
 
         melee_attackRating = (AR_str + AR_dex) / 2;
@@ -414,24 +413,30 @@ public class EntityStats : MonoBehaviour
         float ranged_DR_dex = dex_adjusted;
         if (equipped_shield != null)
         {
-            ranged_DR_dex += dex_adjusted * equipped_shield.Shield.defense_dexModifier;
+            ranged_DR_dex += dex_adjusted * equipped_shield.Shield.defense_dexBonusFactor;
         }
 
         ranged_defenseRating = ranged_DR_dex;
 
         //calculate ranged_AR
         float ranged_AR_dex = dex_adjusted;
+        float ranged_AR_int = int_adjusted;
+
         if (equipped_rangedWeapon != null)
         {
-            ranged_AR_dex += dex_adjusted * equipped_rangedWeapon.RangedWeapon.attack_dexModifier;
+            ranged_AR_dex += dex_adjusted * equipped_rangedWeapon.RangedWeapon.attack_dexBonusFactor;
+
+            ranged_AR_int += int_adjusted * equipped_rangedWeapon.RangedWeapon.attack_intBonusFactor;
         }
 
         if (equipped_missile != null)
         {
-            ranged_AR_dex += dex_adjusted * equipped_missile.Missile.attack_dexModifier;
+            ranged_AR_dex += dex_adjusted * equipped_missile.Missile.attack_dexBonusFactor;
+
+            ranged_AR_int += int_adjusted * equipped_missile.Missile.attack_intBonusFactor;
         }
 
-        ranged_attackRating = (ranged_AR_dex + int_adjusted) / 2;
+        ranged_attackRating = (ranged_AR_dex + ranged_AR_int) / 2;
 
         degrees_of_accuracy = 1f / ((0.0015f * ranged_attackRating) + (1f / 180f));
 
@@ -451,8 +456,8 @@ public class EntityStats : MonoBehaviour
         float AR_int = int_adjusted;
         if (equipped_meleeWeapon != null)
         {
-            AR_int += int_adjusted * equipped_meleeWeapon.MeleeWeapon.attack_intModifier;
-            AR_will += will_adjusted * equipped_meleeWeapon.MeleeWeapon.attack_willModifer;
+            AR_int += int_adjusted * equipped_meleeWeapon.MeleeWeapon.attack_intBonusFactor;
+            AR_will += will_adjusted * equipped_meleeWeapon.MeleeWeapon.attack_willBonusFactor;
         }
         magic_attackRating = (AR_int + AR_will) / 2;
 

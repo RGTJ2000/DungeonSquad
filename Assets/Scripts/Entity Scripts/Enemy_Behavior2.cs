@@ -308,7 +308,7 @@ public class Enemy_Behavior2 : MonoBehaviour
 
 
                                 }
-                                StartCoroutine(MeleeAttackCooldown(_entityStats.equipped_meleeWeapon.MeleeWeapon.attackCooldown));
+                                StartCoroutine(MeleeAttackCooldown(_entityStats.equipped_meleeWeapon.MeleeWeapon.cycleTime));
                             }
                         }
                     }
@@ -333,7 +333,7 @@ public class Enemy_Behavior2 : MonoBehaviour
                             //Debug.Log("Calling Ranged Skill. target=" + target.name);
                             engageBehavior_SO.skill_SO.Use(gameObject, target);
 
-                            StartCoroutine(RangedAttackCooldown(_entityStats.equipped_rangedWeapon.RangedWeapon.attackCooldown));
+                            StartCoroutine(RangedAttackCooldown(_entityStats.equipped_rangedWeapon.RangedWeapon.cycleTime));
                         }
                     }
 

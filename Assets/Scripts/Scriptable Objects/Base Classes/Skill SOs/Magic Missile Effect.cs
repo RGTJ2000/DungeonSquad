@@ -31,9 +31,16 @@ public class MagicMissileEffect : SpellEffect_SO
 
         MM_Guidance _mmGuidance2 = magicMissile.GetComponent<MM_Guidance>();
 
-        _mmGuidance2.SetMMParameters(caster, target, spell.castingTime, acceleration, damageStats, spell.alwaysHit, _casterStats.magic_attackRating);
+        float waitTime = spell.castingTime / (1 + StatScale(_casterStats.int_adjusted));
+        
+
+        _mmGuidance2.SetMMParameters(caster, target, waitTime, acceleration, damageStats, spell.alwaysHit, _casterStats.magic_attackRating);
 
     }
 
- 
+    private float StatScale(float stat)
+    {
+        return (stat - 50f) / 50f;
+    }
+
 }

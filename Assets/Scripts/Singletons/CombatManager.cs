@@ -54,16 +54,18 @@ public class CombatManager : MonoBehaviour
 
         float damageBase = equippedMeleeWeapon.melee_damageBase;
         float damageRange = equippedMeleeWeapon.melee_damageRange;
-        float critChance = equippedMeleeWeapon.critChance_base * (1 + _attackerStats.melee_critModifier);
+
+        //CRIT CHANCE
+        float critChance = equippedMeleeWeapon.melee_critBase * (1 + (2*_attackerStats.melee_critBonusFactor));
+        Debug.Log("Crit Chance = " + critChance);
+
 
         bool isHit = false;
         bool isCrit = false;
 
         // Determine if the attack hits
         float hitChance = CalculateHitChance(_attacker_meleeAR, _defender_meleeDR);
-        float randomNum = Random.value;
         isHit = (Random.value < hitChance);
-        //Debug.Log($"MELEE Hit Chance = {hitChance} | randomNum = {randomNum} | isHit = {isHit}");
 
         // Calculate damage if the attack hits
         List<DamageResult> damageList = new List<DamageResult>();
@@ -87,8 +89,13 @@ public class CombatManager : MonoBehaviour
             foreach (DamageStats damageStats in equippedMeleeWeapon.damageList)
             {
                 float damageDone = damageStats.damage_base + Random.Range(0, damageStats.damage_range + 1);
+                Debug.Log("Weapon: " + equippedMeleeWeapon.item_name + " damage=" + damageDone);
 
-                Debug.Log("Defender equipped armor=" + _defenderStats.equipped_armor);
+                //scale damage to weapon's scaling factors
+                damageDone += damageDone * ( (StatScale(_attackerStats.str_adjusted) * equippedMeleeWeapon.str_scalingFactor) + ( StatScale(_attackerStats.dex_adjusted) * equippedMeleeWeapon.dex_scalingFactor) );
+                Debug.Log("STR Stat Scale=" + StatScale(_attackerStats.str_adjusted) + " str scaling factor =" + equippedMeleeWeapon.str_scalingFactor);
+                Debug.Log("...damage with scaling=" + damageDone);
+
                 if (isCrit)
                 {
                     damageDone *= 2f;
@@ -140,7 +147,7 @@ public class CombatManager : MonoBehaviour
     {
         Combat _combatOfDefender = _mData.target.GetComponent<Combat>();         // Get target's combat component
         EntityStats _defenderStats = _mData.target.GetComponent<EntityStats>();
-
+        
         float _defender_rangedDR = _defenderStats.ranged_defenseRating;
 
         bool isHit = false;
@@ -180,6 +187,8 @@ public class CombatManager : MonoBehaviour
             foreach (DamageStats damageStats in _mData.damageList)
             {
                 float damageDone = damageStats.damage_base + Random.Range(0, damageStats.damage_range + 1);
+
+                
 
                 if (isCrit)
                 {
@@ -322,10 +331,15 @@ public class CombatManager : MonoBehaviour
 
     private float CalculateHitChance(float attackerAR, float defenderDR)
     {
-        float AR_squared = attackerAR * attackerAR;
-        float DR_squared = defenderDR * defenderDR;
+        float AR_cubed = attackerAR * attackerAR * attackerAR;
+        float DR_cubed = defenderDR * defenderDR * defenderDR;
 
-        return (AR_squared) / (AR_squared + DR_squared);
+        return (AR_cubed) / (AR_cubed + DR_cubed);
+    }
+
+    private float StatScale(float stat)
+    {
+        return (stat - 50f) / 50f;
     }
 
 }

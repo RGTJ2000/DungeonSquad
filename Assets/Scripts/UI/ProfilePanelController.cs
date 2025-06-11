@@ -342,13 +342,13 @@ public class ProfilePanelController : MonoBehaviour
         {
             if (item.category == ItemCategory.melee_weapon)
             {
-                AR_str = newStr + (newStr * item.MeleeWeapon.attack_strModifier);
-                AR_dex = newDex + (newDex * item.MeleeWeapon.attack_dexModifier);
+                AR_str = newStr + (newStr * item.MeleeWeapon.attack_strBonusFactor);
+                AR_dex = newDex + (newDex * item.MeleeWeapon.attack_dexBonusFactor);
             }
             else if (_chStats.equipped_meleeWeapon != null)
             {
-                AR_str = newStr + (newStr * _chStats.equipped_meleeWeapon.MeleeWeapon.attack_strModifier);
-                AR_dex = newDex + (newDex * _chStats.equipped_meleeWeapon.MeleeWeapon.attack_dexModifier);
+                AR_str = newStr + (newStr * _chStats.equipped_meleeWeapon.MeleeWeapon.attack_strBonusFactor);
+                AR_dex = newDex + (newDex * _chStats.equipped_meleeWeapon.MeleeWeapon.attack_dexBonusFactor);
             }
             else
             {
@@ -367,8 +367,8 @@ public class ProfilePanelController : MonoBehaviour
             }
             else
             {
-                AR_str = newStr + (newStr * _chStats.equipped_meleeWeapon.MeleeWeapon.attack_strModifier);
-                AR_dex = newDex + (newDex * _chStats.equipped_meleeWeapon.MeleeWeapon.attack_dexModifier);
+                AR_str = newStr + (newStr * _chStats.equipped_meleeWeapon.MeleeWeapon.attack_strBonusFactor);
+                AR_dex = newDex + (newDex * _chStats.equipped_meleeWeapon.MeleeWeapon.attack_dexBonusFactor);
             }
 
 
@@ -392,11 +392,11 @@ public class ProfilePanelController : MonoBehaviour
             //find DR_str for DR calculation
             if (item.category == ItemCategory.shield)
             {
-                DR_str = newStr + (newStr * item.Shield.defense_strModifier);
+                DR_str = newStr + (newStr * item.Shield.defense_strBonusFactor);
             }
             else if (_chStats.equipped_shield != null)
             {
-                DR_str = newStr + (newStr * _chStats.equipped_shield.Shield.defense_strModifier);
+                DR_str = newStr + (newStr * _chStats.equipped_shield.Shield.defense_strBonusFactor);
             }
             else
             {
@@ -406,11 +406,11 @@ public class ProfilePanelController : MonoBehaviour
             //find DR_dex for DR calculation
             if (item.category == ItemCategory.melee_weapon)
             {
-                DR_dex = newDex + (newDex * item.MeleeWeapon.defense_dexModifier);
+                DR_dex = newDex + (newDex * item.MeleeWeapon.defense_dexBonusFactor);
             }
             else if (_chStats.equipped_meleeWeapon != null)
             {
-                DR_dex = newDex + (newDex * _chStats.equipped_meleeWeapon.MeleeWeapon.defense_dexModifier);
+                DR_dex = newDex + (newDex * _chStats.equipped_meleeWeapon.MeleeWeapon.defense_dexBonusFactor);
             }
             else
             {
@@ -428,7 +428,7 @@ public class ProfilePanelController : MonoBehaviour
             }
             else
             {
-                DR_str = newStr + (newStr * _chStats.equipped_shield.Shield.defense_strModifier);
+                DR_str = newStr + (newStr * _chStats.equipped_shield.Shield.defense_strBonusFactor);
             }
 
             if (item.category == ItemCategory.melee_weapon || _chStats.equipped_meleeWeapon == null)
@@ -437,7 +437,7 @@ public class ProfilePanelController : MonoBehaviour
             }
             else
             {
-                DR_dex = newDex + (newDex * _chStats.equipped_meleeWeapon.MeleeWeapon.defense_dexModifier);
+                DR_dex = newDex + (newDex * _chStats.equipped_meleeWeapon.MeleeWeapon.defense_dexBonusFactor);
             }
 
             return ((DR_str + DR_dex) / 2);
@@ -462,11 +462,11 @@ public class ProfilePanelController : MonoBehaviour
             
             if (item.category == ItemCategory.ranged_weapon)
             {
-                rangedBonus += newDex * item.RangedWeapon.attack_dexModifier;
+                rangedBonus += newDex * item.RangedWeapon.attack_dexBonusFactor;
             }
             else if (_chStats.equipped_rangedWeapon != null)
             {
-                rangedBonus += newDex * _chStats.equipped_rangedWeapon.RangedWeapon.attack_dexModifier;
+                rangedBonus += newDex * _chStats.equipped_rangedWeapon.RangedWeapon.attack_dexBonusFactor;
             }
             else
             {
@@ -475,11 +475,11 @@ public class ProfilePanelController : MonoBehaviour
 
             if (item.category == ItemCategory.missile)
             {
-                rangedBonus += newDex * item.Missile.attack_dexModifier;
+                rangedBonus += newDex * item.Missile.attack_dexBonusFactor;
             }
             else if (_chStats.equipped_missile != null)
             {
-                rangedBonus += newDex * _chStats.equipped_missile.Missile.attack_dexModifier;
+                rangedBonus += newDex * _chStats.equipped_missile.Missile.attack_dexBonusFactor;
             }
             else
             { 
@@ -495,7 +495,7 @@ public class ProfilePanelController : MonoBehaviour
 
             if (item.category != ItemCategory.ranged_weapon && _chStats.equipped_rangedWeapon != null)
             {
-                rangedBonus += newDex * _chStats.equipped_rangedWeapon.RangedWeapon.attack_dexModifier;
+                rangedBonus += newDex * _chStats.equipped_rangedWeapon.RangedWeapon.attack_dexBonusFactor;
             }
             else
             {
@@ -504,7 +504,7 @@ public class ProfilePanelController : MonoBehaviour
 
             if (item.category != ItemCategory.missile && _chStats.equipped_missile != null)
             {
-                rangedBonus += newDex * _chStats.equipped_missile.Missile.attack_dexModifier;
+                rangedBonus += newDex * _chStats.equipped_missile.Missile.attack_dexBonusFactor;
             }
             else
             {
@@ -529,11 +529,11 @@ public class ProfilePanelController : MonoBehaviour
         {
             if (item.category == ItemCategory.shield)
             {
-                rangedDR_dex = newDex + (newDex * item.Shield.defense_dexModifier);
+                rangedDR_dex = newDex + (newDex * item.Shield.defense_dexBonusFactor);
             }
             else if (_chStats.equipped_shield != null)
             {
-                rangedDR_dex = newDex + (newDex * _chStats.equipped_shield.Shield.defense_dexModifier);
+                rangedDR_dex = newDex + (newDex * _chStats.equipped_shield.Shield.defense_dexBonusFactor);
             }
             else
             {
@@ -548,7 +548,7 @@ public class ProfilePanelController : MonoBehaviour
 
             if (item.category != ItemCategory.shield && _chStats.equipped_shield != null)
             {
-                rangedDR_dex = newDex + (newDex * _chStats.equipped_shield.Shield.defense_dexModifier);
+                rangedDR_dex = newDex + (newDex * _chStats.equipped_shield.Shield.defense_dexBonusFactor);
             }
             else
             {
@@ -576,13 +576,13 @@ public class ProfilePanelController : MonoBehaviour
 
             if (item.category == ItemCategory.melee_weapon)
             {
-                AR_int = newInt + (newInt * item.MeleeWeapon.attack_intModifier);
-                AR_will = newWill + (newWill * item.MeleeWeapon.attack_willModifer);
+                AR_int = newInt + (newInt * item.MeleeWeapon.attack_intBonusFactor);
+                AR_will = newWill + (newWill * item.MeleeWeapon.attack_willBonusFactor);
             }
             else if (_chStats.equipped_meleeWeapon != null)
             {
-                AR_int = newInt + (_chStats.equipped_meleeWeapon.MeleeWeapon.attack_intModifier);
-                AR_will = newWill + (_chStats.equipped_meleeWeapon.MeleeWeapon.attack_willModifer);
+                AR_int = newInt + (_chStats.equipped_meleeWeapon.MeleeWeapon.attack_intBonusFactor);
+                AR_will = newWill + (_chStats.equipped_meleeWeapon.MeleeWeapon.attack_willBonusFactor);
             }
             else
             {
@@ -599,8 +599,8 @@ public class ProfilePanelController : MonoBehaviour
 
             if (item.category != ItemCategory.melee_weapon && _chStats.equipped_meleeWeapon != null)
             {
-                AR_int = newInt + (_chStats.equipped_meleeWeapon.MeleeWeapon.attack_intModifier);
-                AR_will = newWill + (_chStats.equipped_meleeWeapon.MeleeWeapon.attack_willModifer);
+                AR_int = newInt + (_chStats.equipped_meleeWeapon.MeleeWeapon.attack_intBonusFactor);
+                AR_will = newWill + (_chStats.equipped_meleeWeapon.MeleeWeapon.attack_willBonusFactor);
             }
             else
             {

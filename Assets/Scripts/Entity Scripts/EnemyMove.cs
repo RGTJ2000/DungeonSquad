@@ -108,7 +108,7 @@ public class EnemyMove : MonoBehaviour
                     Debug.Log("Skill to use:" + skill.skill_name);
                     skill.Use(gameObject, obj_to_pursue);
 
-                    StartCoroutine(MeleeAttackCooldown(_entityStats.equipped_meleeWeapon.MeleeWeapon.attackCooldown));
+                    StartCoroutine(MeleeAttackCooldown(_entityStats.equipped_meleeWeapon.MeleeWeapon.cycleTime));
                 }
             }
         }

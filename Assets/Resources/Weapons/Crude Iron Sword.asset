@@ -39,20 +39,21 @@ MonoBehaviour:
   soulModifier:
     operatorType: 0
     amount: 0
-  attackCooldown: 1
-  critChance_base: 0.5
+  cycleTime: 1
   melee_reach: 1
   melee_damageBase: 10
   melee_damageRange: 5
-  melee_critBase: 0
+  melee_critBase: 0.2
   damageList:
   - damageType: 0
     damage_base: 10
     damage_range: 5
-  defense_dexModifier: 0
-  attack_strModifier: 0
-  attack_dexModifier: 0
-  attack_intModifier: 0
-  attack_willModifer: 0
+  str_scalingFactor: 0.5
+  dex_scalingFactor: 0.5
+  defense_dexBonusFactor: 0.2
+  attack_strBonusFactor: 0.2
+  attack_dexBonusFactor: 0.2
+  attack_intBonusFactor: 0
+  attack_willBonusFactor: 0
   hitAudio_ID: swordHit
   missAudio_ID: swordMiss

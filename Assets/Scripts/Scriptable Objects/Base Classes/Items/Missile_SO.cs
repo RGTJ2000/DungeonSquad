@@ -14,6 +14,7 @@ public class Missile_SO : Item_SO
     public float missile_weight;
     public GameObject missileLaunch_prefab;
 
-    public float attack_dexModifier;
+    public float attack_dexBonusFactor;
+    public float attack_intBonusFactor;
 
 }
