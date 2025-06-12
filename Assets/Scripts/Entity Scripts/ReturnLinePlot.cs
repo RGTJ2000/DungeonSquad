@@ -17,8 +17,10 @@ public class ReturnLinePlot : MonoBehaviour
 
     LayerMask layerMask;
 
+
+   
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    void Awake()
     {
         GameObject lineObj = new GameObject("OtherLineRenderer");
         lineObj.transform.SetParent(transform, false); // Parent to this object
@@ -114,6 +116,7 @@ public class ReturnLinePlot : MonoBehaviour
     public void SetLineMaterial(Material material)
     {
         _returnLineRenderer.material = material;
+        
     }
     public void SetReturnLineWidth(float thisTargetWidth, float originWidth)
     {

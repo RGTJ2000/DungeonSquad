@@ -110,4 +110,8 @@ public class DroppedItemBehavior : MonoBehaviour
         _runtimeItem = item;
     }
 
+    public RuntimeItem GetRuntimeItem()
+    {
+        return _runtimeItem;
+    }
 }

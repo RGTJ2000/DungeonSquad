@@ -86,6 +86,10 @@ public class TargetingScan : MonoBehaviour
 
             visibleTargets = ScanForVisibleTargets(activeTargetTag);
 
+            if (scanMode == ActionMode.combat)
+            {
+                ItemTooltipManager.Instance.HideTooltip();
+            }
 
             if (visibleTargets.Length > 0)
             {
@@ -102,7 +106,6 @@ public class TargetingScan : MonoBehaviour
                     //step through visible targets, turn on target active_line and set this gameobject as target
                     ReturnLinePlot currentTarget_lineplot = visibleTargets[i].GetComponent<ReturnLinePlot>();
                     currentTarget_lineplot.visibleDistance = visibleDistance;
-                    currentTarget_lineplot.active_line = true;
                     currentTarget_lineplot.target_obj = this.gameObject;
 
                     if (scanMode == ActionMode.combat)
@@ -115,6 +118,7 @@ public class TargetingScan : MonoBehaviour
                         currentTarget_lineplot.SetLineMaterial(character_mutedLineMaterial);
                     }
 
+                    currentTarget_lineplot.active_line = true;
 
 
                     if (visibleTargets[i] == highlighted_target) //if the highlighted target, make the return line wider
@@ -122,6 +126,16 @@ public class TargetingScan : MonoBehaviour
                         currentTarget_lineplot.SetReturnLineWidth(0.6f, 0.3f);
 
                         highlighted_target_match = true; //only set to true if existing highlighted enemy is still visible
+
+                        //turn on tooltip for highlighted target if action mode = item
+                        if (scanMode == ActionMode.item)
+                        {
+                            //Call item tooltip instance to display item name
+                            ItemTooltipManager.Instance.ShowTooltip(visibleTargets[i]);
+                        }
+                        
+                        
+
                     }
                     else // if not the highlighted target, make the line thinner
                     {
@@ -131,22 +145,43 @@ public class TargetingScan : MonoBehaviour
                     //the return scan will then be active and tracking character, if line of sight breaks, target turns off the return line itself
                 }
 
+
+
                 if (!highlighted_target_match) //if the existing highlighted enemy not visible, then reset the highlight to null so that it will be refound by FindTargetOnVector
                 {
                     highlighted_target = null;
+
+                    if (scanMode == ActionMode.item)
+                    {
+                       ItemTooltipManager.Instance.HideTooltip();
+
+                    }
                 }
 
             }
             else //if no target found always default back to combat mode
             {
                 _chBehavior.SetActionMode(ActionMode.combat);
+
+                
             }
         }
         else //if scanning is off null out targets and default to combat scan
         {
             visibleTargets = null; //no visible targets found
             highlighted_target = null;
+
+            if (scanMode == ActionMode.item)
+            {
+                ItemTooltipManager.Instance.HideTooltip();
+            }
+
             _chBehavior.SetActionMode(ActionMode.combat);
+
+            ///When this line is used, the tootltip does not show
+            //ItemTooltipManager.Instance.HideTooltip();
+
+            
 
         }
 

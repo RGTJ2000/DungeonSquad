@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3cdb9f05507d2c041aa5f6d3d8d3ed29, type: 3}
   m_Name: Simple Bow
   m_EditorClassIdentifier: 
-  item_name: Simple bow
+  item_name: Simple Bow
   description: A simple bow made of simple wood.
   category: 2
   item_icon: {fileID: 21300000, guid: 7e09a8b1c98a78841a2dd6c071485751, type: 3}
