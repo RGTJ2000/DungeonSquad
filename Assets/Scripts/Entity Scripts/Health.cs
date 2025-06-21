@@ -87,7 +87,7 @@ public class Health : MonoBehaviour
     {
         //Debug.Log($"{gameObject.name} has died!");
         // Handle death logic (e.g., play animation, remove object, etc.)
-        DropManager.Instance.DropLoot(gameObject);
+        DropManager.Instance.DropAllLoot(gameObject);
         Destroy(healthBar_instance);
         Destroy(gameObject, 0.1f);
     }

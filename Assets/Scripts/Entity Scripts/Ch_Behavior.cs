@@ -301,11 +301,27 @@ public class Ch_Behavior : MonoBehaviour
                 _navMeshAgent.destination = transform.position;
 
             }
-            DroppedItemBehavior _dib = obj_to_pickup.GetComponent<DroppedItemBehavior>();
-            _dib.ActivatePickup(gameObject);
-            waitingForPickup = true;
-            isPickingUp = false;
-            isPerusing = true;
+
+            if (obj_to_pickup.CompareTag("Item"))
+            {
+                DroppedItemBehavior _dib = obj_to_pickup.GetComponent<DroppedItemBehavior>();
+                _dib.ActivatePickup(gameObject);
+                waitingForPickup = true;
+                isPickingUp = false;
+                isPerusing = true;
+
+            }
+            else if (obj_to_pickup.CompareTag("Chest"))
+            {
+                ChestBehavior _chestBehavior = obj_to_pickup.GetComponent<ChestBehavior>();
+                _chestBehavior.OpenChest();
+                waitingForPickup = false;
+                isPickingUp = false;
+                isPerusing = true;
+
+            }
+
+            
             Debug.Log("Switching to Perusing. Action mode =" + actionMode);
         }
 

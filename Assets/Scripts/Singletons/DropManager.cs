@@ -1,6 +1,5 @@
-using System.Runtime.CompilerServices;
-using System.Xml.Serialization;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class DropManager : MonoBehaviour
 {
@@ -8,6 +7,7 @@ public class DropManager : MonoBehaviour
 
     [SerializeField] private Vector3 dropLaunchVector = new Vector3(1, 0, 0).normalized;
     [SerializeField] private float dropLaunchSpeed = 5f;
+    
 
     [SerializeField] private GameObject copperDrop_prefab;
     [SerializeField] private GameObject silverDrop_prefab;
@@ -53,7 +53,7 @@ public class DropManager : MonoBehaviour
 
    
 
-    public void DropLoot(GameObject deadEntity)
+    public void DropAllLoot(GameObject deadEntity)
     {
         Inventory _inventory = deadEntity.GetComponent<Inventory>();
         if (_inventory != null)
@@ -62,14 +62,14 @@ public class DropManager : MonoBehaviour
             _inventory.copper_count = 0;
             if (copper_count > 0)
             {
-                ThrowLoot(copperDrop_prefab, copper_count, deadEntity);
+                ThrowCoins(copperDrop_prefab, copper_count, deadEntity);
             }
 
             int silver_count = _inventory.silver_count;
             _inventory.silver_count = 0;
             if (silver_count > 0)
             {
-                ThrowLoot(silverDrop_prefab, silver_count, deadEntity);
+                ThrowCoins(silverDrop_prefab, silver_count, deadEntity);
             }
 
             //get gold count
@@ -77,14 +77,14 @@ public class DropManager : MonoBehaviour
             _inventory.gold_count = 0;
             if (gold_count > 0)
             {
-                ThrowLoot(goldDrop_prefab, gold_count, deadEntity);
+                ThrowCoins(goldDrop_prefab, gold_count, deadEntity);
             }
 
             int platinum_count = _inventory.platinum_count;
             _inventory.platinum_count = 0;
             if(platinum_count > 0)
             {
-                ThrowLoot(platinumDrop_prefab, platinum_count, deadEntity);
+                ThrowCoins(platinumDrop_prefab, platinum_count, deadEntity);
             }
 
             if (copper_count+silver_count+gold_count+platinum_count > 0)
@@ -92,21 +92,48 @@ public class DropManager : MonoBehaviour
                 SoundManager.Instance.PlaySoundByKeyAtPosition("coin_drop", deadEntity.transform.position, SoundCategory.sfx);
             }
 
+            //drop items
+
+            List<RuntimeItem> allItems = _inventory.AllItems;
+            foreach (RuntimeItem item in allItems)
+            {
+                ThrowRuntimeItem(item, deadEntity);
+            }
+
+            //clear items
+            _inventory.Clear();
         }
 
     }
 
-    private void ThrowLoot(GameObject dropPrefab, int amount, GameObject entity)
+    private void ThrowCoins(GameObject dropPrefab, int amount, GameObject entity)
     {
         GameObject thisDrop;
+        float thisLaunchSpeed;
+
         for (int i = 0; i < amount; i++)
         {
-            thisDrop = Instantiate(dropPrefab, entity.transform.position, Quaternion.identity);
+            Vector3 launchPosition;
+            if (entity.CompareTag("Chest"))
+            {
+                launchPosition = entity.transform.position + entity.transform.forward;
+                thisLaunchSpeed = dropLaunchSpeed * 2f;
+            }
+            else
+            {
+                launchPosition = entity.transform.position;
+                thisLaunchSpeed = dropLaunchSpeed;
+            }
+
+            thisDrop = Instantiate(dropPrefab,launchPosition, Quaternion.identity);
+
+            
+
             Rigidbody _rb = thisDrop.GetComponent<Rigidbody>();
             if (_rb != null)
             {
 
-                _rb.linearVelocity = RandomizeLaunchVector(dropLaunchVector) * dropLaunchSpeed;
+                _rb.linearVelocity = RandomizeLaunchVector(dropLaunchVector) * thisLaunchSpeed;
 
 
             }
@@ -122,16 +149,28 @@ public class DropManager : MonoBehaviour
         {
             Debug.Log("Instatiating drop");
             GameObject thisDrop;
-            thisDrop = Instantiate(_prefab, entity.transform.position, Quaternion.identity);
+
+            Vector3 launchPosition;
+            if (entity.CompareTag("Chest"))
+            {
+                launchPosition = entity.transform.position + entity.transform.forward;
+            }
+            else
+            {
+                launchPosition = entity.transform.position;
+            }
+
+            thisDrop = Instantiate(_prefab, launchPosition, Quaternion.identity);
             //set the RuntimeItem reference in prefab
             DroppedItemBehavior _droppedItemBehavior = thisDrop.GetComponent<DroppedItemBehavior>();
             _droppedItemBehavior.SetRuntimeItem(item);
 
+            
             //throw item
             Rigidbody _rb = thisDrop.GetComponent<Rigidbody>();
             {
 
-                _rb.linearVelocity = RandomizeLaunchVector(dropLaunchVector) * dropLaunchSpeed;
+                _rb.linearVelocity = RandomizeLaunchVector(dropLaunchVector) * dropLaunchSpeed *3f;
 
             }
              SoundManager.Instance.PlaySoundByKeyAtPosition(item.baseItem.dropAudio_ID, entity.transform.position, SoundCategory.sfx);
@@ -148,6 +187,6 @@ public class DropManager : MonoBehaviour
 
         // Rotate around Y-axis
         Vector3 rotatedVector = Quaternion.Euler(0, randomDegrees, 0) * vector;
-        return rotatedVector.normalized;
+        return rotatedVector;
     }
 }

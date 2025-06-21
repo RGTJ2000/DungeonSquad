@@ -540,6 +540,7 @@ public class SquadManager : MonoBehaviour
         entities.AddRange(new List<GameObject>(GameObject.FindGameObjectsWithTag("Item")));
 
         entities.AddRange(new List<GameObject>(GameObject.FindGameObjectsWithTag("Chest")));
+        entities.AddRange(new List<GameObject>(GameObject.FindGameObjectsWithTag("OpenedChest")));
 
 
         /*

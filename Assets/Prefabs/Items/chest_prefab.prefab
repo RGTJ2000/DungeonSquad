@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8930991816926276517}
   - component: {fileID: 8569447591921692371}
   - component: {fileID: 7231911827590931664}
-  m_Layer: 13
+  m_Layer: 14
   m_Name: chestBottom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -106,7 +106,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.1, y: 1, z: 1.1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1258139573774723872
 GameObject:
@@ -120,7 +120,7 @@ GameObject:
   - component: {fileID: 5969456745060174105}
   - component: {fileID: 4693625303926470241}
   - component: {fileID: 8737858517187937782}
-  m_Layer: 13
+  m_Layer: 14
   m_Name: lid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -136,7 +136,7 @@ Transform:
   m_GameObject: {fileID: 1258139573774723872}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.1, z: -0.5}
+  m_LocalPosition: {x: 0, y: 0.1, z: 0.5}
   m_LocalScale: {x: 2, y: 0.2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -225,8 +225,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6280197954785600161}
-  m_Layer: 13
-  m_Name: lid_pivot
+  m_Layer: 14
+  m_Name: lidPivot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -241,7 +241,7 @@ Transform:
   m_GameObject: {fileID: 3261618755521839368}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.35, z: 0.5}
+  m_LocalPosition: {x: 0, y: 0.35, z: -0.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -261,7 +261,10 @@ GameObject:
   - component: {fileID: 1453714427365077375}
   - component: {fileID: 8650144148965531042}
   - component: {fileID: 5398351379823164506}
-  m_Layer: 13
+  - component: {fileID: 2055167509846671372}
+  - component: {fileID: 6117835805112108398}
+  - component: {fileID: 7126040455057343274}
+  m_Layer: 14
   m_Name: chest_prefab
   m_TagString: Chest
   m_Icon: {fileID: 0}
@@ -298,10 +301,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a120536c190dd469d67e89bf904c0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chestContents:
-    baseItem: {fileID: 0}
-    stackCount: 0
-    attachedCharms: []
 --- !u!120 &1453714427365077375
 LineRenderer:
   serializedVersion: 2
@@ -443,8 +442,88 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2, y: 1.3, z: 1}
-  m_Center: {x: 0, y: -0.1, z: 0}
+  m_Size: {x: 2.2, y: 1.3, z: 1.2}
+  m_Center: {x: 0, y: -0.100000024, z: 0}
+--- !u!114 &2055167509846671372
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6788394081984000554}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db404c2fd17683d4aaeebce7fb296df6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  copper_count: 0
+  silver_count: 0
+  gold_count: 0
+  platinum_count: 0
+  rings: []
+  helms: []
+  amulets: []
+  meleeWeapons:
+  - baseItem: {fileID: 11400000, guid: 99addd19d2a9ce7448797625b7aa00f3, type: 2}
+    stackCount: 1
+    attachedCharms: []
+  - baseItem: {fileID: 11400000, guid: 99addd19d2a9ce7448797625b7aa00f3, type: 2}
+    stackCount: 1
+    attachedCharms: []
+  - baseItem: {fileID: 11400000, guid: 99addd19d2a9ce7448797625b7aa00f3, type: 2}
+    stackCount: 1
+    attachedCharms: []
+  armors: []
+  rangedWeapons: []
+  shields: []
+  boots: []
+  missiles: []
+  potions: []
+  scrolls: []
+  gems: []
+--- !u!54 &6117835805112108398
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6788394081984000554}
+  serializedVersion: 4
+  m_Mass: 100
+  m_Drag: 10
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 80
+  m_CollisionDetection: 0
+--- !u!208 &7126040455057343274
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6788394081984000554}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 0.5, z: 1}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0.5}
+  m_TimeToStationary: 0.5
 --- !u!1 &8051294455889421134
 GameObject:
   m_ObjectHideFlags: 0
@@ -457,7 +536,7 @@ GameObject:
   - component: {fileID: 5820017069429134837}
   - component: {fileID: 2694159054776701640}
   - component: {fileID: 2502105462116244790}
-  m_Layer: 13
+  m_Layer: 14
   m_Name: rim
   m_TagString: Untagged
   m_Icon: {fileID: 0}

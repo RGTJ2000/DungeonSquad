@@ -42,7 +42,7 @@ MonoBehaviour:
     operatorType: 0
     amount: 0
   cycleTime: 1.4
-  melee_reach: 2
+  melee_reach: 2.5
   melee_damageBase: 0
   melee_damageRange: 0
   melee_critBase: 0.3
