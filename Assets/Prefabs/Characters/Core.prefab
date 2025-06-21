@@ -194,25 +194,16 @@ MonoBehaviour:
   - baseItem: {fileID: 11400000, guid: 99addd19d2a9ce7448797625b7aa00f3, type: 2}
     stackCount: 0
     attachedCharms: []
-  - baseItem: {fileID: 11400000, guid: 99addd19d2a9ce7448797625b7aa00f3, type: 2}
+  - baseItem: {fileID: 11400000, guid: 1f303c623453df949b7e0a46e6872711, type: 2}
     stackCount: 0
     attachedCharms: []
-  - baseItem: {fileID: 11400000, guid: 99addd19d2a9ce7448797625b7aa00f3, type: 2}
+  - baseItem: {fileID: 11400000, guid: fdfda981ee0849e408b13ebf0fbd3a0f, type: 2}
     stackCount: 0
     attachedCharms: []
-  - baseItem: {fileID: 11400000, guid: 99addd19d2a9ce7448797625b7aa00f3, type: 2}
+  - baseItem: {fileID: 11400000, guid: 01a3a4039f31ed5439e2fe4c41fa57d6, type: 2}
     stackCount: 0
     attachedCharms: []
-  - baseItem: {fileID: 11400000, guid: 99addd19d2a9ce7448797625b7aa00f3, type: 2}
-    stackCount: 0
-    attachedCharms: []
-  - baseItem: {fileID: 11400000, guid: 99addd19d2a9ce7448797625b7aa00f3, type: 2}
-    stackCount: 0
-    attachedCharms: []
-  - baseItem: {fileID: 11400000, guid: 99addd19d2a9ce7448797625b7aa00f3, type: 2}
-    stackCount: 0
-    attachedCharms: []
-  - baseItem: {fileID: 11400000, guid: 99addd19d2a9ce7448797625b7aa00f3, type: 2}
+  - baseItem: {fileID: 11400000, guid: 817b6d54290977341a3c541552058675, type: 2}
     stackCount: 0
     attachedCharms: []
   armors:

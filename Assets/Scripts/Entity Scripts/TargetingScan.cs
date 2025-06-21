@@ -42,7 +42,7 @@ public class TargetingScan : MonoBehaviour
 
     private ActionMode scanMode;
 
-    [SerializeField]private string activeTargetTag;
+    [SerializeField]private string[] activeTargetTags;
 
     void Start()
     {
@@ -84,7 +84,7 @@ public class TargetingScan : MonoBehaviour
         {
             bool highlighted_target_match = false;
 
-            visibleTargets = ScanForVisibleTargets(activeTargetTag);
+            visibleTargets = ScanForVisibleTargets(activeTargetTags);
 
             if (scanMode == ActionMode.combat)
             {
@@ -205,14 +205,14 @@ public class TargetingScan : MonoBehaviour
 
     public void ActivateTargetingScan()
     {
-        activeTargetTag = GetActiveTagString();
+        activeTargetTags = GetActiveTagArray();
         scanningOn = true;
     }
 
 
-    private string GetActiveTagString()
+    private string[] GetActiveTagArray()
     {
-        string targetingTag;
+        string[] targetingTags;
 
         if (scanMode == ActionMode.combat)
         {
@@ -223,67 +223,88 @@ public class TargetingScan : MonoBehaviour
                 switch (type)
                 {
                     case Targeting_Type.self:
-                        targetingTag = "undef";
+                        targetingTags = new string[] { "undef"};
                         break;
                     case Targeting_Type.group:
-                        targetingTag = "Character";
+                        targetingTags = new string[] { "Character"};
                         break;
                     case Targeting_Type.other:
-                        targetingTag = "Enemy";
+                        targetingTags = new string[] { "Enemy"};
                         break;
                     case Targeting_Type.area:
-                        targetingTag = "undef";
+                        targetingTags = new string[] { "undef"};
                         break;
                     default:
-                        targetingTag = "none";
+                        targetingTags = new string[] { "none"};
                         break;
                 }
             }
             else
             {
-                targetingTag= "none";
+                targetingTags= new string[] { "none"};
             }
 
         }
         else if (scanMode == ActionMode.item)
         {
-            targetingTag = "Item";
+            
+            targetingTags = new string[] { "Item", "Chest" };
+            Debug.Log("Setting targeting tags to: " + string.Join(", ", targetingTags));
+
         }
         else
         {
-            targetingTag = "none";
+            targetingTags = new string[] { "none" };
         }
 
 
-        return targetingTag;
+
+        return targetingTags;
 
 
 
     }
-    public GameObject[] ScanForVisibleTargets(string targetTag)
+    public GameObject[] ScanForVisibleTargets(params string[] targetTags)
     {
-
-        GameObject[] allTargets = GameObject.FindGameObjectsWithTag(targetTag);
-
         List<GameObject> visibleTargetsList = new List<GameObject>();
 
-        foreach (GameObject target in allTargets)
+        foreach (string tag in targetTags)
         {
-            if (target.CompareTag(targetTag))
+            
+
+            GameObject[] targets = GameObject.FindGameObjectsWithTag(tag);
+
+            if (tag == "Chest")
+            {
+                Debug.Log("Looking for Chest");
+
+                if (targets.Length > 0)
+                {
+                    Debug.Log("Chests FOUND =" + targets.Length);
+                }
+            }
+
+            if (tag == "Item")
+            {
+                Debug.Log("Looking for Items");
+
+                if (targets.Length > 0)
+                {
+                    Debug.Log("Items FOUND =" + targets.Length);
+                }
+            }
+
+            foreach (GameObject target in targets)
             {
                 if (HitTargetBeforeWall(target))
                 {
                     visibleTargetsList.Add(target);
                 }
-
             }
         }
 
-        GameObject[] visibleTargetsArray = visibleTargetsList.ToArray();
-
-        return visibleTargetsArray;
-
-
+        Debug.Log("Total found="+ visibleTargetsList.Count);
+        return visibleTargetsList.ToArray();
     }
 
 
@@ -575,13 +596,13 @@ public class TargetingScan : MonoBehaviour
         {
             scanMode = ActionMode.combat;
         }
-        activeTargetTag = GetActiveTagString();
+        activeTargetTags = GetActiveTagArray();
     }
 
     public void SetScanMode(ActionMode mode)
     {
         scanMode = mode;
-        activeTargetTag = GetActiveTagString();
+        activeTargetTags = GetActiveTagArray();
     }
 }
 

@@ -1,0 +1,63 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ae7652cccefeba40aa42f1cc017fc48, type: 3}
+  m_Name: Hatchet
+  m_EditorClassIdentifier: 
+  item_name: Hatchet
+  description: A light hatchet. Handy for splitting wood or skulls.
+  category: 1
+  item_icon: {fileID: 21300000, guid: 3306eea31c5141540b256ab4b2a345d8, type: 3}
+  item_prefab: {fileID: 6711430165638062514, guid: f2fbf793a74c4f4469c35946354c276b,
+    type: 3}
+  pickupAudio_ID: 
+  dropAudio_ID: sword_drop
+  equipAudio_ID: 
+  unequipAudio_ID: 
+  isEquippable: 1
+  isStackable: 0
+  maxStack: 1
+  attachedCharms: []
+  strModifier:
+    operatorType: 0
+    amount: 0
+  dexModifier:
+    operatorType: 0
+    amount: 0
+  intModifier:
+    operatorType: 0
+    amount: 0
+  willModifier:
+    operatorType: 0
+    amount: 0
+  soulModifier:
+    operatorType: 0
+    amount: 0
+  cycleTime: 0.6
+  melee_reach: 0.4
+  melee_damageBase: 0
+  melee_damageRange: 0
+  melee_critBase: 0.15
+  damageList:
+  - damageType: 0
+    damage_base: 3
+    damage_range: 3
+  str_scalingFactor: 0.1
+  dex_scalingFactor: 0.05
+  defense_dexBonusFactor: 0
+  attack_strBonusFactor: 0.1
+  attack_dexBonusFactor: 0.1
+  attack_intBonusFactor: 0
+  attack_willBonusFactor: 0
+  ignoreArmor: 0
+  isTwoHanded: 0
+  hitAudio_ID: 
+  missAudio_ID: 

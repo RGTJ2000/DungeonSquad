@@ -313,7 +313,7 @@ public class Ch_Behavior : MonoBehaviour
 
     private void ActivePerusing()
     {
-        Debug.Log("PERUSING. Action mode = "+actionMode);
+        //Debug.Log("PERUSING. Action mode = "+actionMode);
         isInFormation = false;
         _navMeshAgent.enabled = true;
         _controller.enabled = false;

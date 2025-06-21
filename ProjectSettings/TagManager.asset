@@ -12,6 +12,8 @@ TagManager:
   - Item
   - UnequipItem
   - EquipItem
+  - Chest
+  - OpenedChest
   layers:
   - Default
   - TransparentFX

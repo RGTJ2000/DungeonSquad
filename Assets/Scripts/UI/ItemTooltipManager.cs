@@ -34,7 +34,7 @@ public class ItemTooltipManager : ManagerBase<ItemTooltipManager>
         if (item_obj != activeTooltipObject)
         {
             activeTooltipObject = item_obj;
-            Debug.Log("ShowTooltip called. Active Tooltip obj="+activeTooltipObject.name);
+            //Debug.Log("ShowTooltip called. Active Tooltip obj="+activeTooltipObject.name);
 
            
 
@@ -43,11 +43,22 @@ public class ItemTooltipManager : ManagerBase<ItemTooltipManager>
             // Update position and text
             currentTooltipInstance.transform.position = activeTooltipObject.transform.position + displayOffset;
 
-            //Get Item info
-            DroppedItemBehavior droppedItemBehavior = activeTooltipObject.GetComponent<DroppedItemBehavior>();
-            RuntimeItem runtimeItem = droppedItemBehavior.GetRuntimeItem();
+            string nameToDisplay = "???";
 
-            tooltipText.text = runtimeItem.item_name;
+            if (item_obj.CompareTag("Item"))
+            {
+                //Get Item info
+                DroppedItemBehavior droppedItemBehavior = activeTooltipObject.GetComponent<DroppedItemBehavior>();
+                RuntimeItem runtimeItem = droppedItemBehavior.GetRuntimeItem();
+                nameToDisplay = runtimeItem.item_name;
+            }
+            else if (item_obj.CompareTag("Chest"))
+            {
+                nameToDisplay = "Chest";
+            }
+           
+
+            tooltipText.text = nameToDisplay;
             currentTooltipInstance.SetActive(true);
 
 

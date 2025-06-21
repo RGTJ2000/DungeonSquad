@@ -18,7 +18,8 @@ public enum ItemCategory
     scroll,
     amulet,
     ring,
-    gem
+    gem,
+    chest
 
 }
 
@@ -49,6 +50,9 @@ public abstract class Item_SO : ScriptableObject
     public GameObject item_prefab;
     public string pickupAudio_ID;
     public string dropAudio_ID;
+
+    public string equipAudio_ID;
+    public string unequipAudio_ID;
 
 
     //Equip behavior

@@ -22,6 +22,9 @@ public class Melee_Weapon_SO : Weapon_SO
     public float attack_intBonusFactor;
     public float attack_willBonusFactor;
 
+    public bool ignoreArmor;
+    public bool isTwoHanded;
+
     //Audio
     public string hitAudio_ID;
     public string missAudio_ID;
