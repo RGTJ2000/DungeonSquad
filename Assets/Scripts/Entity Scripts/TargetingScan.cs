@@ -303,7 +303,6 @@ public class TargetingScan : MonoBehaviour
             }
         }
 
-        Debug.Log("Total found="+ visibleTargetsList.Count);
         return visibleTargetsList.ToArray();
     }
 

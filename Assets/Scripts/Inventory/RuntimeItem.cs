@@ -30,6 +30,8 @@ public class RuntimeItem
 
     public bool IsStackable => baseItem.isStackable;
     public bool IsEquippable => baseItem.isEquippable;
+
+    public bool IsUseable => baseItem.isUseable;
     public int maxStack => baseItem.maxStack;
 
     public StatAdjustment strModifier => baseItem.strModifier;
@@ -57,7 +59,7 @@ public class RuntimeItem
     public Boots_SO Boots => baseItem as Boots_SO;
     public Missile_SO Missile => baseItem as Missile_SO;
 
-
+    public Potion_SO Potion => baseItem as Potion_SO;
     /*
     public Armor_SO Armor => baseItem as Armor_SO;
     public Shield_SO Shield => baseItem as Shield_SO;

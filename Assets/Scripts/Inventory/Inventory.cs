@@ -144,6 +144,9 @@ public class Inventory : MonoBehaviour
             case ItemCategory.missile:
                 missiles.Remove(item);
                 break;
+            case ItemCategory.potion:
+                potions.Remove(item);
+                break;
 
             default:
                 Debug.LogWarning("Unknown item category to remove: " + item.baseItem.item_name);

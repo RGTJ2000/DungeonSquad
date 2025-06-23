@@ -72,6 +72,11 @@ public class InventoryManager : ManagerBase<InventoryManager>
         return _coreInventory.missiles;
     }
 
+    public List<RuntimeItem> GetCorePotionsList()
+    {
+        return _coreInventory.potions;
+    }
+
     public void DropItemFromCore(RuntimeItem item)
     {
         //instantiate dropped item
@@ -211,5 +216,10 @@ public class InventoryManager : ManagerBase<InventoryManager>
         }
 
 
+    }
+
+    public void DeleteItemFromCore(RuntimeItem item)
+    {
+        _coreInventory.RemoveItem(item);
     }
 }

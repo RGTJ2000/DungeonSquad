@@ -108,7 +108,7 @@ public class ProfilePanelController : MonoBehaviour
 
     public void UpdatePanelToCharacter(GameObject ch_obj)
     {
-        Debug.Log("Updating PanelToCharacter.");
+        //Debug.Log("Updating PanelToCharacter.");
 
         _chStats = ch_obj.GetComponent<EntityStats>();
 
@@ -128,7 +128,7 @@ public class ProfilePanelController : MonoBehaviour
         }
     }
 
-    private void UpdateHitPoints()
+    public void UpdateHitPoints()
     {
         if (_chStats != null)
         {
@@ -167,13 +167,13 @@ public class ProfilePanelController : MonoBehaviour
 
             if (!UICanvasManager.Instance.equipPanelFocus)
             {
-                Debug.Log("Not EquipPanel Focus.");
+                //Debug.Log("Not EquipPanel Focus.");
                 int inventoryIndex = UICanvasManager.Instance.inventoryIndex;
                 UpdateReadjustSlidersAndStats(UICanvasManager.Instance.inventoryItems[inventoryIndex], EquipState.equip);
             }
             else
             {
-                Debug.Log("EquipPanel in Focus.");
+                //Debug.Log("EquipPanel in Focus.");
 
                 UpdateReadjustSlidersAndStats(_chStats.GetEquippedByCategory(UICanvasManager.Instance.currentCatSelect), EquipState.unequip);
 

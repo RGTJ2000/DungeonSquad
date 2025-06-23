@@ -35,6 +35,8 @@ public class UICanvasManager : ManagerBase<UICanvasManager>
     [SerializeField] private Transform bootsPanel;
     [SerializeField] private Transform missilePanel;
 
+    [SerializeField] private Transform potionPanel;
+
     [SerializeField] private GameObject itemEntry_prefab;
     [SerializeField] private GameObject unequipItem_prefab;
 
@@ -400,6 +402,7 @@ public class UICanvasManager : ManagerBase<UICanvasManager>
         ClearInventoryListPanel(shieldPanel);
         ClearInventoryListPanel(bootsPanel);
         ClearInventoryListPanel(missilePanel);
+        ClearInventoryListPanel(potionPanel);
         //clear main lists
         inventoryEntries.Clear();
         inventoryItems.Clear();
@@ -484,6 +487,11 @@ public class UICanvasManager : ManagerBase<UICanvasManager>
             AddItemToCategoryPanel(missileItem, missilePanel);
         }
 
+        foreach (var potionItem in InventoryManager.Instance.GetCorePotionsList())
+        {
+            AddItemToCategoryPanel(potionItem, potionPanel);
+        }
+
     }
 
     private void AddItemToCategoryPanel(RuntimeItem item, Transform categoryPanel)
@@ -508,7 +516,7 @@ public class UICanvasManager : ManagerBase<UICanvasManager>
             }
             else
             {
-                DeselectInventoryItem(newObj);
+                DeselectInventoryEntry(newObj);
             }
 
 
@@ -517,7 +525,7 @@ public class UICanvasManager : ManagerBase<UICanvasManager>
         }
         else if (inventoryEntries.Count > 1)
         {
-            DeselectInventoryItem(newObj);
+            DeselectInventoryEntry(newObj);
 
         }
 
@@ -544,7 +552,7 @@ public class UICanvasManager : ManagerBase<UICanvasManager>
         }
         else if (inventoryEntries.Count > 1)
         {
-            DeselectInventoryItem(newObj);
+            DeselectInventoryEntry(newObj);
 
         }
     }
@@ -937,7 +945,7 @@ public class UICanvasManager : ManagerBase<UICanvasManager>
                 equipPanelActive = true;
                 SelectInventoryEntry(inventoryEntries[inventoryIndex]);
 
-                Debug.Log("Update Panel to Character FOUDN. Changed to " + ch_obj.name + " Updating ProfilePanel to character. EquipPanelFocus=" +equipPanelFocus);
+                //Debug.Log("Update Panel to Character FOUND. Changed to " + ch_obj.name + " Updating ProfilePanel to character. EquipPanelFocus=" +equipPanelFocus);
 
                 _profilePanelController.UpdatePanelToCharacter(ch_obj);
                 profilePanel.SetActive(true);
@@ -945,7 +953,7 @@ public class UICanvasManager : ManagerBase<UICanvasManager>
             }
             else
             {
-                Debug.Log("Update Panel to Character. Null characterObj found.");
+                //Debug.Log("Update Panel to Character. Null characterObj found.");
                 equipPanel.gameObject.SetActive(false);
                 equipPanelActive = false;
                 equipPanelFocus = false;
@@ -1019,6 +1027,7 @@ public class UICanvasManager : ManagerBase<UICanvasManager>
                 {
                     if (!equipPanelFocus)
                     {
+                        
                         DropItem(inventoryIndex);
 
                     }
@@ -1036,6 +1045,10 @@ public class UICanvasManager : ManagerBase<UICanvasManager>
                         if (current_character != null && inventoryItems[inventoryIndex].IsEquippable)
                         {
                             EquipItem(inventoryIndex);
+                        }
+                        else if (current_character != null && inventoryItems[inventoryIndex].IsUseable)
+                        {
+                            UseItem(inventoryIndex);
                         }
 
                     }
@@ -1282,7 +1295,7 @@ public class UICanvasManager : ManagerBase<UICanvasManager>
             color.a = 200;
             inventoryDescriptBackground.color = color;
 
-            DeselectInventoryItem(inventoryEntries[inventoryIndex]);
+            DeselectInventoryEntry(inventoryEntries[inventoryIndex]);
 
             //update profilepanel to show dequip stats
             _profilePanelController.UpdateReadjustSlidersAndStats( current_character.GetComponent<EntityStats>().GetEquippedByCategory(currentCatSelect), EquipState.unequip);
@@ -1334,6 +1347,27 @@ public class UICanvasManager : ManagerBase<UICanvasManager>
         UpdateEquipDescriptPanel(current_character);
 
         _profilePanelController.UpdateStatsPanels_1_2();
+    }
+
+    private void UseItem(int index)
+    {
+        if (inventoryItems[index].Potion != null)
+        {
+            inventoryItems[index].Potion.Use(current_character);
+            
+            InventoryManager.Instance.DeleteItemFromCore(inventoryItems[index]);
+            RefreshInventoryListsAndObjects();
+            MoveToInventoryIndex(index);
+
+            UpdateInventoryDescriptPanel();
+
+            _profilePanelController.UpdateHitPoints();
+            _profilePanelController.UpdateStatsPanels_1_2();
+
+
+        }
+
+
     }
 
     private void OnUnequipItem(InputAction.CallbackContext context)
@@ -1457,7 +1491,7 @@ public class UICanvasManager : ManagerBase<UICanvasManager>
             index = Mathf.Clamp(index, 0, inventoryEntries.Count - 1);
 
 
-            DeselectInventoryItem(inventoryEntries[inventoryIndex]);
+            DeselectInventoryEntry(inventoryEntries[inventoryIndex]);
             SelectInventoryEntry(inventoryEntries[index]);
 
 
@@ -1593,7 +1627,7 @@ public class UICanvasManager : ManagerBase<UICanvasManager>
                 //SoundManager.Instance.PlaySoundByKey("single_click", SoundCategory.UI);
 
                 //deselect inventory index
-                DeselectInventoryItem(inventoryEntries[inventoryIndex]);
+                DeselectInventoryEntry(inventoryEntries[inventoryIndex]);
                 //select new index
                 inventoryIndex = newIndex;
                 SelectInventoryEntry(inventoryEntries[inventoryIndex]);
@@ -1694,21 +1728,47 @@ public class UICanvasManager : ManagerBase<UICanvasManager>
 
             Transform equipText = entry.transform.Find("Equip");
             Transform dropText = entry.transform.Find("Drop");
+            Transform useText = entry.transform.Find("Use");
             Image background = entry.GetComponentInChildren<Image>();
 
             nameText.fontStyle = FontStyles.Bold;
-            if (!inventoryItems[inventoryIndex].IsEquippable || current_character == null || (_squadManager.select_active != -1 && _squadManager.ch_in_slot_array[_squadManager.select_active] == null))
+            if ((!inventoryItems[inventoryIndex].IsEquippable && !inventoryItems[inventoryIndex].IsUseable) || current_character == null || (_squadManager.select_active != -1 && _squadManager.ch_in_slot_array[_squadManager.select_active] == null))
             {
                 equipText.gameObject.SetActive(false);
+                useText.gameObject.SetActive(false);
             }
             else
             {
-                equipText.gameObject.SetActive(true);
+                Debug.Log(inventoryItems[inventoryIndex].item_name+":  isEquippable=" + inventoryItems[inventoryIndex].IsEquippable+ "  isUseable="+ inventoryItems[inventoryIndex].IsUseable );
+
+                if (inventoryItems[inventoryIndex].IsEquippable)
+                {
+                    equipText.gameObject.SetActive(true);
+                    useText.gameObject.SetActive(false);
+
+                    _profilePanelController.UpdateReadjustSlidersAndStats(inventoryItems[inventoryIndex], EquipState.equip);
+
+                }
+                else if (inventoryItems[inventoryIndex].IsUseable)
+                {
+                    Debug.Log("Setting USE TEXT to true.");
+                    equipText.gameObject.SetActive(false);
+                    useText.gameObject.SetActive(true);
+
+                    _profilePanelController.UpdateReadjustSlidersAndStats(inventoryItems[inventoryIndex], EquipState.equip);
+                }
+                else
+                {
+                    equipText.gameObject.SetActive(false);
+                    useText.gameObject.SetActive(false);
+
+                }
+
+
             }
             dropText.gameObject.SetActive(true);
             background.color = new Color32(221, 147, 39, 20);
 
-            _profilePanelController.UpdateReadjustSlidersAndStats(inventoryItems[inventoryIndex], EquipState.equip);
         }
 
         /*
@@ -1734,7 +1794,7 @@ public class UICanvasManager : ManagerBase<UICanvasManager>
 
     }
 
-    private void DeselectInventoryItem(GameObject entry)
+    private void DeselectInventoryEntry(GameObject entry)
     {
         if (entry.tag == "EquipItem")
         {
@@ -1743,11 +1803,14 @@ public class UICanvasManager : ManagerBase<UICanvasManager>
 
             Transform equipText = entry.transform.Find("Equip");
             Transform dropText = entry.transform.Find("Drop");
+            Transform useText = entry.transform.Find("Use");
+
             Image background = entry.GetComponentInChildren<Image>();
 
             nameText.fontStyle = FontStyles.Normal;
             equipText.gameObject.SetActive(false);
             dropText.gameObject.SetActive(false);
+            useText .gameObject.SetActive(false);
             background.color = new Color32(152, 152, 152, 22);
 
         }

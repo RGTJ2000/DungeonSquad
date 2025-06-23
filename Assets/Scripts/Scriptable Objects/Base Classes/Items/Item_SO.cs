@@ -57,6 +57,7 @@ public abstract class Item_SO : ScriptableObject
 
     //Equip behavior
     public bool isEquippable = true;
+    public bool isUseable = false;
 
 
     // Stacking behavior

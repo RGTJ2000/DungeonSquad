@@ -79,6 +79,16 @@ public enum ActionMode
     item
 }
 
+public enum StatType
+{
+    strength,
+    dexterity,
+    intelligence,
+    will,
+    soul,
+    maxHealth
+}
+
 #region COMBAT ENUMS STRUCTS
 
 public enum DamageType

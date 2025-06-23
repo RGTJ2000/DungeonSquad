@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74575f47d7b83254299238dd48b5b865, type: 3}
+  m_Name: LesserStrengthPotion_SO
+  m_EditorClassIdentifier: 
+  item_name: +5 Strength Potion
+  description: 'A noxious red brew with a label reading: "Red Thrive gives you 5!"'
+  category: 8
+  item_icon: {fileID: 21300000, guid: df139092a7971ab439c4e479bd366cef, type: 3}
+  item_prefab: {fileID: 6711430165638062514, guid: eaa8351fa0d11854bafb6178383e7b77,
+    type: 3}
+  pickupAudio_ID: 
+  dropAudio_ID: 
+  equipAudio_ID: 
+  unequipAudio_ID: 
+  isEquippable: 0
+  isUseable: 1
+  isStackable: 1
+  maxStack: 10
+  attachedCharms: []
+  strModifier:
+    operatorType: 0
+    amount: 0
+  dexModifier:
+    operatorType: 0
+    amount: 0
+  intModifier:
+    operatorType: 0
+    amount: 0
+  willModifier:
+    operatorType: 0
+    amount: 0
+  soulModifier:
+    operatorType: 0
+    amount: 0
+  potionEffects:
+  - {fileID: 11400000, guid: d61f684bb4a77764080808a408b983fd, type: 2}

@@ -200,12 +200,6 @@ MonoBehaviour:
   - baseItem: {fileID: 11400000, guid: fdfda981ee0849e408b13ebf0fbd3a0f, type: 2}
     stackCount: 0
     attachedCharms: []
-  - baseItem: {fileID: 11400000, guid: 01a3a4039f31ed5439e2fe4c41fa57d6, type: 2}
-    stackCount: 0
-    attachedCharms: []
-  - baseItem: {fileID: 11400000, guid: 817b6d54290977341a3c541552058675, type: 2}
-    stackCount: 0
-    attachedCharms: []
   armors:
   - baseItem: {fileID: 11400000, guid: 7e64edeff4ed8c940aa72edea799aa81, type: 2}
     stackCount: 1
@@ -214,61 +208,19 @@ MonoBehaviour:
   - baseItem: {fileID: 11400000, guid: fff9698c686307a4698f242a7e669550, type: 2}
     stackCount: 1
     attachedCharms: []
-  - baseItem: {fileID: 11400000, guid: fff9698c686307a4698f242a7e669550, type: 2}
-    stackCount: 1
-    attachedCharms: []
-  - baseItem: {fileID: 11400000, guid: fff9698c686307a4698f242a7e669550, type: 2}
-    stackCount: 1
-    attachedCharms: []
-  - baseItem: {fileID: 11400000, guid: fff9698c686307a4698f242a7e669550, type: 2}
-    stackCount: 1
-    attachedCharms: []
-  - baseItem: {fileID: 11400000, guid: fff9698c686307a4698f242a7e669550, type: 2}
-    stackCount: 1
-    attachedCharms: []
-  - baseItem: {fileID: 11400000, guid: fff9698c686307a4698f242a7e669550, type: 2}
-    stackCount: 1
-    attachedCharms: []
   shields:
   - baseItem: {fileID: 11400000, guid: 7ff8911cb21ad004d9bd86a4213f4016, type: 2}
     stackCount: 1
     attachedCharms: []
   boots: []
-  missiles:
-  - baseItem: {fileID: 11400000, guid: 3ca1cf42af935e7439c3954489a8786e, type: 2}
+  missiles: []
+  potions:
+  - baseItem: {fileID: 11400000, guid: 497ec87ebf7691e47962e6c6c3df35b4, type: 2}
     stackCount: 1
     attachedCharms: []
-  - baseItem: {fileID: 11400000, guid: 3ca1cf42af935e7439c3954489a8786e, type: 2}
+  - baseItem: {fileID: 11400000, guid: a62784507422b524580f1c616a66da7c, type: 2}
     stackCount: 1
     attachedCharms: []
-  - baseItem: {fileID: 11400000, guid: 3ca1cf42af935e7439c3954489a8786e, type: 2}
-    stackCount: 1
-    attachedCharms: []
-  - baseItem: {fileID: 11400000, guid: 3ca1cf42af935e7439c3954489a8786e, type: 2}
-    stackCount: 1
-    attachedCharms: []
-  - baseItem: {fileID: 11400000, guid: 3ca1cf42af935e7439c3954489a8786e, type: 2}
-    stackCount: 1
-    attachedCharms: []
-  - baseItem: {fileID: 11400000, guid: 3ca1cf42af935e7439c3954489a8786e, type: 2}
-    stackCount: 1
-    attachedCharms: []
-  - baseItem: {fileID: 11400000, guid: 3ca1cf42af935e7439c3954489a8786e, type: 2}
-    stackCount: 1
-    attachedCharms: []
-  - baseItem: {fileID: 11400000, guid: 3ca1cf42af935e7439c3954489a8786e, type: 2}
-    stackCount: 1
-    attachedCharms: []
-  - baseItem: {fileID: 11400000, guid: 3ca1cf42af935e7439c3954489a8786e, type: 2}
-    stackCount: 1
-    attachedCharms: []
-  - baseItem: {fileID: 11400000, guid: 3ca1cf42af935e7439c3954489a8786e, type: 2}
-    stackCount: 1
-    attachedCharms: []
-  - baseItem: {fileID: 11400000, guid: 3ca1cf42af935e7439c3954489a8786e, type: 2}
-    stackCount: 1
-    attachedCharms: []
-  potions: []
   scrolls: []
   gems: []
 --- !u!1 &4076837569317092631
