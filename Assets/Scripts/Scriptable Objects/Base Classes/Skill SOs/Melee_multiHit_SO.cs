@@ -7,6 +7,7 @@ public class Melee_multiHit_SO : Skill_SO
     EntityStats _entityStats;
     RuntimeItem equippedWeapon_SO;
     SkillCooldownTracker _cooldownTracker;
+    float _cooldown;
 
     public override void Use(GameObject user, GameObject target)
     {
@@ -15,13 +16,13 @@ public class Melee_multiHit_SO : Skill_SO
 
         equippedWeapon_SO = _entityStats.equipped_meleeWeapon;
 
-        cooldown = equippedWeapon_SO.MeleeWeapon.cycleTime / numberOfHits; //set the cooldown to atacker's weapon
+        _cooldown = equippedWeapon_SO.MeleeWeapon.cycleTime / numberOfHits; //set the cooldown to atacker's weapon
 
         CombatManager.Instance.ResolveMelee(user, target);
 
         if (_cooldownTracker != null)
         {
-            _cooldownTracker.StartCooldown(this); //set the cooldown tracker
+            _cooldownTracker.StartCooldown(this, _cooldown); //set the cooldown tracker
 
         }
 

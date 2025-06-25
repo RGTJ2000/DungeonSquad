@@ -49,7 +49,7 @@ public class TripleStrike_SO : Skill_SO
 
                     tripleStrike_obj.GetComponent<TripleStrikeGuidance>().SetTripleStrikeParameters(attacker, target);
 
-                    _cooldownTracker.StartCooldown(this); //start cooldown for triple strike instantiation
+                    _cooldownTracker.StartCooldown(this, cooldown); //start cooldown for triple strike instantiation
 
                     //after instantiaion of TripleStrike set the skill performing to simple melee assault
                     /*
@@ -61,7 +61,7 @@ public class TripleStrike_SO : Skill_SO
                         //if a character is using this, then set the skill to simple assault now
                         _chBehavior.SetSkillPerforming(simpleAssault_SO);
                         //and set the simple assault cooldown so that it proc's after triple strike
-                        _cooldownTracker.StartCooldown(simpleAssault_SO);
+                        _cooldownTracker.StartCooldown(simpleAssault_SO, simpleAssault_SO.cooldown);
                     }
                 }
                 /*

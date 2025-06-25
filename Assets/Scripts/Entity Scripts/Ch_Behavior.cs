@@ -133,8 +133,17 @@ public class Ch_Behavior : MonoBehaviour
     {
         //change movement behavior
         isInFormation = false;
-        _navMeshAgent.enabled = true;
-        _controller.enabled = false;
+        if (_navMeshAgent.enabled == false)
+        {
+            _navMeshAgent.enabled = true;
+            _navMeshAgent.velocity = _controller.velocity;
+        }
+        
+        if (_controller.enabled == true)
+        {
+            _controller.enabled = false;
+
+        }
         //set target arrow on
         _targetingscan.target_arrow_on = true;
 
@@ -145,6 +154,11 @@ public class Ch_Behavior : MonoBehaviour
     {
         isInFormation = true;
         _targetingscan.target_arrow_on = true;
+
+
+        skill_performing.Use(gameObject, obj_to_ranged);
+
+        /*
         FaceTarget(obj_to_ranged);
 
         Vector3 target_direction = obj_to_ranged.transform.position - transform.position;
@@ -164,6 +178,8 @@ public class Ch_Behavior : MonoBehaviour
                 StartCoroutine(RangedAttackCooldown(_entityStats.equipped_rangedWeapon.RangedWeapon.cycleTime));
             }
         }
+
+        */
 
         /*
         _combat.SetEngageStatus(true);
@@ -198,7 +214,7 @@ public class Ch_Behavior : MonoBehaviour
 
                 if (_skillCooldownTracker != null)
                 {
-                    _skillCooldownTracker.StartCooldown(skill);
+                    _skillCooldownTracker.StartCooldown(skill, skill.cooldown);
                 }
 
             }

@@ -15,16 +15,16 @@ public class Enemy_Behavior2 : MonoBehaviour
     //for BehaviorStats_SO
     [SerializeField] private bool vc_required = true;
     [SerializeField] private Enemy_EngageType engageType = Enemy_EngageType.blind;
-    [SerializeField] private bool activeTriggerFilled = false;
-    [SerializeField] private bool farTriggerFilled = false;
+    [SerializeField] private bool awareTriggerOccupied = false;
+    [SerializeField] private bool engageTriggerOccupied = false;
 
     [SerializeField] private bool engage_state = false;
 
 
-    private float active_radius;
-    private float active_disengageRadius;
-    private float far_radius;
-    private float far_disengageRadius;
+    private float aware_radius;
+    private float aware_cancelRadius;
+    private float engage_radius;
+    private float engage_cancelRadius;
 
 
     private ScanForCharacters _scanForCharacters;
@@ -43,12 +43,7 @@ public class Enemy_Behavior2 : MonoBehaviour
 
     void Start()
     {
-        /*
-        //Add SphereCollider and set parameters
-        activeCollider = gameObject.AddComponent<SphereCollider>();
-        activeCollider.radius = behaviorStats_SO.trigger_activeRadius;
-        activeCollider.isTrigger = true;
-        */
+       
 
         _scanForCharacters = GetComponent<ScanForCharacters>();
         _navMeshAgent = GetComponent<NavMeshAgent>();
@@ -57,10 +52,10 @@ public class Enemy_Behavior2 : MonoBehaviour
         //fill behavior parameters based on behaviorStats
         if (behaviorStats_SO != null)
         {
-            active_radius = behaviorStats_SO.trigger_activeRadius;
-            active_disengageRadius = behaviorStats_SO.trigger_active_disengageRadius;
-            far_radius = behaviorStats_SO.trigger_farRadius;
-            far_disengageRadius = behaviorStats_SO.trigger_far_disengageRadius;
+            aware_radius = behaviorStats_SO.trigger_aware_radius;
+            aware_cancelRadius = behaviorStats_SO.trigger_aware_cancelRadius;
+            engage_radius = behaviorStats_SO.trigger_engage_radius;
+            engage_cancelRadius = behaviorStats_SO.trigger_engage_cancelRadius;
 
             vc_required = behaviorStats_SO.visualContact_required;
             defaultBehavior_SO = behaviorStats_SO.defaultBehavior_SO;
@@ -74,6 +69,7 @@ public class Enemy_Behavior2 : MonoBehaviour
             Debug.Log("EntityBehaviorStats_SO is MISSING.");
         }
 
+        //Get referenes to all characters
         ch_list = FindAllCharacters();
 
 
@@ -83,59 +79,62 @@ public class Enemy_Behavior2 : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        CleanCharacterList();
+        
 
-        DrawCircle(transform.position, active_radius, Color.green);
-        DrawCircle(transform.position, active_disengageRadius, Color.green);
+        #region Debug lines
+        //debug circle to show trigger zones
+        DrawCircle(transform.position, aware_radius, Color.green); //where enemy becomes active
+        DrawCircle(transform.position, aware_cancelRadius, Color.green);  //where enemy stops becoming active if not engaged
 
-        DrawCircle(transform.position, far_radius, Color.red);
-        DrawCircle(transform.position, far_disengageRadius, Color.red);
+        DrawCircle(transform.position, engage_radius, Color.red); 
+        DrawCircle(transform.position, engage_cancelRadius, Color.red);  //where enemy disengages if engaged
 
 
-        //draw targeted ch line
+        //debug draw targeted ch line
         if (_scanForCharacters.targeted_character != null)
         {
             if (engage_state)
             {
-                Debug.DrawLine(transform.position, _scanForCharacters.targeted_character.transform.position, Color.red);
+                Debug.DrawLine(transform.position, _scanForCharacters.targeted_character.transform.position, Color.red);  //engaging this character
             }
             else
             {
-                Debug.DrawLine(transform.position, _scanForCharacters.targeted_character.transform.position, Color.yellow);
+                Debug.DrawLine(transform.position, _scanForCharacters.targeted_character.transform.position, Color.yellow); //aware of this character
             }
             
         }
+        #endregion
 
+        //clear out null (dead) characters
+        CleanCharacterList();
 
-        if (ch_list.Count > 0)
-        {
-            activeTriggerFilled = CheckTriggerZone(active_radius);
-            farTriggerFilled = CheckTriggerZone(far_radius);
-        }
-
+        //Check for Characters in zones
+        CheckForCharactersInZones();
+      
 
         // Engagement-Disengagement logic
         if (!engage_state)
         {
             //if not engaged, check if any characters are around to engage
-            if (farTriggerFilled)
+            if (engageTriggerOccupied)
             {
+                //write a method "SelectCharacterToAggroFromList" - picks a character in the zone, sets targeted character in scan
                 if (!vc_required || _scanForCharacters.SetAndReturnNearestCharacter(_entityStats.visible_distance) != null)
                 {
                     engage_state = true;
                 }
             }
             
-            //if target active but enemy not engaged and character out of active disengage range then disengage
+            //if enemy aware (target active) but enemy not engaged and character out of aware disengage range then disengage
             GameObject target = _scanForCharacters.GetTargetedCharacter();
-            if ( (target != null && Vector3.Distance(transform.position, target.transform.position) > active_disengageRadius) || ( target !=null && !_scanForCharacters.CheckCharacterIsVisible(target, active_disengageRadius) )) 
+            if ( (target != null && Vector3.Distance(transform.position, target.transform.position) > aware_cancelRadius) || ( target !=null && !_scanForCharacters.CheckCharacterIsVisible(target, aware_cancelRadius) && !vc_required)) 
             {
-                DisengageTarget();
+                CancelAwarenessOfTarget();
             }
             
 
         }
-        else
+        else //if engage_state is true
         {
             // Disengagement logic
             GameObject target = _scanForCharacters.GetTargetedCharacter();
@@ -153,8 +152,8 @@ public class Enemy_Behavior2 : MonoBehaviour
                     case Enemy_EngageType.blind:
                         if (target != null)
                         {
-                            if (Vector3.Distance(transform.position, target.transform.position) > far_disengageRadius ||
-                                !_scanForCharacters.CheckCharacterIsVisible(target, far_disengageRadius))
+                            if (Vector3.Distance(transform.position, target.transform.position) > engage_cancelRadius ||
+                                !_scanForCharacters.CheckCharacterIsVisible(target, engage_cancelRadius))
                             {
                                 DisengageTarget();
                             }
@@ -169,7 +168,7 @@ public class Enemy_Behavior2 : MonoBehaviour
                         break;
 
                     case Enemy_EngageType.lazy:
-                        if (target != null && Vector3.Distance(transform.position, target.transform.position) > far_disengageRadius)
+                        if (target != null && Vector3.Distance(transform.position, target.transform.position) > engage_cancelRadius)
                         {
                             DisengageTarget();
                         }
@@ -177,7 +176,7 @@ public class Enemy_Behavior2 : MonoBehaviour
 
                     case Enemy_EngageType.tenacious:
                         if (target != null &&
-                            Vector3.Distance(transform.position, target.transform.position) > far_disengageRadius &&
+                            Vector3.Distance(transform.position, target.transform.position) > engage_cancelRadius &&
                             !_scanForCharacters.CheckCharacterIsVisible(target, _entityStats.visible_distance) )
                         {
                             DisengageTarget();
@@ -199,13 +198,19 @@ public class Enemy_Behavior2 : MonoBehaviour
         {
             if (engage_state)
             {
+                engageBehavior_SO.Perform(gameObject, _scanForCharacters.targeted_character);
+
+                //engageBehavior_SO.skill_SO.Use(gameObject, _scanForCharacters.targeted_character);
+                /*
+                 * This is using engageBehavior set to MeleePursuit. I changed the skillSO to Assault.
                 engageBehavior_SO.Perform(gameObject, _scanForCharacters, _navMeshAgent, _entityStats);
                 HandleCombat();
+                */
             }
-            else if (activeTriggerFilled)
+            else if (awareTriggerOccupied)
             {
                 
-                alertBehavior_SO.Perform(gameObject, _scanForCharacters, _navMeshAgent, _entityStats, active_radius);
+                alertBehavior_SO.Perform(gameObject, _scanForCharacters, _navMeshAgent, _entityStats, aware_radius);
             }
             else
             {
@@ -217,16 +222,14 @@ public class Enemy_Behavior2 : MonoBehaviour
         }
     }
 
-    /*
-    void OnTriggerEnter(Collider other)
+    private void CheckForCharactersInZones()
     {
-        Debug.Log("Collider entered" + other.name);
-        if (other.CompareTag("Character") && !activeTriggerFilled)
+        if (ch_list.Count > 0)
         {
-            activeTriggerFilled = true;
+            awareTriggerOccupied = CheckTriggerZone(aware_radius);
+            engageTriggerOccupied = CheckTriggerZone(engage_radius);
         }
     }
-    */
 
     private List<GameObject> FindAllCharacters()
     {
@@ -256,7 +259,6 @@ public class Enemy_Behavior2 : MonoBehaviour
 
     void DrawCircle(Vector3 position, float radius, Color color)
     {
-
         for (int i = 0; i < 30; i++)
         {
             Debug.DrawLine(position + (Quaternion.AngleAxis((360 / 30) * i, Vector3.up) * transform.forward * radius), position + (Quaternion.AngleAxis((360 / 30) * (i + 1), Vector3.up) * transform.forward * radius), color);
@@ -264,14 +266,23 @@ public class Enemy_Behavior2 : MonoBehaviour
     }
     private void DisengageTarget()
     {
-        //Debug.Log("Disengaging Target");
+       
         engage_state = false;
+
         if (!_navMeshAgent.isOnNavMesh)
         {
             _navMeshAgent.enabled = true;
         }
 
         _navMeshAgent.ResetPath();
+
+        _scanForCharacters.targeted_character = null;
+
+    }
+
+    private void CancelAwarenessOfTarget()
+    {
+      
 
         _scanForCharacters.targeted_character = null;
 

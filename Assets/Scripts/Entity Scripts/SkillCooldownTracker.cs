@@ -48,7 +48,7 @@ public class SkillCooldownTracker : MonoBehaviour
 #endif
     }
 
-    public void StartCooldown(Skill_SO skill)
+    public void StartCooldown(Skill_SO skill, float cooldownDuration)
     {
         if (skill == null)
         {
@@ -56,7 +56,6 @@ public class SkillCooldownTracker : MonoBehaviour
             return;
         }
 
-        float cooldownDuration = skill.cooldown;
 
         if (!cooldowns.ContainsKey(skill))
         {
@@ -69,6 +68,7 @@ public class SkillCooldownTracker : MonoBehaviour
 
         SyncListFromDictionary(); // Sync after starting a new cooldown
     }
+
 
     public bool IsSkillOnCooldown(Skill_SO skill)
     {

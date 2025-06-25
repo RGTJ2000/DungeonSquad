@@ -5,8 +5,12 @@ using UnityEngine.AI;
 public class MeleePursuit_SO : EngageBehavior_SO
 {
 
-    public override void Perform(GameObject enemy_obj, ScanForCharacters _scanForCharacters, NavMeshAgent _navMeshAgent, EntityStats _entityStats)
+    public override void Perform(GameObject attacker, GameObject target)
     {
+        //just perform the assault skill
+        skill_SO.Use(attacker, target);
+
+        /*
         if (_scanForCharacters.targeted_character != null)
         {
             _navMeshAgent.speed = _entityStats.running_speed;
@@ -21,25 +25,16 @@ public class MeleePursuit_SO : EngageBehavior_SO
                 {
                     _navMeshAgent.destination = enemy_obj.transform.position;
 
-                    /*
-                    if (!isMeleeAttacking)
-                    {
-                        isMeleeAttacking = true;
-
-                        Skill_SO skill = _entityStats.active_skill;
-                        skill.Use(gameObject, obj_to_pursue);
-
-                        StartCoroutine(MeleeAttackCooldown(_entityStats.equipped_meleeWeapon.attackCooldown));
-                    }
-                    */
                 }
             }
             else
             {
                 _navMeshAgent.destination = _scanForCharacters.targeted_character.transform.position;
             }
+        
 
         }
+        */
         
     }
 

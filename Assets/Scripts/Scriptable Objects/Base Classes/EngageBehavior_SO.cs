@@ -8,5 +8,5 @@ public abstract class EngageBehavior_SO : ScriptableObject
     public Skill_SO skill_SO;
 
 
-    public abstract void Perform(GameObject enemy_obj, ScanForCharacters _scanForCharacters, NavMeshAgent _navMeshAgent, EntityStats _entityStats);
+    public abstract void Perform(GameObject attacker, GameObject target);
 }

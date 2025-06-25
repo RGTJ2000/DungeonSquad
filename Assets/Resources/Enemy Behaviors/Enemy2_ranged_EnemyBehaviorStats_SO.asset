@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 694ed7c473eff614bb9434a226829ca6, type: 3}
   m_Name: Enemy2_ranged_EnemyBehaviorStats_SO
   m_EditorClassIdentifier: 
-  trigger_activeRadius: 15
-  trigger_active_disengageRadius: 18
-  trigger_farRadius: 10
-  trigger_far_disengageRadius: 20
+  trigger_aware_radius: 15
+  trigger_aware_cancelRadius: 18
+  trigger_engage_radius: 10
+  trigger_engage_cancelRadius: 20
   trigger_nearRadius: 5
   visualContact_required: 1
   trigger_lowHealth: 20

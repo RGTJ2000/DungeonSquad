@@ -17,7 +17,7 @@ public class Assault_SO : Skill_SO
         _navMeshAgent = attacker.GetComponent<NavMeshAgent>();
         _cooldownTracker = attacker.GetComponent<SkillCooldownTracker>();
 
-
+        //MOVE ATTACKER TO CLOSE DISTANCE WITH TARGET
         RaycastHit hit;
         Vector3 direction = (target.transform.position - attacker.transform.position).normalized;
         float maxDistance = _attackerStats.equipped_meleeWeapon.MeleeWeapon.melee_reach + _attackerStats.entity_radius;
@@ -42,6 +42,7 @@ public class Assault_SO : Skill_SO
 
                 if (_cooldownTracker != null && _cooldownTracker.GetRemainingCooldown(meleeAttack_SO) == 0)
                 {
+                    //PERFORM ACTUAL MELEE ATTACK
                     if (meleeAttack_SO != null)
                     {
                         meleeAttack_SO.Use(attacker, target);

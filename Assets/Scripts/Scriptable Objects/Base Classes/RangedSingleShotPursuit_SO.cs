@@ -1,32 +1,44 @@
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.AI;
-using static UnityEngine.GraphicsBuffer;
 
-[CreateAssetMenu(fileName = "MagicBehavior_MM_SO", menuName = "Enemy Behavior/MagicBehavior_MM_SO")]
-public class MagicBehavior_SO : EngageBehavior_SO
+[CreateAssetMenu(fileName = "RangedBehavior_SO", menuName = "Enemy Behavior/RangedBehavior_SO")]
+public class RangedSingleShotPursuit_SO : EngageBehavior_SO
 {
-    public override void Perform(GameObject attacker, GameObject target)
+
+    public override void Perform(GameObject attacker, GameObject target) 
     {
         if (target != null)
         {
             EntityStats _entityStats = attacker.GetComponent<EntityStats>();
             NavMeshAgent _navMeshAgent = attacker.GetComponent<NavMeshAgent>();
+            SkillCooldownTracker _cooldownTracker = attacker.GetComponent<SkillCooldownTracker>();
+
+            //MOVE ATTACKER. HOLD POSITION IF STRAIGHT LINE VIEW. IF NOT CLOSE DISTANCE.
 
             Vector3 target_direction = (target.transform.position - attacker.transform.position).normalized;
             target_direction.y = 0;
-
             FaceTarget(attacker, target_direction);
 
-            int missilesLayer = 11;
-            int layerMask = ~(1 << missilesLayer); // Exclude layer 11 from check for casting obstructions
-
+            
             RaycastHit hit;
 
-            if (Physics.SphereCast(attacker.transform.position, _entityStats.entity_radius, target_direction, out hit, _entityStats.visible_distance, layerMask, QueryTriggerInteraction.Ignore) && hit.transform.gameObject.tag == "Character")
+            if (Physics.SphereCast(attacker.transform.position, _entityStats.entity_radius, target_direction, out hit, _entityStats.visible_distance, ~0, QueryTriggerInteraction.Ignore) && hit.transform.gameObject.tag == "Character")
             {
                 //if the enemy has a straight line to character then hold position
                 _navMeshAgent.destination = attacker.transform.position;
+
+                if (_cooldownTracker != null && _cooldownTracker.GetRemainingCooldown(skill_SO) == 0)
+                {
+                    //PERFORM ACTUAL RANGED ATTACK
+                    if (skill_SO != null)
+                    {
+                        skill_SO.Use(attacker, target);
+                    }
+                }
+
+
+
             }
             else
             {
@@ -34,8 +46,11 @@ public class MagicBehavior_SO : EngageBehavior_SO
                 _navMeshAgent.destination = target.transform.position;
             }
 
-
         }
+
+
+
+
 
     }
 
@@ -49,6 +64,4 @@ public class MagicBehavior_SO : EngageBehavior_SO
             origin_obj.transform.rotation = Quaternion.Slerp(origin_obj.transform.rotation, targetRotation, 10 * Time.deltaTime);
         }
     }
-
 }
-    
