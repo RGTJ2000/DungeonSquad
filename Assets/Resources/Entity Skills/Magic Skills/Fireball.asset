@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8210c0466ad515944a1bb2233d16c4a8, type: 3}
+  m_Script: {fileID: 11500000, guid: a157d4dcefcfda345bd651d33df3f410, type: 3}
   m_Name: Fireball
   m_EditorClassIdentifier: 
   skill_type: magic
@@ -17,7 +17,4 @@ MonoBehaviour:
   skill_targetType: 0
   cooldown: 10
   skill_icon: {fileID: 21300000, guid: 277c45d518ce5314f865f9afbe69adc5, type: 3}
-  castingTime: 3
-  castingOffsetfromCaster: {x: 0, y: 1, z: 1}
-  hitChanceMultiplier: 1
-  effect: {fileID: 11400000, guid: 54e3ac617a6ef3547a132f9457c652c3, type: 2}
+  spellEffect: {fileID: 11400000, guid: 54e3ac617a6ef3547a132f9457c652c3, type: 2}

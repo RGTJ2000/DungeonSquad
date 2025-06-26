@@ -1,9 +1,11 @@
 using NUnit.Framework;
 using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Fireball Effect", menuName = "Spells/Fireball Effect")]
-public class FireballEffect : SpellEffect_SO
+public class FireballEffect : Skill_SO
 {
     public GameObject fireball_prefab;
 
@@ -20,11 +22,16 @@ public class FireballEffect : SpellEffect_SO
     public float blast_damageRange;
     public List<DamageStats> blastDamageStats;
 
-    public override void Execute(Spell_SO spell, GameObject caster, GameObject target)
-    {
-        EntityStats _casterStats = caster.GetComponent<EntityStats>();
+    public float castingTime;
+    public Vector3 castingOffset;
 
-        Vector3 instantiatePoint = caster.transform.position + (caster.transform.forward * _casterStats.entity_radius) + Quaternion.LookRotation(caster.transform.forward, Vector3.up) * spell.castingOffsetfromCaster;
+    public override void Use(GameObject caster, GameObject target)
+    {
+        
+        EntityStats _casterStats = caster.GetComponent<EntityStats>();
+        SkillCooldownTracker _cooldownTracker = caster.GetComponent<SkillCooldownTracker>();
+
+        Vector3 instantiatePoint = caster.transform.position + (caster.transform.forward * _casterStats.entity_radius) + Quaternion.LookRotation(caster.transform.forward, Vector3.up) * castingOffset;
 
 
         GameObject fireball = Instantiate(fireball_prefab, instantiatePoint, caster.transform.rotation);
@@ -33,10 +40,17 @@ public class FireballEffect : SpellEffect_SO
 
         Fireball_Guidance _fbGuidance = fireball.GetComponent<Fireball_Guidance>();
 
-        _fbGuidance.SetParameters(caster, target, contactDamageStats, blastDamageStats, startSize, spell.castingTime, travelSpeed, blastDiameter, blastImpulse, blastSpeed, _casterStats.magic_attackRating);
+        float castingTime_adjusted = castingTime / (1 + StatScale(_casterStats.int_adjusted));
 
+        _cooldownTracker.StartCooldown(this, castingTime_adjusted);
 
+        _fbGuidance.SetParameters(caster, target, contactDamageStats, blastDamageStats, startSize, castingTime_adjusted, travelSpeed, blastDiameter, blastImpulse, blastSpeed, _casterStats.magic_attackRating);
+        
     }
 
+    private float StatScale(float stat)
+    {
+        return (stat - 50f) / 50f;
+    }
 
 }

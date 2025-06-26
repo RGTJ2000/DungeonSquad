@@ -352,7 +352,7 @@ public class Enemy_Behavior2 : MonoBehaviour
                 break;
 
             case (CombatType.magic):
-
+                /*
                 if (target != null)
                 {
                     Vector3 target_direction = target.transform.position - transform.position;
@@ -369,7 +369,7 @@ public class Enemy_Behavior2 : MonoBehaviour
                             engageBehavior_SO.skill_SO.Use(gameObject, target);
 
                             Skill_SO skill = engageBehavior_SO.skill_SO;
-                            if (skill is Spell_SO spell)
+                            if (skill is CastSpell_SO spell)
                             {
                                 StartCoroutine(WaitforCastingToComplete(spell.castingTime));
                             }
@@ -377,7 +377,7 @@ public class Enemy_Behavior2 : MonoBehaviour
                     }
 
                 }
-
+                */
                 break;
 
 

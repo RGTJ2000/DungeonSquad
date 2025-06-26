@@ -25,6 +25,7 @@ public class Ch_Behavior : MonoBehaviour
     private Vector3 core_homing_vector = Vector3.zero;
 
     public bool isInFormation = true;
+    public bool isHoldingPosition = false;
     public bool isEngaging = false;
     public bool isPickingUp = false;
     public bool isPerusing = false;
@@ -100,7 +101,7 @@ public class Ch_Behavior : MonoBehaviour
             }
             else
             {
-                if (skill_performing.skill_type != "melee")
+                if (skill_performing.skill_type == "magic" || skill_performing.skill_type == "incant")
                 {
                     CancelEngage();
                 }
@@ -127,12 +128,19 @@ public class Ch_Behavior : MonoBehaviour
         {
             FollowFormation();
         }
+
+        if (isHoldingPosition)
+        {
+            HoldPosition();
+        }
     }
 
     public void ActiveMelee(GameObject obj_to_pursue)
     {
         //change movement behavior
         isInFormation = false;
+        isHoldingPosition = false;
+
         if (_navMeshAgent.enabled == false)
         {
             _navMeshAgent.enabled = true;
@@ -152,51 +160,33 @@ public class Ch_Behavior : MonoBehaviour
     }
     public void ActiveRanged(GameObject obj_to_ranged)
     {
-        isInFormation = true;
         _targetingscan.target_arrow_on = true;
 
-
         skill_performing.Use(gameObject, obj_to_ranged);
-
-        /*
-        FaceTarget(obj_to_ranged);
-
-        Vector3 target_direction = obj_to_ranged.transform.position - transform.position;
-        target_direction.y = 0;
-
-        if (!isRangedAttacking && Vector3.Angle(transform.forward, target_direction) < 10f)
-        {
-            RaycastHit hit;
-            if (Physics.Raycast(transform.position, obj_to_ranged.transform.position - transform.position, out hit, _entityStats.visible_distance, ~0, QueryTriggerInteraction.Ignore) && hit.transform.gameObject.tag == "Enemy")
-            {
-                isRangedAttacking = true;
-
-                //Skill_SO skill = _entityStats.selected_skill;
-                Skill_SO skill = skill_performing;
-                skill.Use(gameObject, obj_to_ranged);
-
-                StartCoroutine(RangedAttackCooldown(_entityStats.equipped_rangedWeapon.RangedWeapon.cycleTime));
-            }
-        }
-
-        */
-
-        /*
-        _combat.SetEngageStatus(true);
-        _combat.SetSkillPerforming(skill_performing.skill_type);
-
-        _combat.SetTargetObject(obj_to_ranged);
-        */
     }
     public void ActiveMagic(GameObject obj_to_magic)
     {
 
         isInFormation = false;
-        _controller.enabled = false;
-        _navMeshAgent.enabled = true;   //switch to navmeshagentcontrol
-        _navMeshAgent.destination = transform.position; //must stand in place for magic
+        isHoldingPosition = false;
+
+        if (_navMeshAgent.enabled == false)
+        {
+            _navMeshAgent.enabled = true;
+            _navMeshAgent.velocity = _controller.velocity;
+        }
+        if (_controller.enabled == true)
+        {
+            _controller.enabled = false;
+        }
 
         _targetingscan.target_arrow_on = true;
+
+        //Debug.Log("Calling Cast Spell." +skill_performing.name);
+        skill_performing.Use(gameObject, obj_to_magic);
+
+        /*
+        _navMeshAgent.destination = transform.position; //must stand in place for magic
 
         FaceTarget(obj_to_magic);
 
@@ -206,7 +196,7 @@ public class Ch_Behavior : MonoBehaviour
         if (!isMagicAttacking && Vector3.Angle(transform.forward, target_direction) < 10f) //if not currently casting and last spell completed and facing target do this
         {
             Skill_SO skill = _entityStats.selected_skill;
-            if (skill is Spell_SO spell)
+            if (skill is CastSpell_SO spell)
             {
                 //Debug.Log("Magic attack beginnging for " + spell.skill_name);
                 spell.Use(gameObject, obj_to_magic);
@@ -234,7 +224,7 @@ public class Ch_Behavior : MonoBehaviour
 
 
         }
-
+        */
 
 
 
@@ -438,6 +428,7 @@ public class Ch_Behavior : MonoBehaviour
     {
         isEngaging = false;
         isInFormation = true;
+        isHoldingPosition = false;
         isReturning = true;
         isIncanting = false;
         OnIncantFocusChanged?.Invoke();
@@ -529,8 +520,19 @@ public class Ch_Behavior : MonoBehaviour
         }
         else
         {
+            if (_navMeshAgent.enabled == false)
+            {
+                _navMeshAgent.enabled = true;
+
+                if (_controller.enabled == true)
+                {
+                    _navMeshAgent.velocity = _controller.velocity;
+
+                }
+            }
             _controller.enabled = false;
-            _navMeshAgent.enabled = true;
+
+
             _navMeshAgent.destination = _slotprojector.slot_array[slot_num];
 
         }
@@ -544,6 +546,37 @@ public class Ch_Behavior : MonoBehaviour
                 _targetingscan.targeted_entity = null;
 
             }
+        }
+
+    }
+    private void HoldPosition()
+    {
+        if (_navMeshAgent.enabled == false)
+        {
+            _navMeshAgent.enabled = true;
+            
+        }
+
+        if (_controller.enabled == true)
+        {
+            _controller.enabled = false;
+        }
+
+        _navMeshAgent.destination = transform.position;
+        
+    }
+
+    public void ToggleFollowHold()
+    {
+        if (isInFormation)
+        {
+            isInFormation = false;
+            isHoldingPosition = true;
+        }
+        else
+        {
+            isInFormation = true;
+            isHoldingPosition = false;
         }
 
     }
@@ -574,6 +607,9 @@ public class Ch_Behavior : MonoBehaviour
         magicCompleted = true;
     }
 
+    #region deprecated cooldowns
+    /*
+
     IEnumerator MeleeAttackCooldown(float meleeTime)
     {
         yield return new WaitForSeconds(meleeTime);
@@ -591,6 +627,10 @@ public class Ch_Behavior : MonoBehaviour
         yield return new WaitForSeconds(waitTime);
         isRangedAttacking = false;
     }
+
+    */
+    #endregion
+
 
     public bool CheckTargetAvailable()
     {

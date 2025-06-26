@@ -152,6 +152,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ToggleFollowHold"",
+                    ""type"": ""Button"",
+                    ""id"": ""e2845534-cf68-41cb-99af-acd6df7d58ca"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -649,6 +658,28 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""UnequipItem"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""eda9a1e9-838a-49b3-be2d-2efd9c023986"",
+                    ""path"": ""<Keyboard>/x"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""ToggleFollowHold"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b2415700-8e7f-49cd-9c8b-c0ba1154a3d7"",
+                    ""path"": ""<Gamepad>/leftStickPress"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ToggleFollowHold"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -968,6 +999,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Player_ToggleScanMode = m_Player.FindAction("ToggleScanMode", throwIfNotFound: true);
         m_Player_UIPanelSelect = m_Player.FindAction("UIPanelSelect", throwIfNotFound: true);
         m_Player_UnequipItem = m_Player.FindAction("UnequipItem", throwIfNotFound: true);
+        m_Player_ToggleFollowHold = m_Player.FindAction("ToggleFollowHold", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1058,6 +1090,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_ToggleScanMode;
     private readonly InputAction m_Player_UIPanelSelect;
     private readonly InputAction m_Player_UnequipItem;
+    private readonly InputAction m_Player_ToggleFollowHold;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -1076,6 +1109,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @ToggleScanMode => m_Wrapper.m_Player_ToggleScanMode;
         public InputAction @UIPanelSelect => m_Wrapper.m_Player_UIPanelSelect;
         public InputAction @UnequipItem => m_Wrapper.m_Player_UnequipItem;
+        public InputAction @ToggleFollowHold => m_Wrapper.m_Player_ToggleFollowHold;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1127,6 +1161,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @UnequipItem.started += instance.OnUnequipItem;
             @UnequipItem.performed += instance.OnUnequipItem;
             @UnequipItem.canceled += instance.OnUnequipItem;
+            @ToggleFollowHold.started += instance.OnToggleFollowHold;
+            @ToggleFollowHold.performed += instance.OnToggleFollowHold;
+            @ToggleFollowHold.canceled += instance.OnToggleFollowHold;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -1173,6 +1210,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @UnequipItem.started -= instance.OnUnequipItem;
             @UnequipItem.performed -= instance.OnUnequipItem;
             @UnequipItem.canceled -= instance.OnUnequipItem;
+            @ToggleFollowHold.started -= instance.OnToggleFollowHold;
+            @ToggleFollowHold.performed -= instance.OnToggleFollowHold;
+            @ToggleFollowHold.canceled -= instance.OnToggleFollowHold;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -1345,6 +1385,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnToggleScanMode(InputAction.CallbackContext context);
         void OnUIPanelSelect(InputAction.CallbackContext context);
         void OnUnequipItem(InputAction.CallbackContext context);
+        void OnToggleFollowHold(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

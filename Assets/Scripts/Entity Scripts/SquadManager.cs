@@ -38,6 +38,7 @@ public class SquadManager : MonoBehaviour
     private InputAction Engage;
     private InputAction SkillSelect;
     private InputAction InventorySelect;
+    private InputAction ToggleFollowHold;
 
     private InputAction ReturnToFormation;
     private InputAction AllReturnToFormation;
@@ -92,6 +93,8 @@ public class SquadManager : MonoBehaviour
         AllReturnToFormation.Enable();
         AllReturnToFormation.performed += OnAllReturnToFormation;
 
+        ToggleFollowHold = playerControls.Player.ToggleFollowHold;
+        ToggleFollowHold.performed += OnToggleFollowHold;
 
 
         Rotate = playerControls.Player.Rotate;
@@ -137,6 +140,7 @@ public class SquadManager : MonoBehaviour
         AllReturnToFormation.performed -= OnAllReturnToFormation;
         AllReturnToFormation.Disable();
 
+        ToggleFollowHold.performed -= OnToggleFollowHold;
 
 
         Rotate.performed -= OnRotate;
@@ -494,6 +498,25 @@ public class SquadManager : MonoBehaviour
       
     }
 
+    private void OnToggleFollowHold(InputAction.CallbackContext context)
+    {
+        if (select_active >= 0)
+        {
+            if (ch_in_slot_array[select_active] != null)
+            {
+                ch_in_slot_array[select_active].GetComponent<Ch_Behavior>().ToggleFollowHold();
+
+
+            }
+            
+
+        }
+
+
+
+
+    }
+
     private void OnAllReturnToFormation(InputAction.CallbackContext context)
     {
         for (int i = 0; i < 4; i++)
@@ -514,6 +537,9 @@ public class SquadManager : MonoBehaviour
         OnCharacterSelected?.Invoke(null);
 
     }
+
+  
+
 
     private void OnRotate(InputAction.CallbackContext context)
     {

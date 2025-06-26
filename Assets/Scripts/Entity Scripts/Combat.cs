@@ -124,6 +124,7 @@ public class Combat : MonoBehaviour
         }
     }
 
+    /*
     
     private void MagicAttackTarget(GameObject target_object)
     {
@@ -143,7 +144,7 @@ public class Combat : MonoBehaviour
             magic_completed = false;
 
             Skill_SO skill = _entityStats.selected_skill;
-            if (skill is Spell_SO spell)
+            if (skill is CastSpell_SO spell)
             {
                 Debug.Log("Magic attack beginnging for " + spell.skill_name);
                 spell.Use(gameObject, target_obj);
@@ -171,6 +172,7 @@ public class Combat : MonoBehaviour
         }
     }
       
+    */
     private void IncantTarget(GameObject target_object)
     {
 

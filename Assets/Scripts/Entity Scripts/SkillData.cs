@@ -8,10 +8,10 @@ public struct SkillData
     public string SkillName; // Name of skill
     public string SkillTargetingTag;
     public Sprite SkillIcon;
-    public Spell_SO SpellSO;
+    public CastSpell_SO SpellSO;
 
     // Optional: Add a constructor for convenience
-    public SkillData(string skillType, int skillID, string skillName, string skillTargetingTag, Sprite skillIcon, Spell_SO spell)
+    public SkillData(string skillType, int skillID, string skillName, string skillTargetingTag, Sprite skillIcon, CastSpell_SO spell)
     {
         SkillType = skillType;
         SkillID = skillID;

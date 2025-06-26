@@ -25,7 +25,7 @@ public class Ranged_shootFromFormation_SO : Skill_SO
                 RaycastHit hit;
                 if (Physics.Raycast(attacker.transform.position, target.transform.position - attacker.transform.position, out hit, _entityStats.visible_distance, ~0, QueryTriggerInteraction.Ignore) && hit.transform.gameObject.tag == "Enemy")
                 {
-                    Debug.Log("RangedAttack Cooldown = " + _cooldownTracker.GetRemainingCooldown(rangedAttack_SO));
+                   // Debug.Log("RangedAttack Cooldown = " + _cooldownTracker.GetRemainingCooldown(rangedAttack_SO));
                     if (_cooldownTracker != null && _cooldownTracker.GetRemainingCooldown(rangedAttack_SO) == 0)
                     {
                         //PERFORM ACTUAL RANGED ATTACK

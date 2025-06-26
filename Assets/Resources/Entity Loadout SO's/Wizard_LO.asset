@@ -23,8 +23,8 @@ MonoBehaviour:
   entity_radius: 0.5
   strength: 50
   dexterity: 50
-  intelligence: 80
-  will: 80
+  intelligence: 50
+  will: 50
   soul: 50
   melee_attackRating: 15
   melee_defenseRating: 10

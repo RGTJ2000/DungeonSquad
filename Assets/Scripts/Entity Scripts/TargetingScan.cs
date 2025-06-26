@@ -358,10 +358,18 @@ public class TargetingScan : MonoBehaviour
 
 
                 //check if the current target angle is less than the closest_target angle, if so change closest angle target to current target
-                if (Vector3.Angle(target.transform.position - transform.position, select_vector) < Vector3.Angle(closest_target.transform.position - transform.position, select_vector))
+                if (closest_target != null)
                 {
-                    closest_target = target;
+                    if (Vector3.Angle(target.transform.position - transform.position, select_vector) < Vector3.Angle(closest_target.transform.position - transform.position, select_vector))
+                    {
+                        closest_target = target;
+                    }
+
+
                 }
+              
+
+
             }
         }
 

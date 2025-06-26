@@ -2,39 +2,43 @@ using UnityEngine;
 using System.Collections.Generic;
 
 [CreateAssetMenu(fileName = "New Magic Missile Effect", menuName = "Spells/Magic Missile Effect")]
-public class MagicMissileEffect : SpellEffect_SO
+public class MagicMissileEffect : Skill_SO
 {
     public GameObject magicMissile_prefab;
 
     public float damageBase;
     public float damageRange;
+    public float castingTime;
+    public Vector3 castingOffset;
+    public bool alwaysHit = false;
 
     public List<DamageStats> damageStats;
   
 
     public float acceleration = 200f;
 
-    public override void Execute(Spell_SO spell, GameObject caster, GameObject target)
+    public override void Use(GameObject attacker, GameObject target)
     {
-        EntityStats _casterStats = caster.GetComponent<EntityStats>();
+        EntityStats _attackerStats = attacker.GetComponent<EntityStats>();
+        SkillCooldownTracker _cooldownTracker = attacker.GetComponent<SkillCooldownTracker>();
 
-        Vector3 instantiatePoint = caster.transform.position + (caster.transform.forward * _casterStats.entity_radius) + Quaternion.LookRotation(caster.transform.forward, Vector3.up)* spell.castingOffsetfromCaster;
+        Vector3 instantiatePoint = attacker.transform.position + (attacker.transform.forward * _attackerStats.entity_radius) + Quaternion.LookRotation(attacker.transform.forward, Vector3.up)* castingOffset;
 
         //Debug.Log("Instantiating MM");
-        GameObject magicMissile = Instantiate(magicMissile_prefab, instantiatePoint, caster.transform.rotation);
+        GameObject magicMissile = Instantiate(magicMissile_prefab, instantiatePoint, attacker.transform.rotation);
 
         CapsuleCollider mmCollider = magicMissile.GetComponent<CapsuleCollider>();
-        CapsuleCollider entityCollider = caster.GetComponent<CapsuleCollider>();
+        CapsuleCollider entityCollider = attacker.GetComponent<CapsuleCollider>();
 
         Physics.IgnoreCollision(mmCollider, entityCollider, true);
 
 
         MM_Guidance _mmGuidance2 = magicMissile.GetComponent<MM_Guidance>();
 
-        float waitTime = spell.castingTime / (1 + StatScale(_casterStats.int_adjusted));
-        
+        float _castingTime_adjusted = castingTime / (1 + StatScale(_attackerStats.int_adjusted));
+        _cooldownTracker.StartCooldown(this, _castingTime_adjusted);
 
-        _mmGuidance2.SetMMParameters(caster, target, waitTime, acceleration, damageStats, spell.alwaysHit, _casterStats.magic_attackRating);
+        _mmGuidance2.SetMMParameters(attacker, target, _castingTime_adjusted, acceleration, damageStats, alwaysHit, _attackerStats.magic_attackRating);
 
     }
 

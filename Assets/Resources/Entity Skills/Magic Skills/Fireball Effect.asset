@@ -12,6 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8019f84e5808de742a3267264ce5ead0, type: 3}
   m_Name: Fireball Effect
   m_EditorClassIdentifier: 
+  skill_type: magic
+  skill_name: fireball effect
+  skill_targetType: 0
+  cooldown: 0
+  skill_icon: {fileID: 0}
   fireball_prefab: {fileID: 284391459442035849, guid: 6141cd40d1f467c49933be7b8102dea0,
     type: 3}
   startSize: 1.5
@@ -31,3 +36,5 @@ MonoBehaviour:
   - damageType: 3
     damage_base: 20
     damage_range: 5
+  castingTime: 3
+  castingOffset: {x: 0, y: 0, z: 1}

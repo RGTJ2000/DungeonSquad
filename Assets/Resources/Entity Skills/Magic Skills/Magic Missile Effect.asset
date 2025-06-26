@@ -12,10 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 786d3773659d29b4481b564a52f1b848, type: 3}
   m_Name: Magic Missile Effect
   m_EditorClassIdentifier: 
+  skill_type: magic
+  skill_name: Magic Missile Shot
+  skill_targetType: 0
+  cooldown: 0
+  skill_icon: {fileID: 0}
   magicMissile_prefab: {fileID: 5869447247674293724, guid: c57071dd4ae1f3e4a978b49de21c1731,
     type: 3}
   damageBase: 50
   damageRange: 10
+  castingTime: 2
+  castingOffset: {x: 0, y: 0, z: 1}
+  alwaysHit: 0
   damageStats:
   - damageType: 0
     damage_base: 50
