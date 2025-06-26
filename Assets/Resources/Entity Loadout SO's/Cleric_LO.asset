@@ -75,7 +75,7 @@ MonoBehaviour:
     attachedCharms: []
   maxSkillSlots: 5
   skill_slot:
-  - {fileID: 11400000, guid: 89a87b22ebdaf504eb7215cd34c86953, type: 2}
+  - {fileID: 11400000, guid: c362cfe49084102489604d580e4f62bb, type: 2}
   - {fileID: 11400000, guid: 68269be72b2a8734c92db619120d46be, type: 2}
   active_skillSlot: 0
   confusion_AL: 20

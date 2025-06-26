@@ -110,7 +110,8 @@ public enum CombatResultType
     parry,
     block,
     dodge,
-    resist
+    resist,
+    heal
 }
 
 [System.Serializable]

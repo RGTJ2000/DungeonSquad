@@ -64,6 +64,10 @@ public class Ch_Behavior : MonoBehaviour
         _navMeshAgent = GetComponent<NavMeshAgent>();
         _entityStats = GetComponent<EntityStats>();
         _skillCooldownTracker = GetComponent<SkillCooldownTracker>();
+
+        _controller.Move(Vector3.zero);
+        isInFormation = true;
+
     }
 
     
@@ -166,7 +170,6 @@ public class Ch_Behavior : MonoBehaviour
     }
     public void ActiveMagic(GameObject obj_to_magic)
     {
-
         isInFormation = false;
         isHoldingPosition = false;
 
@@ -182,61 +185,29 @@ public class Ch_Behavior : MonoBehaviour
 
         _targetingscan.target_arrow_on = true;
 
-        //Debug.Log("Calling Cast Spell." +skill_performing.name);
         skill_performing.Use(gameObject, obj_to_magic);
-
-        /*
-        _navMeshAgent.destination = transform.position; //must stand in place for magic
-
-        FaceTarget(obj_to_magic);
-
-        Vector3 target_direction = obj_to_magic.transform.position - transform.position;
-        target_direction.y = 0;
-
-        if (!isMagicAttacking && Vector3.Angle(transform.forward, target_direction) < 10f) //if not currently casting and last spell completed and facing target do this
-        {
-            Skill_SO skill = _entityStats.selected_skill;
-            if (skill is CastSpell_SO spell)
-            {
-                //Debug.Log("Magic attack beginnging for " + spell.skill_name);
-                spell.Use(gameObject, obj_to_magic);
-                StartCoroutine(WaitforCastingToComplete(spell.castingTime));
-
-                if (_skillCooldownTracker != null)
-                {
-                    _skillCooldownTracker.StartCooldown(skill, skill.cooldown);
-                }
-
-            }
-
-            isMagicAttacking = true;
-            magicCompleted = false;
-
-
-        }
-        else if (magicCompleted) //when WaitforCasting is completed
-        {
-
-            isMagicAttacking = false;
-            magicCompleted = false;
-            //turn off assault and return to formation
-            CancelEngage();
-
-
-        }
-        */
-
-
-
     }
     public void ActiveIncant(GameObject obj_to_incant)
     {
         isInFormation = false;
-        _controller.enabled = false;
-        _navMeshAgent.enabled = true;   //switch to navmeshagentcontrol
-        _navMeshAgent.destination = transform.position; //must stand in place for incant
+        isHoldingPosition = true;
+
+        if (_navMeshAgent.enabled == false)
+        {
+            _navMeshAgent.enabled = true;
+            _navMeshAgent.velocity = _controller.velocity;
+        }
+        if (_controller.enabled == true)
+        {
+            _controller.enabled = false;
+        }
+
         _targetingscan.target_arrow_on = true;
 
+        skill_performing.Use(gameObject, obj_to_incant);
+
+
+        /*
         FaceTarget(obj_to_incant);
 
         if (obj_to_incant != currentIncantTarget)
@@ -258,23 +229,6 @@ public class Ch_Behavior : MonoBehaviour
             //_incantHandler.CastActiveIncant(target_object);
             //incant spells will continue while incant_active, when incantobject heard a focus change they destroy themselves.
             isIncanting = true;
-        }
-
-        //perform the incant here
-
-
-
-
-        /* _combat.SetEngageStatus(true);
-        _combat.SetSkillPerforming(skill_performing.skill_type);
-        
-        if (_combat.ActiveTargetDifferentFrom(obj_to_incant))
-        {
-            _combat.SetIncantStatus(false); //stop previous incant
-            OnIncantFocusChanged?.Invoke(); //alert incant objects that focus has changed
-
-            Debug.Log("Setting incant Status:" + _combat.isIncanting);
-            _combat.SetTargetObject(obj_to_incant);  //sets new active combat target
         }
         */
 
@@ -488,8 +442,16 @@ public class Ch_Behavior : MonoBehaviour
         RaycastHit hitinfo;
         if (!Physics.SphereCast(transform.position, _entityStats.entity_radius, core_homing_vector, out hitinfo, core_homing_vector.magnitude))
         {
-            _navMeshAgent.enabled = false;
-            _controller.enabled = true;
+            if (_navMeshAgent == true)
+            {
+                _navMeshAgent.enabled = false;
+
+            }
+            if (_controller.enabled == false)
+            {
+                _controller.enabled = true;
+
+            }
 
             Vector3 look_direction = core_obj.transform.forward;
             if (look_direction != Vector3.zero && !isEngaging) // Avoid errors if direction is zero

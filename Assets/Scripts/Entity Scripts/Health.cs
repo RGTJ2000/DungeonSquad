@@ -81,6 +81,8 @@ public class Health : MonoBehaviour
         }
        // Debug.Log($"{gameObject.name} healed for {amount}! Current health: {currentHealth}");
        _entityStats.health_current = currentHealth;
+
+        ShowFloatingText("+"+amount, CombatResultType.heal);
     }
 
     private void Die()
@@ -121,15 +123,27 @@ public class Health : MonoBehaviour
             if (resultType == CombatResultType.critical)
             {
                 _textMeshProComponent.color = Color.red;
+                _textMeshProComponent.fontMaterial.SetColor(TMPro.ShaderUtilities.ID_OutlineColor, new Color(0, 0, 0, 0));
+
             }
             else if (resultType == CombatResultType.hit)
             {
                 _textMeshProComponent.color = Color.red;
+                _textMeshProComponent.fontMaterial.SetColor(TMPro.ShaderUtilities.ID_OutlineColor, new Color(0, 0, 0, 0));
+
             }
             else if (resultType == CombatResultType.miss)
             {
                 _textMeshProComponent.color = Color.white;
+                _textMeshProComponent.fontMaterial.SetColor(TMPro.ShaderUtilities.ID_OutlineColor, new Color(0, 0, 0, 0));
 
+            }
+            else if (resultType == CombatResultType.heal)
+            {
+
+                _textMeshProComponent.color = Color.white;
+                _textMeshProComponent.fontMaterial.SetColor(ShaderUtilities.ID_OutlineColor, Color.red);
+                _textMeshProComponent.fontMaterial.SetFloat(TMPro.ShaderUtilities.ID_OutlineWidth, 0.2f);
 
             }
 

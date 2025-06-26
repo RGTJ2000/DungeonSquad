@@ -43,7 +43,7 @@ public class FireballEffect : Skill_SO
         float castingTime_adjusted = castingTime / (1 + StatScale(_casterStats.int_adjusted));
 
         _cooldownTracker.StartCooldown(this, castingTime_adjusted);
-
+       
         _fbGuidance.SetParameters(caster, target, contactDamageStats, blastDamageStats, startSize, castingTime_adjusted, travelSpeed, blastDiameter, blastImpulse, blastSpeed, _casterStats.magic_attackRating);
         
     }
