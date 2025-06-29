@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using System.Linq;
 using System.Collections.Generic;
+using static UnityEngine.GraphicsBuffer;
 
 public class Enemy_Behavior2 : MonoBehaviour
 {
@@ -11,6 +12,8 @@ public class Enemy_Behavior2 : MonoBehaviour
     [SerializeField] private DefaultBehavior_SO defaultBehavior_SO;
     [SerializeField] private EngageBehavior_SO engageBehavior_SO;
     [SerializeField] private AlertBehavior_SO alertBehavior_SO;
+
+    [SerializeField] private TargetSelection_SO targetSelection_SO;
 
     //for BehaviorStats_SO
     [SerializeField] private bool vc_required = true;
@@ -31,19 +34,17 @@ public class Enemy_Behavior2 : MonoBehaviour
     private NavMeshAgent _navMeshAgent;
     private EntityStats _entityStats;
 
-    //SphereCollider activeCollider;
+
 
     private List<GameObject> ch_list = new List<GameObject>();
-    //private bool ch_listFound = false;
 
+    private List<GameObject> targetList = new List<GameObject>();
 
-    private bool isMeleeAttacking = false;
-    private bool isRangedAttacking = false;
-    private bool isMagicAttacking = false;
+    private GameObject targetedCharacter = null;
 
     void Start()
     {
-       
+
 
         _scanForCharacters = GetComponent<ScanForCharacters>();
         _navMeshAgent = GetComponent<NavMeshAgent>();
@@ -61,6 +62,7 @@ public class Enemy_Behavior2 : MonoBehaviour
             defaultBehavior_SO = behaviorStats_SO.defaultBehavior_SO;
             engageBehavior_SO = behaviorStats_SO.engageBehavior_SO;
             alertBehavior_SO = behaviorStats_SO.alertBehavior_SO;
+            targetSelection_SO = behaviorStats_SO.targetSelection_SO;
 
             _entityStats.selected_skill = behaviorStats_SO.engageBehavior_SO.skill_SO; //sets the active skill to that specified in the engageBehavior
         }
@@ -79,14 +81,14 @@ public class Enemy_Behavior2 : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
 
         #region Debug lines
         //debug circle to show trigger zones
         DrawCircle(transform.position, aware_radius, Color.green); //where enemy becomes active
         DrawCircle(transform.position, aware_cancelRadius, Color.green);  //where enemy stops becoming active if not engaged
 
-        DrawCircle(transform.position, engage_radius, Color.red); 
+        DrawCircle(transform.position, engage_radius, Color.red);
         DrawCircle(transform.position, engage_cancelRadius, Color.red);  //where enemy disengages if engaged
 
 
@@ -101,7 +103,7 @@ public class Enemy_Behavior2 : MonoBehaviour
             {
                 Debug.DrawLine(transform.position, _scanForCharacters.targeted_character.transform.position, Color.yellow); //aware of this character
             }
-            
+
         }
         #endregion
 
@@ -110,35 +112,61 @@ public class Enemy_Behavior2 : MonoBehaviour
 
         //Check for Characters in zones
         CheckForCharactersInZones();
-      
+
 
         // Engagement-Disengagement logic
+        if (awareTriggerOccupied)
+        {
+            if (targetedCharacter == null)
+            {
+                targetList.Clear();
+
+                if (!vc_required)
+                {
+                    targetList = ch_list;
+                }
+                else
+                {
+                    targetList = _scanForCharacters.ScanVisibleCharacters(_entityStats.visible_distance).ToList();
+                }
+
+                targetedCharacter = targetSelection_SO.Perform(gameObject, targetList);
+
+                _scanForCharacters.targeted_character = targetedCharacter;
+
+            }
+
+
+
+
+
+            //if enemy aware (target active) but enemy not engaged and character out of aware disengage range then disengage
+            //GameObject target = _scanForCharacters.GetTargetedCharacter();
+
+
+
+
+        }
+
         if (!engage_state)
         {
-            //if not engaged, check if any characters are around to engage
-            if (engageTriggerOccupied)
+            if (engageTriggerOccupied && targetedCharacter != null)
             {
-                //write a method "SelectCharacterToAggroFromList" - picks a character in the zone, sets targeted character in scan
-                if (!vc_required || _scanForCharacters.SetAndReturnNearestCharacter(_entityStats.visible_distance) != null)
-                {
-                    engage_state = true;
-                }
+                engage_state = true;
             }
-            
-            //if enemy aware (target active) but enemy not engaged and character out of aware disengage range then disengage
-            GameObject target = _scanForCharacters.GetTargetedCharacter();
-            if ( (target != null && Vector3.Distance(transform.position, target.transform.position) > aware_cancelRadius) || ( target !=null && !_scanForCharacters.CheckCharacterIsVisible(target, aware_cancelRadius) && !vc_required)) 
+
+            if ((!vc_required && targetedCharacter != null && Vector3.Distance(transform.position, targetedCharacter.transform.position) > aware_cancelRadius) || (vc_required && targetedCharacter != null && !_scanForCharacters.CheckCharacterIsVisible(targetedCharacter, aware_cancelRadius)))
             {
                 CancelAwarenessOfTarget();
             }
-            
+
 
         }
         else //if engage_state is true
         {
             // Disengagement logic
-            GameObject target = _scanForCharacters.GetTargetedCharacter();
-            if (target == null)
+            //GameObject target = _scanForCharacters.GetTargetedCharacter();
+            if (targetedCharacter == null)
             {
                 DisengageTarget();
 
@@ -146,38 +174,33 @@ public class Enemy_Behavior2 : MonoBehaviour
             else
             {
 
-
                 switch (engageType)
                 {
                     case Enemy_EngageType.blind:
-                        if (target != null)
-                        {
-                            if (Vector3.Distance(transform.position, target.transform.position) > engage_cancelRadius ||
-                                !_scanForCharacters.CheckCharacterIsVisible(target, engage_cancelRadius))
-                            {
-                                DisengageTarget();
-                            }
-                        }
 
+                        if (Vector3.Distance(transform.position, targetedCharacter.transform.position) > engage_cancelRadius ||
+                            !_scanForCharacters.CheckCharacterIsVisible(targetedCharacter, engage_cancelRadius))
+                        {
+                            DisengageTarget();
+                        }
                         break;
                     case Enemy_EngageType.dumb:
-                        if (target != null && !_scanForCharacters.CheckCharacterIsVisible(target, _entityStats.visible_distance))
+                        if (!_scanForCharacters.CheckCharacterIsVisible(targetedCharacter, _entityStats.visible_distance))
                         {
                             DisengageTarget();
                         }
                         break;
 
                     case Enemy_EngageType.lazy:
-                        if (target != null && Vector3.Distance(transform.position, target.transform.position) > engage_cancelRadius)
+                        if (Vector3.Distance(transform.position, targetedCharacter.transform.position) > engage_cancelRadius)
                         {
                             DisengageTarget();
                         }
                         break;
 
                     case Enemy_EngageType.tenacious:
-                        if (target != null &&
-                            Vector3.Distance(transform.position, target.transform.position) > engage_cancelRadius &&
-                            !_scanForCharacters.CheckCharacterIsVisible(target, _entityStats.visible_distance) )
+                        if (Vector3.Distance(transform.position, targetedCharacter.transform.position) > engage_cancelRadius &&
+                            !_scanForCharacters.CheckCharacterIsVisible(targetedCharacter, _entityStats.visible_distance))
                         {
                             DisengageTarget();
                         }
@@ -198,18 +221,18 @@ public class Enemy_Behavior2 : MonoBehaviour
         {
             if (engage_state)
             {
-                engageBehavior_SO.Perform(gameObject, _scanForCharacters.targeted_character);
+                if (targetedCharacter != null)
+                {
+                    engageBehavior_SO.Perform(gameObject, targetedCharacter);
 
-                //engageBehavior_SO.skill_SO.Use(gameObject, _scanForCharacters.targeted_character);
-                /*
-                 * This is using engageBehavior set to MeleePursuit. I changed the skillSO to Assault.
-                engageBehavior_SO.Perform(gameObject, _scanForCharacters, _navMeshAgent, _entityStats);
-                HandleCombat();
-                */
+                }
+
+
+
             }
             else if (awareTriggerOccupied)
             {
-                
+
                 alertBehavior_SO.Perform(gameObject, _scanForCharacters, _navMeshAgent, _entityStats, aware_radius);
             }
             else
@@ -266,7 +289,7 @@ public class Enemy_Behavior2 : MonoBehaviour
     }
     private void DisengageTarget()
     {
-       
+
         engage_state = false;
 
         if (!_navMeshAgent.isOnNavMesh)
@@ -282,139 +305,20 @@ public class Enemy_Behavior2 : MonoBehaviour
 
     private void CancelAwarenessOfTarget()
     {
-      
 
         _scanForCharacters.targeted_character = null;
+        targetedCharacter = null;
 
     }
 
-    private void HandleCombat()
-    {
-        GameObject target = _scanForCharacters.targeted_character;
-
-        //case switch to combat action as defined by engageBehavior_SO;
-        switch (engageBehavior_SO.combatType)
-        {
-            case (CombatType.melee):
-                if (target != null)
-                {
-                    RaycastHit hit;
-                    Vector3 direction = (target.transform.position - transform.position).normalized;
-                    float maxDistance = _entityStats.equipped_meleeWeapon.MeleeWeapon.melee_reach + _entityStats.entity_radius;
-
-                    if (Physics.Raycast(transform.position, direction, out hit, maxDistance, ~0, QueryTriggerInteraction.Ignore))
-                    {
-                        if (hit.transform == target.transform)
-                        {
-                            if (!isMeleeAttacking)
-                            {
-                               
-
-                                isMeleeAttacking = true;
-
-                                if (target != null)
-                                {
-                                    //Debug.Log("Target= "+target.name+"  GameObject="+gameObject.name);
-                                    engageBehavior_SO.skill_SO.Use(gameObject, target);
 
 
-                                }
-                                StartCoroutine(MeleeAttackCooldown(_entityStats.equipped_meleeWeapon.MeleeWeapon.cycleTime));
-                            }
-                        }
-                    }
-
-                }
-
-                break;
-
-            case (CombatType.ranged):
-
-                if (target != null)
-                {
-                    Vector3 target_direction = target.transform.position - transform.position;
-                    target_direction.y = 0;
-
-                    if (!isRangedAttacking && Vector3.Angle(transform.forward, target_direction) < 10f)
-                    {
-                        RaycastHit hit;
-                        if (Physics.Raycast(transform.position, target.transform.position - transform.position, out hit, _entityStats.visible_distance, ~0, QueryTriggerInteraction.Ignore) && hit.transform.gameObject.tag == "Character")
-                        {
-                            isRangedAttacking = true;
-                            //Debug.Log("Calling Ranged Skill. target=" + target.name);
-                            engageBehavior_SO.skill_SO.Use(gameObject, target);
-
-                            StartCoroutine(RangedAttackCooldown(_entityStats.equipped_rangedWeapon.RangedWeapon.cycleTime));
-                        }
-                    }
-
-                }
-                break;
-
-            case (CombatType.magic):
-                /*
-                if (target != null)
-                {
-                    Vector3 target_direction = target.transform.position - transform.position;
-                    target_direction.y = 0;
-
-                    if (!isMagicAttacking && Vector3.Angle(transform.forward, target_direction) < 10f)
-                    {
-                        RaycastHit hit;
-
-                        if (Physics.Raycast(transform.position, target.transform.position - transform.position, out hit, _entityStats.visible_distance, ~0, QueryTriggerInteraction.Ignore) && hit.transform.gameObject.tag == "Character")
-                        {
-                            isMagicAttacking = true;
-
-                            engageBehavior_SO.skill_SO.Use(gameObject, target);
-
-                            Skill_SO skill = engageBehavior_SO.skill_SO;
-                            if (skill is CastSpell_SO spell)
-                            {
-                                StartCoroutine(WaitforCastingToComplete(spell.castingTime));
-                            }
-                        }
-                    }
-
-                }
-                */
-                break;
-
-
-            default:
-                break;
-        }
-    }
-
-    IEnumerator MeleeAttackCooldown(float meleeTime)
-    {
-        yield return new WaitForSeconds(meleeTime);
-
-        isMeleeAttacking = false; // Reset the cooldown flag
-    }
-    IEnumerator RangedAttackCooldown(float rangedCooldown)
-    {
-        yield return new WaitForSeconds(rangedCooldown);
-        isRangedAttacking = false;
-    }
-
-    IEnumerator WaitforCastingToComplete(float castingTime)
-    {
-        yield return new WaitForSeconds(castingTime);
-        isMagicAttacking = false;
-    }
 
     private void CleanCharacterList()
     {
         // Remove null or destroyed objects from ch_list
         ch_list.RemoveAll(character => character == null);
 
-        // Optional: Log for debugging
-        /*
-        if (ch_list.Count > 0)
-        {
-            Debug.Log($"Cleaned ch_list, remaining count: {ch_list.Count}");
-        }
-        */
+
     }
 }
