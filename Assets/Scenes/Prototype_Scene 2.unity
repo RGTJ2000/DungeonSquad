@@ -6424,7 +6424,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemy_loudouts_array:
   - {fileID: 11400000, guid: 1692797f4f32355418b4797ff8cb0f01, type: 2}
-  number_of_enemies: 30
+  number_of_enemies: 20
   boundmax_x: 80
   boundmax_z: 80
 --- !u!1001 &1919626171

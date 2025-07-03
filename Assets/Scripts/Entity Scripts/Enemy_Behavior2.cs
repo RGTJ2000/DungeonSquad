@@ -22,6 +22,7 @@ public class Enemy_Behavior2 : MonoBehaviour
     [SerializeField] private bool engageTriggerOccupied = false;
 
     [SerializeField] private bool engage_state = false;
+    [SerializeField] private float engageDamageThreshold = 10f;
 
 
     private float aware_radius;
@@ -33,7 +34,7 @@ public class Enemy_Behavior2 : MonoBehaviour
     private ScanForCharacters _scanForCharacters;
     private NavMeshAgent _navMeshAgent;
     private EntityStats _entityStats;
-
+    private ThreatTracker _threatTracker;
 
 
     private List<GameObject> ch_list = new List<GameObject>();
@@ -49,6 +50,7 @@ public class Enemy_Behavior2 : MonoBehaviour
         _scanForCharacters = GetComponent<ScanForCharacters>();
         _navMeshAgent = GetComponent<NavMeshAgent>();
         _entityStats = GetComponent<EntityStats>();
+        _threatTracker = GetComponent<ThreatTracker>();
 
         //fill behavior parameters based on behaviorStats
         if (behaviorStats_SO != null)
@@ -83,6 +85,9 @@ public class Enemy_Behavior2 : MonoBehaviour
     {
 
 
+        //When aware, check threat levels, if top threat level is zero then pick based on evaluation_SO. If not zero then, select that top threat as target.
+        //On receiving hit from attacker, reevaluate threat level comparing currently engaged and new attacker. If higher from new attacker, then keep on engaged target.
+
         #region Debug lines
         //debug circle to show trigger zones
         DrawCircle(transform.position, aware_radius, Color.green); //where enemy becomes active
@@ -93,18 +98,21 @@ public class Enemy_Behavior2 : MonoBehaviour
 
 
         //debug draw targeted ch line
-        if (_scanForCharacters.targeted_character != null)
+        if (targetedCharacter != null)
         {
             if (engage_state)
             {
-                Debug.DrawLine(transform.position, _scanForCharacters.targeted_character.transform.position, Color.red);  //engaging this character
+                Debug.DrawLine(transform.position, targetedCharacter.transform.position, Color.red);  //engaging this character
             }
             else
             {
-                Debug.DrawLine(transform.position, _scanForCharacters.targeted_character.transform.position, Color.yellow); //aware of this character
+                Debug.DrawLine(transform.position, targetedCharacter.transform.position, Color.yellow); //aware of this character
             }
 
         }
+       
+
+
         #endregion
 
         //clear out null (dead) characters
@@ -176,6 +184,9 @@ public class Enemy_Behavior2 : MonoBehaviour
 
                 switch (engageType)
                 {
+                    //add a threat check on distance disengages
+                    //also add engage when threat level > 0
+
                     case Enemy_EngageType.blind:
 
                         if (Vector3.Distance(transform.position, targetedCharacter.transform.position) > engage_cancelRadius ||
@@ -212,6 +223,14 @@ public class Enemy_Behavior2 : MonoBehaviour
 
                     default:
                         break;
+                }
+
+
+                if (targetedCharacter != null)
+                {
+
+                    //check if top threat is greater than currently targeted character
+                    //if above theshhold then switch targeted character
                 }
             }
         }
@@ -318,6 +337,41 @@ public class Enemy_Behavior2 : MonoBehaviour
     {
         // Remove null or destroyed objects from ch_list
         ch_list.RemoveAll(character => character == null);
+
+
+    }
+
+
+    public void OnDamageCheckTargetedCharacter(GameObject attacker)
+    {
+        if (!engage_state)
+        {
+            engage_state = true;
+            targetedCharacter = attacker;
+            return;
+        }
+        else //currently engaging
+        {
+            if (targetedCharacter == null)
+            {
+                targetedCharacter = attacker;
+            }
+            else
+            {
+                float currentThreat = _threatTracker.GetThreatLevel(targetedCharacter);
+                float newThreat = _threatTracker.GetThreatLevel(attacker);
+
+                if (newThreat >= currentThreat + engageDamageThreshold)
+                {
+                    targetedCharacter = attacker;
+                }
+
+            }
+
+        }
+
+
+
 
 
     }

@@ -23,7 +23,7 @@ MonoBehaviour:
   running_speed: 10
   entity_radius: 0.5
   strength: 50
-  dexterity: 80
+  dexterity: 50
   intelligence: 50
   will: 50
   soul: 50

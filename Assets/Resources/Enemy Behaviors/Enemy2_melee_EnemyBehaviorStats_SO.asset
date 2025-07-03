@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Enemy2_melee_EnemyBehaviorStats_SO
   m_EditorClassIdentifier: 
   trigger_aware_radius: 15
-  trigger_aware_cancelRadius: 18
+  trigger_aware_cancelRadius: 25
   trigger_engage_radius: 10
   trigger_engage_cancelRadius: 20
   trigger_nearRadius: 5
@@ -23,4 +23,5 @@ MonoBehaviour:
   defaultBehavior_SO: {fileID: 11400000, guid: a4599094eb8321a4b914cddfeb6ef300, type: 2}
   alertBehavior_SO: {fileID: 11400000, guid: 767f8a56a47bafe43ad9cbc77c2cd6ca, type: 2}
   engageBehavior_SO: {fileID: 11400000, guid: 46817978ef5599d4d8d1a9b183fd0906, type: 2}
+  targetSelection_SO: {fileID: 11400000, guid: 5776ae5f75b0ca24bb949d9bfe1f06ef, type: 2}
   wander_radius: 0

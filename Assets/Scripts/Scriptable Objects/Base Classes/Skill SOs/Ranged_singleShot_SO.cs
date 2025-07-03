@@ -24,7 +24,7 @@ public class Ranged_singleShot_SO : Skill_SO
 
         if (_cooldownTracker != null)
         {
-            Debug.Log("Ranged_singleShot_SO setting cooldown at " + _cooldown);
+            //Debug.Log("Ranged_singleShot_SO setting cooldown at " + _cooldown);
             _cooldownTracker.StartCooldown(this, _cooldown); //set the cooldown tracker for weapon cycle time
 
         }

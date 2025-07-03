@@ -26,6 +26,7 @@ public class Assault_SO : Skill_SO
         {
             if (_navMeshAgent.isOnNavMesh)
             {
+                _navMeshAgent.speed = _attackerStats.running_speed;
                 _navMeshAgent.destination = target.transform.position;
 
             }

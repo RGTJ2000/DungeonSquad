@@ -20,7 +20,10 @@ MonoBehaviour:
     type: 3}
   pickupAudio_ID: 
   dropAudio_ID: 
+  equipAudio_ID: 
+  unequipAudio_ID: 
   isEquippable: 1
+  isUseable: 0
   isStackable: 1
   maxStack: 10
   attachedCharms: []
@@ -39,8 +42,8 @@ MonoBehaviour:
   soulModifier:
     operatorType: 0
     amount: 0
-  missile_damageBase: 5
-  missile_damageRange: 3
+  missile_damageBase: 10
+  missile_damageRange: 5
   missile_critBaseModifier: 0
   damageList:
   - damageType: 5
@@ -53,4 +56,5 @@ MonoBehaviour:
   missile_weight: 0.01
   missileLaunch_prefab: {fileID: 6660670465892539401, guid: 896be4032708c2c4eb60af12a71f69e0,
     type: 3}
-  attack_dexModifier: 0.2
+  attack_dexBonusFactor: 0
+  attack_intBonusFactor: 0

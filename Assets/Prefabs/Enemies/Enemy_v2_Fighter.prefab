@@ -25,6 +25,7 @@ GameObject:
   - component: {fileID: 4289309330656767326}
   - component: {fileID: -8161833348235447876}
   - component: {fileID: -4986003316885556866}
+  - component: {fileID: 9169802659335078810}
   m_Layer: 10
   m_Name: Enemy_v2_Fighter
   m_TagString: Enemy
@@ -338,7 +339,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf57a9885a1ba2949aa6747dfb3b5398, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isIncanting: 0
 --- !u!114 &8885968554854478681
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -387,6 +387,7 @@ MonoBehaviour:
   defaultBehavior_SO: {fileID: 0}
   engageBehavior_SO: {fileID: 0}
   alertBehavior_SO: {fileID: 0}
+  targetSelection_SO: {fileID: 0}
   vc_required: 1
   engageType: 0
   awareTriggerOccupied: 0
@@ -467,3 +468,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cooldownPairs: []
+--- !u!114 &9169802659335078810
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2167847887569344889}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f76cdc3bae582584d9f6a3fead6783da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dpsWindow: 3
+  damageBufferWeight: 0.4
+  damageBufferDecay: 1
+  threatDisplay_prefab: {fileID: 62143593920539622, guid: 8a23b8f23f98f474c999956534f58acd,
+    type: 3}

@@ -61,7 +61,7 @@ public class MM_Guidance : MonoBehaviour
         rise_target = startPoint + riseOffset;
 
         hasCollided = false;
-
+        alwaysHit = true;
         //Debug.Log("MM guidance 2: Missile launched");
 
     }

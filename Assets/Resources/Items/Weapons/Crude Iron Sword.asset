@@ -20,7 +20,10 @@ MonoBehaviour:
     type: 3}
   pickupAudio_ID: 
   dropAudio_ID: sword_drop
+  equipAudio_ID: 
+  unequipAudio_ID: 
   isEquippable: 1
+  isUseable: 0
   isStackable: 0
   maxStack: 1
   attachedCharms: []
@@ -41,8 +44,8 @@ MonoBehaviour:
     amount: 0
   cycleTime: 1
   melee_reach: 1
-  melee_damageBase: 10
-  melee_damageRange: 5
+  melee_damageBase: 8
+  melee_damageRange: 4
   melee_critBase: 0.2
   damageList:
   - damageType: 0
@@ -55,5 +58,7 @@ MonoBehaviour:
   attack_dexBonusFactor: 0.2
   attack_intBonusFactor: 0
   attack_willBonusFactor: 0
+  ignoreArmor: 0
+  isTwoHanded: 0
   hitAudio_ID: swordHit
   missAudio_ID: swordMiss

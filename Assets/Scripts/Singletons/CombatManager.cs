@@ -89,12 +89,12 @@ public class CombatManager : MonoBehaviour
             foreach (DamageStats damageStats in equippedMeleeWeapon.damageList)
             {
                 float damageDone = damageStats.damage_base + Random.Range(0, damageStats.damage_range + 1);
-                Debug.Log("Weapon: " + equippedMeleeWeapon.item_name + " damage=" + damageDone);
+                //Debug.Log("Weapon: " + equippedMeleeWeapon.item_name + " damage=" + damageDone);
 
                 //scale damage to weapon's scaling factors
                 damageDone += damageDone * ( (StatScale(_attackerStats.str_adjusted) * equippedMeleeWeapon.str_scalingFactor) + ( StatScale(_attackerStats.dex_adjusted) * equippedMeleeWeapon.dex_scalingFactor) );
-                Debug.Log("STR Stat Scale=" + StatScale(_attackerStats.str_adjusted) + " str scaling factor =" + equippedMeleeWeapon.str_scalingFactor);
-                Debug.Log("...damage with scaling=" + damageDone);
+                //Debug.Log("STR Stat Scale=" + StatScale(_attackerStats.str_adjusted) + " str scaling factor =" + equippedMeleeWeapon.str_scalingFactor);
+               //Debug.Log("...damage with scaling=" + damageDone);
 
                 if (isCrit)
                 {

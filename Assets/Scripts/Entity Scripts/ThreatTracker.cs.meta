@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: f76cdc3bae582584d9f6a3fead6783da
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - threatDisplay_prefab: {fileID: 62143593920539622, guid: 8a23b8f23f98f474c999956534f58acd,
+      type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
