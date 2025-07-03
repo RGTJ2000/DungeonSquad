@@ -80,7 +80,6 @@ public class Enemy_Behavior2 : MonoBehaviour
 
     }
 
-    // Update is called once per frame
     void Update()
     {
 
@@ -131,25 +130,42 @@ public class Enemy_Behavior2 : MonoBehaviour
 
                 if (!vc_required)
                 {
-                    targetList = ch_list;
+                    targetList = PickCharactersInZone(ch_list, aware_cancelRadius);
                 }
                 else
                 {
-                    targetList = _scanForCharacters.ScanVisibleCharacters(_entityStats.visible_distance).ToList();
+                    targetList = PickCharactersInZone( _scanForCharacters.ScanVisibleCharacters(_entityStats.visible_distance).ToList(), aware_cancelRadius );
                 }
 
-                targetedCharacter = targetSelection_SO.Perform(gameObject, targetList);
+
+                GameObject potentialTarget = _threatTracker.GetTopAttackerByThreatLevel();
+
+                if (potentialTarget != null)
+                {
+                    if (_threatTracker.GetThreatLevel(potentialTarget) == 0)
+                    {
+                        //if no threat exists, then pick target by the eval_SO
+                        targetedCharacter = targetSelection_SO.Perform(gameObject, targetList);
+
+                    }
+                    else
+                    {
+                        targetedCharacter = potentialTarget;
+                    }
+                }
+                else
+                {
+
+                    targetedCharacter = targetSelection_SO.Perform(gameObject, targetList);
+
+                }
+
+
 
                 _scanForCharacters.targeted_character = targetedCharacter;
 
             }
 
-
-
-
-
-            //if enemy aware (target active) but enemy not engaged and character out of aware disengage range then disengage
-            //GameObject target = _scanForCharacters.GetTargetedCharacter();
 
 
 
@@ -163,7 +179,10 @@ public class Enemy_Behavior2 : MonoBehaviour
                 engage_state = true;
             }
 
-            if ((!vc_required && targetedCharacter != null && Vector3.Distance(transform.position, targetedCharacter.transform.position) > aware_cancelRadius) || (vc_required && targetedCharacter != null && !_scanForCharacters.CheckCharacterIsVisible(targetedCharacter, aware_cancelRadius)))
+            if (
+                ( !vc_required && targetedCharacter != null && Vector3.Distance(transform.position, targetedCharacter.transform.position) > aware_cancelRadius ) || 
+                ( vc_required && targetedCharacter != null && !_scanForCharacters.CheckCharacterIsVisible(targetedCharacter, aware_cancelRadius) )
+                )
             {
                 CancelAwarenessOfTarget();
             }
@@ -173,7 +192,6 @@ public class Enemy_Behavior2 : MonoBehaviour
         else //if engage_state is true
         {
             // Disengagement logic
-            //GameObject target = _scanForCharacters.GetTargetedCharacter();
             if (targetedCharacter == null)
             {
                 DisengageTarget();
@@ -189,8 +207,11 @@ public class Enemy_Behavior2 : MonoBehaviour
 
                     case Enemy_EngageType.blind:
 
-                        if (Vector3.Distance(transform.position, targetedCharacter.transform.position) > engage_cancelRadius ||
-                            !_scanForCharacters.CheckCharacterIsVisible(targetedCharacter, engage_cancelRadius))
+                        if (
+                            Vector3.Distance(transform.position, targetedCharacter.transform.position) > engage_cancelRadius 
+                            ||
+                            !_scanForCharacters.CheckCharacterIsVisible(targetedCharacter, engage_cancelRadius)
+                            )
                         {
                             DisengageTarget();
                         }
@@ -226,12 +247,7 @@ public class Enemy_Behavior2 : MonoBehaviour
                 }
 
 
-                if (targetedCharacter != null)
-                {
-
-                    //check if top threat is greater than currently targeted character
-                    //if above theshhold then switch targeted character
-                }
+              
             }
         }
 
@@ -331,8 +347,6 @@ public class Enemy_Behavior2 : MonoBehaviour
     }
 
 
-
-
     private void CleanCharacterList()
     {
         // Remove null or destroyed objects from ch_list
@@ -340,6 +354,21 @@ public class Enemy_Behavior2 : MonoBehaviour
 
 
     }
+
+    private List<GameObject> PickCharactersInZone(List<GameObject> list, float radius)
+    {
+
+        List<GameObject> resultList = new List<GameObject>();
+        foreach (GameObject character in list)
+        {
+            if ((character.transform.position - transform.position).magnitude <= radius)
+            {
+                resultList.Add(character);
+            }
+        }
+
+        return resultList;
+    } 
 
 
     public void OnDamageCheckTargetedCharacter(GameObject attacker)

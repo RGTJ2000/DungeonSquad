@@ -18,7 +18,7 @@ MonoBehaviour:
   entity_prefab: {fileID: 2167847887569344889, guid: a29005b1dd3c1da4e8ce512e19535eaf,
     type: 3}
   visible_distance: 50
-  health_max: 500
+  health_max: 100
   walking_speed: 1
   running_speed: 2
   entity_radius: 0.5

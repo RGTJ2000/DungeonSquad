@@ -66,7 +66,7 @@ public class ThreatTracker : MonoBehaviour
         _entityStats = GetComponent<EntityStats>();
 
 
-        damageBufferDecay = _entityStats.health_max * 0.05f;
+        damageBufferDecay = _entityStats.health_max * 0.01f;
 
         damageBufferWeight = 0.3f;
         dpsWindow = 3f;
