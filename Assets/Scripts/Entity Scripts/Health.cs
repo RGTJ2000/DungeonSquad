@@ -19,7 +19,7 @@ public class Health : MonoBehaviour
 
     public Camera mainCamera;
 
-    private FloatingHealthbar _healthbar;
+    private FloatingHealthbarBehavior _healthbarBehavior;
     private EntityStats _entityStats;
 
     private void Awake()
@@ -29,16 +29,19 @@ public class Health : MonoBehaviour
     private void Start()
     {
         mainCamera = Camera.main;
-
-        healthBar_instance = Instantiate(healthBar_prefab, transform.position, Quaternion.identity); //instantiate with no parent
-        healthBar_instance.GetComponent<HealthBarCanvasPosition>().SetEntityToFollow(gameObject);
-
-        _healthbar = healthBar_instance.GetComponentInChildren<FloatingHealthbar>();
-
         _entityStats = GetComponent<EntityStats>();
-
         maxHealth = _entityStats.health_max;
         currentHealth = maxHealth;
+
+        healthBar_instance = Instantiate(healthBar_prefab, transform.position, Quaternion.identity); //instantiate with no parent
+        _healthbarBehavior = healthBar_instance.GetComponent<FloatingHealthbarBehavior>();
+
+        _healthbarBehavior.InitializeHealthBar(gameObject);
+    }
+
+    public void Update()
+    {
+        maxHealth = _entityStats.health_max;
     }
 
     public void TakeDamage(float damage)
@@ -49,12 +52,14 @@ public class Health : MonoBehaviour
     
         currentHealth = Mathf.Max(currentHealth, 0); // Ensure health doesn't go below 0
 
-       if (_healthbar != null)
-        {
-            _healthbar.UpdateHealthbar(currentHealth, maxHealth);
-        }
+      
 
         _entityStats.health_current = currentHealth;
+
+        if (_healthbarBehavior != null)
+        {
+            _healthbarBehavior.TakeDamage();
+        }
 
 
         //ShowFloatingText( Mathf.RoundToInt(damage).ToString(), resultType);
@@ -75,12 +80,12 @@ public class Health : MonoBehaviour
     {
         currentHealth += amount;
         currentHealth = Mathf.Min(currentHealth, maxHealth); // Ensure health doesn't exceed max
-        if (_healthbar != null)
-        {
-            _healthbar.UpdateHealthbar(currentHealth, maxHealth);
-        }
-       // Debug.Log($"{gameObject.name} healed for {amount}! Current health: {currentHealth}");
+        
        _entityStats.health_current = currentHealth;
+        if (_healthbarBehavior != null)
+        {
+            _healthbarBehavior.Heal();
+        }
 
         ShowFloatingText("+"+amount, CombatResultType.heal);
     }

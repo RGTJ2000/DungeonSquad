@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe3f63cbb2e976943b9dd0c0ee60741f, type: 3}
+  m_Name: HealEffect+10_SO
+  m_EditorClassIdentifier: 
+  skill_type: incant
+  skill_name: Heal +10
+  skill_targetType: 1
+  cooldown: 0
+  skill_icon: {fileID: 0}
+  healAmount: 10
+  healing_prefab: {fileID: 5540355412864984503, guid: ab3bfb888ace8f44fb5e2a9518239fba,
+    type: 3}
+  healCycleTime: 1

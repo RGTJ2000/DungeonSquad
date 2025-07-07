@@ -18,6 +18,7 @@ public class HealEffect_SO : Skill_SO
 
         if (_targetHealth.currentHealth == _targetHealth.maxHealth)
         {
+            //Debug.Log($"Target={target.name}  current health={_targetHealth.currentHealth} | max health={_targetHealth.maxHealth}");
             if (incanter.TryGetComponent<Ch_Behavior>(out var ch_behavior))
             {
                 ch_behavior.CancelEngage();
